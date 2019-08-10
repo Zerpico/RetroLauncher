@@ -17,39 +17,43 @@ namespace RomsDownloaderGUI.ImgParse
         public string[] Parse(IHtmlDocument document, string BaseUrl)
         {
             //возвращаяемый результат
-            List<string> result = new List<string>(); ;
+            List<string> result = new List<string>();
 
-            //отбираем элементы только с таблицей 
-            var parseItems = document.QuerySelectorAll("table").Where(dd => dd.ClassName == "gdb_table");
-
-            foreach (var parseItem in parseItems)
+            try
             {
-                var urlElement = parseItem.QuerySelectorAll("td").Where(dd => dd.ClassName == "gdb_left_col");
+                //отбираем элементы только с таблицей 
+                var parseItems = document.QuerySelectorAll("table").Where(dd => dd.ClassName == "gdb_table");
 
-                foreach (var urlItem in urlElement)
+                foreach (var parseItem in parseItems)
                 {
-                    foreach (var child in urlItem.Children)
+                    var urlElement = parseItem.QuerySelectorAll("td").Where(dd => dd.ClassName == "gdb_left_col");
+
+                    foreach (var urlItem in urlElement)
                     {
-                        if (child.Attributes["src"] != null)
-                            result.Add(child.Attributes["src"].Value);
-                        if (child.NodeName.ToLower() == "div")
+                        foreach (var child in urlItem.Children)
                         {
-                            for(int i=0; i< child.Children.Count();i++)
-                                if (child.Children[i].Attributes["src"] != null)
-                                    result.Add(child.Children[i].Attributes["src"].Value);
+                            if (child.Attributes["src"] != null)
+                                result.Add(child.Attributes["src"].Value);
+                            if (child.NodeName.ToLower() == "div")
+                            {
+                                for (int i = 0; i < child.Children.Count(); i++)
+                                    if (child.Children[i].Attributes["src"] != null)
+                                        result.Add(child.Children[i].Attributes["src"].Value);
+
+                            }
+
+                            /*  if (child is IHtmlImageElement)
+                                  result.Add((child as IHtmlImageElement).Source);  */
 
                         }
-
-                      /*  if (child is IHtmlImageElement)
-                            result.Add((child as IHtmlImageElement).Source);  */
-
+                        //получаем ссылку на картинку
+                        //    if (urlItem.Children.Count())
+                        /* var url = urlElement.Children[0].QuerySelector("img");
+                         result = (url as IHtmlAnchorElement).Href;*/
                     }
-                    //получаем ссылку на картинку
-                    //    if (urlItem.Children.Count())
-                    /* var url = urlElement.Children[0].QuerySelector("img");
-                     result = (url as IHtmlAnchorElement).Href;*/
                 }
             }
+            catch (Exception) { }
             return result.ToArray();
         }
     }

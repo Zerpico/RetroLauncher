@@ -7,8 +7,124 @@
       mc:Ignorable="d" 
       d:DesignHeight="300" d:DesignWidth="300"
       Title="Home" DataContext="{Binding  HomeViewModel,Source={StaticResource Locator}}">
+    <Page.Resources>
+        <Style x:Key="gameGridCellStyle" TargetType="{x:Type DataGridCell}">
 
+            <Setter Property="Background" Value="Transparent"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFF7F7F7"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="BorderBrush" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="gameGridRowStyle" TargetType="{x:Type DataGridRow}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="BorderThickness" Value="0"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#FFF7F7F7"/>
+                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="BorderThickness" Value="0"/>
+                    <Setter Property="BorderBrush" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+    
     <Grid>
-        <TextBlock FontSize="24" Foreground="White">Home Page</TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!--Верхняя панель-->
+        <Grid Grid.Row="0">
+            <!--StackPanel Orientation="Horizontal">
+                <Button Width="100" Height="30" Content="download" Command="{Binding Page1Command}"/>
+                <Image Source="{Binding SelectedGame.ImgUrl, UpdateSourceTrigger=PropertyChanged}"/>
+            </-->
+        </Grid>
+        
+        <!--Главная область-->
+        <Grid Grid.Row="1">
+            <DataGrid IsEnabled="{Binding BlockPanel}" x:Name="gameList" HorizontalAlignment="Stretch"  HorizontalContentAlignment="Stretch" 
+                  Margin="7" ItemsSource="{Binding Games}" SelectedItem="{Binding SelectedGame, UpdateSourceTrigger=PropertyChanged}"
+                  Background="Transparent" BorderThickness="0" HeadersVisibility="None"
+                   AutoGenerateColumns="False" IsReadOnly="True" 
+                  ColumnHeaderHeight="0" RowHeaderWidth="0" ColumnWidth="*" 
+                  SelectionMode="Single" SelectionUnit="FullRow"
+                  VerticalGridLinesBrush="Transparent" HorizontalGridLinesBrush="Transparent"
+                  VirtualizingPanel.ScrollUnit="Pixel"  CellStyle="{StaticResource gameGridCellStyle}"    
+                  RowStyle="{StaticResource gameGridRowStyle}"
+                 >
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn>
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Grid Margin="5" Background="Transparent">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="150"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Image Grid.Column="0" Grid.Row="0" Source="{Binding ImgUrl}" MaxWidth="150" MaxHeight="100"/>
+                                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="7,0,0,0">
+                                        <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="#595959" FontSize="16" Text="{Binding Path=Name}" VerticalAlignment="Center" />
+                                        <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="#FFBCBCBC" FontSize="14" Text="{Binding Path=SecondName}" VerticalAlignment="Center" />
+                                        <TextBlock Margin="0,3,0,0" Foreground="#FF6C5858" FontSize="14" Text="{Binding Path=Genre}" VerticalAlignment="Center" />
+                                        <TextBlock Foreground="#FF68586C" FontSize="14" Text="{Binding Path=Year}" VerticalAlignment="Center" />
+                                        <TextBlock Foreground="#FF6E6B94" FontSize="14" Text="{Binding Path=Platform}" VerticalAlignment="Center" />
+                                    </StackPanel>
+
+                                    <!--StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                            Margin="0,0,20,9" Grid.Column="1" Grid.Row="0">
+                                        <Button Content="Играть" Style="{StaticResource BlueButton}" Visibility="{Binding Downloaded, Converter={StaticResource BoolToVis}}"
+                                         Command="{Binding DataContext.DownloadCommand, RelativeSource={RelativeSource FindAncestor, 
+                                         AncestorType={x:Type local:GameListControl}}}"
+                                         CommandParameter="{Binding SelectedItem, ElementName=gameList}"/>
+                                        <Button Content="Скачать" Style="{StaticResource GreenButton}" Visibility="{Binding Downloaded, Converter={StaticResource BoolInvertToVis}}"
+                                         Command="{Binding DataContext.DownloadCommand, RelativeSource={RelativeSource FindAncestor, 
+                                         AncestorType={x:Type local:GameListControl}}}"
+                                         CommandParameter="{Binding SelectedItem, ElementName=gameList}"/>
+                                        <Border HorizontalAlignment="Left" CornerRadius="3" Background="#FA1781B7" Height="5"                                             
+                                         MaxWidth="100" Width="{Binding Path=ProgressDownload}" 
+                                         Margin="0,3,0,0" >
+                                        </Border>
+                                    </-->
+                                    <Separator Grid.ColumnSpan="2" Grid.Row="1" Margin="20,10" VerticalAlignment="Bottom" />
+                                </Grid>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+
+            </DataGrid>
+            <!--
+            <ListBox ItemsSource="{Binding Games}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid x:Name="itemsGrid" Margin="3" ShowGridLines="False" >
+                            <Image Source="{Binding ImgUrl, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>                       
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+            -->
+            
+        </Grid>
+
     </Grid>
 </Page>

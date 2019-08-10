@@ -17,17 +17,19 @@ namespace RomsDownloaderGUI.UrlParse
         public string Parse(IHtmlDocument document, string BaseUrl)
         {
             //возвращаяемый результат
-            var result = "";
+            string result = string.Empty;
+            try
+            {
+                //отбираем элементы только с таблицей 
+                var parseItem = document.QuerySelectorAll("table").Where(dd => dd.ClassName == "gdb_table").First();
 
-            //отбираем элементы только с таблицей 
-            var parseItem = document.QuerySelectorAll("table").Where(dd => dd.ClassName == "gdb_table").First();
+                var urlElement = parseItem.QuerySelectorAll("td").Where(dd => dd.ClassName == "gdb_right_col").First();
 
-            var urlElement = parseItem.QuerySelectorAll("td").Where(dd => dd.ClassName == "gdb_right_col").First();
-
-            //получаем ссылку на архив
-            var url = urlElement.Children[0].QuerySelector("a");
-            result = (url as IHtmlAnchorElement).Href;
-
+                //получаем ссылку на архив
+                var url = urlElement.Children[0].QuerySelector("a");
+                result = (url as IHtmlAnchorElement).Href;
+            }
+            catch (Exception) { }
             return result;
         }
     }

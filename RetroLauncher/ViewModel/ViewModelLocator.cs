@@ -28,7 +28,7 @@ namespace RetroLauncher.ViewModel
         private static void SetupNavigation()
         {
             var navigationService = new FrameNavigationService();
-            navigationService.Configure("Home", new Uri("../View/Home.xaml", UriKind.Relative));
+            navigationService.Configure("Home", new Uri("../View/HomePage.xaml", UriKind.Relative));
           /*  navigationService.Configure("Page1", new Uri("../View/Page1.xaml", UriKind.Relative));
             navigationService.Configure("Page2", new Uri("../View/Page2.xaml", UriKind.Relative));*/
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);

@@ -7,7 +7,9 @@
         xmlns:command="http://www.galasoft.ch/mvvmlight"
         BorderBrush="#95939E" BorderThickness="1"    
         WindowStartupLocation="CenterScreen"                     
-        Height="600" Width="800">
+        Height="800" Width="1000"
+        DataContext="{Binding Main, Source={StaticResource Locator}}">
+    
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <command:EventToCommand Command="{Binding LoadedCommand, Mode=OneWay}" />
@@ -16,28 +18,33 @@
     
     <controls:FlatWindow.Background>
         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-            <GradientStop Color="#0E2036" Offset="0"/>
-            <GradientStop Color="#FF240E36" Offset="1"/>
+            <GradientStop Color="#FFB2B2B2" Offset="0"/>
+            <GradientStop Color="#FFE6E6E6" Offset="1"/>
         </LinearGradientBrush>
     </controls:FlatWindow.Background>
+
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="100" MaxWidth="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0" Background="#500E361D">           
-            <ListBox Foreground="White" FontSize="16" Background="Transparent" BorderThickness="0">
-                <TextBlock>1</TextBlock>
-                <TextBlock>1</TextBlock>
-                <TextBlock>1</TextBlock>
-                <TextBlock>1</TextBlock>
-                <TextBlock>1</TextBlock>
-            </ListBox>
+        <!--Левое меню-->
+        <Grid Grid.Column="0" Background="#D827273E">
+            <StackPanel>
+                <Separator Height="5"   />
+                <RadioButton Padding="5,5"  HorizontalContentAlignment="Left" FontSize="16" Style="{StaticResource {x:Type ToggleButton}}" >Последнии</RadioButton>
+                <RadioButton Command="{Binding LoadedCommand}" Padding="5,5"  HorizontalContentAlignment="Left" FontSize="16" Style="{StaticResource {x:Type ToggleButton}}" >Все игры</RadioButton>
+                <RadioButton Padding="5,5"  HorizontalContentAlignment="Left" FontSize="16" Style="{StaticResource {x:Type ToggleButton}}" >Скачанные</RadioButton>
+                <Separator Height="5" Margin="0,3"  />
+                <RadioButton Padding="5,5"  HorizontalContentAlignment="Left" FontSize="16" Style="{StaticResource {x:Type ToggleButton}}" >Настройки</RadioButton>
+            </StackPanel>
         </Grid>
 
-        <Grid Grid.Column="1">
-            <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
-        </Grid>
+
+        <!--Главный фрейм-->
+        <Frame Margin="15" x:Name="MainFrame" Grid.Column="1" NavigationUIVisibility="Hidden" 
+                   VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+
     </Grid>
 </controls:FlatWindow>

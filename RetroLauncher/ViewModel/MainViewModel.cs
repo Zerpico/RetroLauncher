@@ -18,13 +18,16 @@ namespace RetroLauncher.ViewModel
                     () =>
                     {
                         _navigationService.NavigateTo("Home");
+                        RaisePropertyChanged("LoadedCommand");
                     }));
             }
         }
 
         public MainViewModel(IFrameNavigationService navigationService)
         {
-            _navigationService = navigationService;
+            _navigationService = navigationService;            
         }
+
+        public string PropText { get { return "sample"; } }
     }
 }

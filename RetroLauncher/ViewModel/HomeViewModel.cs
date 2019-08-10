@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using RetroLauncher.Helpers;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using System.Collections.ObjectModel;
+using RetroLauncher.Model;
 
 namespace RetroLauncher.ViewModel
 {
@@ -31,6 +33,16 @@ namespace RetroLauncher.ViewModel
                 RaisePropertyChanged("MainPageText");
             }
         }
+
+        public ObservableCollection<Game> Games { get; set; }
+
+        
+        public Game SelectedGame
+        {
+            get;
+            set;
+        }
+
         private RelayCommand _page1Command;
         public RelayCommand Page1Command
         {
@@ -40,12 +52,13 @@ namespace RetroLauncher.ViewModel
                     ?? (_page1Command = new RelayCommand(
                     () =>
                     {
-                        _navigationService.NavigateTo("Page1");
+                        SelectedGame = Services.RepositoryBase.GetGameByIdAsync(Games[0].GameId).Result;
+                        //_navigationService.NavigateTo("Page1");
                     }));
             }
         }
-        private RelayCommand _page2Command;
 
+        private RelayCommand _page2Command;
         public RelayCommand Page2Command
         {
             get
@@ -62,6 +75,7 @@ namespace RetroLauncher.ViewModel
         public HomeViewModel(IFrameNavigationService navigationService)
         {
             _navigationService = navigationService;
+            Games = new ObservableCollection<Game>(Services.RepositoryBase.GetGamesAsync().Result.Distinct());
         }
     }
 }
