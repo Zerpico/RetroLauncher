@@ -33,11 +33,11 @@
         <Grid Grid.Column="0" Background="#D827273E">
             <StackPanel>
                 <Separator Height="5"   />
-                <RadioButton Padding="5,5"  HorizontalContentAlignment="Left" FontSize="16" Style="{StaticResource {x:Type ToggleButton}}" >Последнии</RadioButton>
+                <RadioButton Command="{Binding RecentCommand}" Padding="5,5"  HorizontalContentAlignment="Left" FontSize="16" Style="{StaticResource {x:Type ToggleButton}}" >Последнии</RadioButton>
                 <RadioButton Command="{Binding LoadedCommand}" Padding="5,5"  HorizontalContentAlignment="Left" FontSize="16" Style="{StaticResource {x:Type ToggleButton}}" >Все игры</RadioButton>
-                <RadioButton Padding="5,5"  HorizontalContentAlignment="Left" FontSize="16" Style="{StaticResource {x:Type ToggleButton}}" >Скачанные</RadioButton>
+                <RadioButton Command="{Binding DownloadedCommand}" Padding="5,5"  HorizontalContentAlignment="Left" FontSize="16" Style="{StaticResource {x:Type ToggleButton}}" >Скачанные</RadioButton>
                 <Separator Height="5" Margin="0,3"  />
-                <RadioButton Padding="5,5"  HorizontalContentAlignment="Left" FontSize="16" Style="{StaticResource {x:Type ToggleButton}}" >Настройки</RadioButton>
+                <!-- <RadioButton Padding="5,5"  HorizontalContentAlignment="Left" FontSize="16" Style="{StaticResource {x:Type ToggleButton}}" >Настройки</RadioButton> -->
             </StackPanel>
         </Grid>
 

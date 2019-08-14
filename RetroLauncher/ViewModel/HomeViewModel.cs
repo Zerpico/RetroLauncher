@@ -52,23 +52,24 @@ namespace RetroLauncher.ViewModel
                     ?? (_page1Command = new RelayCommand(
                     () =>
                     {
-                        SelectedGame = Services.RepositoryBase.GetGameByIdAsync(Games[0].GameId).Result;
+                        //SelectedGame = Services.RepositoryBase.GetGameByIdAsync(Games[0].GameId).Result;
                         //_navigationService.NavigateTo("Page1");
                     }));
             }
         }
 
-        private RelayCommand _page2Command;
-        public RelayCommand Page2Command
+        private RelayCommand _detailCommand;
+        public RelayCommand DetailCommand
         {
             get
             {
-                return _page2Command
-                       ?? (_page2Command = new RelayCommand(
-                           () =>
-                           {
-                               _navigationService.NavigateTo("Page2");
-                           }));
+                return _detailCommand
+                    ?? (_detailCommand = new RelayCommand(
+                    () =>
+                    {
+                        MessengerInstance.Send<Game>(SelectedGame);
+                        _navigationService.NavigateTo("GameDetail", SelectedGame);
+                    }));
             }
         }
 

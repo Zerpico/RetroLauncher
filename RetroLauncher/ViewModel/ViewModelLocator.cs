@@ -19,9 +19,10 @@ namespace RetroLauncher.ViewModel
         {
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
             SimpleIoc.Default.Register<MainViewModel>();
-          /*  SimpleIoc.Default.Register<Page2ViewModel>();
-            SimpleIoc.Default.Register<Page1ViewModel>();*/
+            SimpleIoc.Default.Register<RecentViewModel>();
+            SimpleIoc.Default.Register<DownloadedViewModel>();
             SimpleIoc.Default.Register<HomeViewModel>();
+            SimpleIoc.Default.Register<GameDetailViewModel>();
             SetupNavigation();
         }
 
@@ -29,8 +30,9 @@ namespace RetroLauncher.ViewModel
         {
             var navigationService = new FrameNavigationService();
             navigationService.Configure("Home", new Uri("../View/HomePage.xaml", UriKind.Relative));
-          /*  navigationService.Configure("Page1", new Uri("../View/Page1.xaml", UriKind.Relative));
-            navigationService.Configure("Page2", new Uri("../View/Page2.xaml", UriKind.Relative));*/
+            navigationService.Configure("Recent", new Uri("../View/RecentPage.xaml", UriKind.Relative));
+            navigationService.Configure("Downloaded", new Uri("../View/DownloadedPage.xaml", UriKind.Relative));
+            navigationService.Configure("GameDetail", new Uri("../View/GameDetailPage.xaml", UriKind.Relative));
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
         }
         public MainViewModel Main
@@ -47,20 +49,28 @@ namespace RetroLauncher.ViewModel
                 return ServiceLocator.Current.GetInstance<HomeViewModel>();
             }
         }
-       /* public Page2ViewModel Page2ViewModel
+        public DownloadedViewModel DownloadedViewModel
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<Page2ViewModel>();
+                return ServiceLocator.Current.GetInstance<DownloadedViewModel>();
             }
         }
-        public Page1ViewModel Page1ViewModel
+        public RecentViewModel RecentViewModel
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<Page1ViewModel>();
+                return ServiceLocator.Current.GetInstance<RecentViewModel>();
             }
-        }*/
+        }
+
+        public GameDetailViewModel GameDetailViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<GameDetailViewModel>();
+            }
+        }
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>

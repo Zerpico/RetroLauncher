@@ -89,7 +89,16 @@
                                         <TextBlock Foreground="#FF6E6B94" FontSize="14" Text="{Binding Path=Platform}" VerticalAlignment="Center" />
                                     </StackPanel>
 
-                                    <!--StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                    <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                                            Margin="0,0,20,9" Grid.Column="1" Grid.Row="0">
+                                        <Button FontSize="14" Content="Подробности" Padding="7" Command="{Binding DataContext.DetailCommand, RelativeSource={RelativeSource FindAncestor, 
+                                         AncestorType={x:Type local:HomePage}}}"/>
+
+
+
+                                    </StackPanel>
+
+                                        <!--StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom"
                                             Margin="0,0,20,9" Grid.Column="1" Grid.Row="0">
                                         <Button Content="Играть" Style="{StaticResource BlueButton}" Visibility="{Binding Downloaded, Converter={StaticResource BoolToVis}}"
                                          Command="{Binding DataContext.DownloadCommand, RelativeSource={RelativeSource FindAncestor, 

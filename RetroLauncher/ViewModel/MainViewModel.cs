@@ -18,7 +18,35 @@ namespace RetroLauncher.ViewModel
                     () =>
                     {
                         _navigationService.NavigateTo("Home");
-                        RaisePropertyChanged("LoadedCommand");
+                        //RaisePropertyChanged("LoadedCommand");
+                    }));
+            }
+        }
+
+        private RelayCommand _recentCommand;
+        public RelayCommand RecentCommand
+        {
+            get
+            {
+                return _recentCommand
+                    ?? (_recentCommand = new RelayCommand(
+                    () =>
+                    {
+                        _navigationService.NavigateTo("Recent");
+                    }));
+            }
+        }
+
+        private RelayCommand _downloadedCommand;
+        public RelayCommand DownloadedCommand
+        {
+            get
+            {
+                return _downloadedCommand
+                    ?? (_downloadedCommand = new RelayCommand(
+                    () =>
+                    {
+                        _navigationService.NavigateTo("Downloaded");
                     }));
             }
         }

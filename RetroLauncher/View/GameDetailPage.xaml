@@ -1,0 +1,65 @@
+﻿<Page x:Class="RetroLauncher.View.GameDetailPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:RetroLauncher.View"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800" DataContext="{Binding GameDetailViewModel ,Source={StaticResource Locator}}">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <!--Верхняя панель-->
+        <Grid Grid.Row="0">
+            <!--StackPanel Orientation="Horizontal">
+                <Button Width="100" Height="30" Content="download" Command="{Binding Page1Command}"/>
+                <Image Source="{Binding SelectedGame.ImgUrl, UpdateSourceTrigger=PropertyChanged}"/>
+            </-->
+        </Grid>
+
+        <!--Главная область-->
+        <Grid Grid.Row="1" Margin="7">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Button Grid.Column="0" Grid.Row="0" Width="30" HorizontalAlignment="Left" VerticalAlignment="Top"
+                Height="30" Command="{Binding BackCommand}"
+                Content=" 	&lt; " />
+
+
+
+            <Image  Grid.Column="0" Grid.Row="1" Source="{Binding SelectedGame.ImgUrl}" MaxWidth="250"/>
+            <StackPanel Grid.Row="1" Margin="5" Grid.Column="1">
+                <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="#595959" FontSize="16" Text="{Binding SelectedGame.Name}" VerticalAlignment="Center" />
+                <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="#FFBCBCBC" FontSize="16" Text="{Binding SelectedGame.NameSecond}" VerticalAlignment="Center" />
+                <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="#FFBCBCBC" FontSize="16" Text="{Binding SelectedGame.NameOther}" VerticalAlignment="Center" />
+                <TextBlock Margin="0,10,0,0" Foreground="#FF6C5858" FontSize="16" Text="{Binding SelectedGame.Genre}" VerticalAlignment="Center" />
+                <TextBlock Foreground="#FF6E6B94" FontSize="16" Text="{Binding SelectedGame.Developer}" VerticalAlignment="Center" />
+
+                <TextBlock Margin="0,10,0,0" Foreground="#FF68586C" FontSize="16" Text="{Binding SelectedGame.Year}" VerticalAlignment="Center" />                
+                <TextBlock Margin="0,10,0,0" Foreground="#FF6E6B94" FontSize="16" Text="{Binding SelectedGame.Platform.PlatformName}" VerticalAlignment="Center" />
+
+
+            </StackPanel>            
+
+            <TextBlock Margin="0,10" TextWrapping="Wrap" Grid.Row="3" Grid.ColumnSpan="2"
+                   HorizontalAlignment="Left" Foreground="#595959" 
+                   FontSize="16" Text="{Binding SelectedGame.Annotation}" VerticalAlignment="Top" />
+
+            <TextBlock Foreground="Maroon" Grid.Row="4" Grid.ColumnSpan="2" FontStyle="Italic">тут должен быть ниже список скриншотов</TextBlock>
+        </Grid>
+    </Grid>
+</Page>
