@@ -7,7 +7,7 @@ namespace RetroLauncher.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
-        private IFrameNavigationService _navigationService;
+        private readonly IFrameNavigationService _navigationService;
         private RelayCommand _loadedCommand;
         public RelayCommand LoadedCommand
         {

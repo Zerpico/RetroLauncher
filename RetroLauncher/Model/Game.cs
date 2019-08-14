@@ -1,4 +1,6 @@
-﻿using System;
+﻿using GalaSoft.MvvmLight.Ioc;
+using RetroLauncher.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -15,55 +17,44 @@ namespace RetroLauncher.Model
             GameLinks = new List<GameLink>();
         }
         */
-        int gameId;
-        public int GameId
-        {
-            get { return gameId; }
-            set { gameId = value; }
-        }
+        public int GameId { get; set; }
 
         public string Name { get; set; }
         public string NameSecond { get; set; }
-        public string NameOther { get; set; }        
+        public string NameOther { get; set; }
         //public string Platform{ get; set; }
         public string Genre { get; set; }
         public int? Year { get; set; }
         public string Developer { get; set; }
 
-        string annotation;
+        private string _annotation;
         public string Annotation
         {
-            get { return annotation; }
-            set { if (value.Length > 1000) annotation = value.Substring(0, 1000); else annotation = value; }
+            get { return _annotation; }
+            set
+            {
+                _annotation = value.Length > 1000 ? value.Substring(0, 1000) : value;
+            }
         }
 
         public Platform Platform { get; set; }
-
-        private List<GameLink> gameLinks { get; set; }
-        public List<GameLink> GameLinks
-        {
-            get { return gameLinks; }
-            set
-            {
-                gameLinks = value;
-             //   LoadLinks(value); // игнорируем возвращаемое значение
-             //   OnPropertyChanged(); // загрузка произойдёт в фоне}
-            }
-        }
+        public List<GameLink> GameLinks { get; set; }
 
         private string imgUrl;
         public string ImgUrl
         {
             get
             {
-               
                 if (GameLinks != null && string.IsNullOrEmpty(imgUrl))
                 {
-                    TaskAwaiter<string> awaiter = Services.RepositoryImage.GET(GameLinks.Where(lnk => lnk.TypeUrl == TypeUrl.MainScreen).FirstOrDefault().Url).GetAwaiter();
+                    var fireUrlService = SimpleIoc.Default.GetInstance<IFileUrlService>();
+                    var file = GameLinks.Where(lnk => lnk.TypeUrl == TypeUrl.MainScreen).FirstOrDefault().Url;
+
+                    var awaiter = fireUrlService.GetFileDirectUrl(file).GetAwaiter();
                     awaiter.OnCompleted(() =>
                     {
                         imgUrl = awaiter.GetResult();
-                        OnPropertyChanged("ImgUrl");
+                        OnPropertyChanged(nameof(ImgUrl));
                     });
                 }
                 return imgUrl;
@@ -72,7 +63,7 @@ namespace RetroLauncher.Model
 
         private void UpdateLink()
         {
-            OnPropertyChanged("ImgUrl");
+            OnPropertyChanged(nameof(ImgUrl));
         }
 
         /*async Task LoadLinks(List<GameLink> value)
@@ -136,8 +127,7 @@ namespace RetroLauncher.Model
         public event PropertyChangedEventHandler PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         #endregion

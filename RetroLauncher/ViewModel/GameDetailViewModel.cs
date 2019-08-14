@@ -29,7 +29,7 @@ namespace RetroLauncher.ViewModel
         private void RefreshGame(Game recGame)
         {
             SelectedGame = recGame;
-            RaisePropertyChanged("SelectedGame");
+            RaisePropertyChanged(nameof(SelectedGame));
         }
 
 

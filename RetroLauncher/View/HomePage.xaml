@@ -39,7 +39,7 @@
             </Style.Triggers>
         </Style>
     </Page.Resources>
-    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
@@ -53,10 +53,10 @@
                 <Image Source="{Binding SelectedGame.ImgUrl, UpdateSourceTrigger=PropertyChanged}"/>
             </-->
         </Grid>
-        
+
         <!--Главная область-->
         <Grid Grid.Row="1">
-            <DataGrid IsEnabled="{Binding BlockPanel}" x:Name="gameList" HorizontalAlignment="Stretch"  HorizontalContentAlignment="Stretch" 
+            <DataGrid  x:Name="gameList" HorizontalAlignment="Stretch"  HorizontalContentAlignment="Stretch" 
                   Margin="7" ItemsSource="{Binding Games}" SelectedItem="{Binding SelectedGame, UpdateSourceTrigger=PropertyChanged}"
                   Background="Transparent" BorderThickness="0" HeadersVisibility="None"
                    AutoGenerateColumns="False" IsReadOnly="True" 
@@ -121,18 +121,7 @@
                 </DataGrid.Columns>
 
             </DataGrid>
-            <!--
-            <ListBox ItemsSource="{Binding Games}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid x:Name="itemsGrid" Margin="3" ShowGridLines="False" >
-                            <Image Source="{Binding ImgUrl, UpdateSourceTrigger=PropertyChanged}" />
-                        </Grid>                       
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            -->
-            
+              
         </Grid>
 
     </Grid>

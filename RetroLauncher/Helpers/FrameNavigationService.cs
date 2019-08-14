@@ -34,7 +34,7 @@ namespace RetroLauncher.Helpers
                 }
 
                 _currentPageKey = value;
-                OnPropertyChanged("CurrentPageKey");
+                OnPropertyChanged(nameof(CurrentPageKey));
             }
         }
         public object Parameter { get; private set; }
@@ -87,14 +87,7 @@ namespace RetroLauncher.Helpers
         {
             lock (_pagesByKey)
             {
-                if (_pagesByKey.ContainsKey(key))
-                {
-                    _pagesByKey[key] = pageType;
-                }
-                else
-                {
-                    _pagesByKey.Add(key, pageType);
-                }
+                _pagesByKey[key] = pageType;
             }
         }
 
@@ -131,8 +124,7 @@ namespace RetroLauncher.Helpers
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }

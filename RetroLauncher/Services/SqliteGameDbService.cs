@@ -1,23 +1,26 @@
-﻿using System;
+﻿using Dapper;
+using RetroLauncher.Model;
+using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.SQLite;
-using Dapper;
-using RetroLauncher.Model;
 
 namespace RetroLauncher.Services
 {
-    class RepositoryBase
+    /// <summary>
+    /// База данных игр (SQLite)
+    /// </summary>
+    public class SqliteGameDbService : IGameDbService
     {
-        private static string _connectionString = "Data Source=library_base.sqlite;Version=3;";
+        private readonly string _connectionString = "Data Source=library_base.sqlite;Version=3;";
 
         /// <summary>
         /// Получить компактный список игры, без привязки ссылок и аннотации
         /// </summary>
         /// <returns></returns>
-        public static async Task<IEnumerable<Game>> GetGamesShortAsync()
+        public async Task<IEnumerable<Game>> GetGamesShortAsync()
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
@@ -33,7 +36,7 @@ namespace RetroLauncher.Services
                 var games = await connection.QueryAsync<Game, Platform, Game>
                     (sql, (game, platform) =>
                     {
-                        game.Platform = platform;                      
+                        game.Platform = platform;
                         return game;
                     }, splitOn: "PlatformId");
                 return games;
@@ -44,7 +47,7 @@ namespace RetroLauncher.Services
         /// Получить список игр 
         /// </summary>
         /// <returns></returns>
-        public static async Task<IEnumerable<Game>> GetGamesAsync()
+        public async Task<IEnumerable<Game>> GetGamesAsync()
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
@@ -85,7 +88,7 @@ namespace RetroLauncher.Services
         /// Получить одну игру по Id
         /// </summary>
         /// <returns></returns>
-        public static async Task<Game> GetGameByIdAsync(int gameId)
+        public async Task<Game> GetGameByIdAsync(int gameId)
         {
             using (var connection = new SQLiteConnection(_connectionString))
             {
@@ -97,15 +100,14 @@ namespace RetroLauncher.Services
                             JOIN rl_genres gnr ON gnr.genre_id = gb.genre_id
                             JOIN rl_platforms pl ON gb.platform_id = pl.platform_id
                             JOIN rl_game_link lnk ON lnk.game_id = gb.game_id
-                            WHERE gb.game_id = "+gameId.ToString();
+                            WHERE gb.game_id = " + gameId.ToString();
 
                 connection.Open();
                 var games = await connection.QueryAsync<Game, Platform, GameLink, Game>
                     (sql, (game, platform, gamelink) =>
                     {
                         //проверям есть ли списка уже
-                        Game gameEntry;
-                        if (!gameDictionary.TryGetValue(game.GameId, out gameEntry))
+                        if (!gameDictionary.TryGetValue(game.GameId, out var gameEntry))
                         {
                             gameEntry = game;
                             gameEntry.GameLinks = new List<GameLink>();
@@ -117,10 +119,7 @@ namespace RetroLauncher.Services
                         return gameEntry;
                     }, splitOn: "PlatformId,LinkId");
                 return games.FirstOrDefault();
-
-
             }
         }
-
     }
 }
