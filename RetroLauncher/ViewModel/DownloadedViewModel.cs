@@ -10,7 +10,7 @@ namespace RetroLauncher.ViewModel
 {
     public class DownloadedViewModel : ViewModelBase
     {
-        private IFrameNavigationService _navigationService;
+        private readonly IFrameNavigationService _navigationService;
 
         public DownloadedViewModel(IFrameNavigationService navigationService)
         {

@@ -1,19 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RetroLauncher.Model
+﻿namespace RetroLauncher.Model
 {
     public class GameLink
     {
-        int linkId;
-        public int LinkId
-        {
-            get { return linkId; }
-            set { linkId = value; }
-        }
+        public int LinkId { get; set; }
 
         public string Url { get; set; }
         public TypeUrl TypeUrl { get; set; }

@@ -90,8 +90,12 @@
     <Compile Include="Model\Game.cs" />
     <Compile Include="Model\GameLink.cs" />
     <Compile Include="Model\Platform.cs" />
+    <Compile Include="Services\IFileService.cs" />
+    <Compile Include="Services\IGameDbService.cs" />
     <Compile Include="Services\RepositoryBase.cs" />
     <Compile Include="Services\RepositoryImage.cs" />
+    <Compile Include="Services\SqliteGameDbService.cs" />
+    <Compile Include="Services\YadiskFileUrlService.cs" />
     <Compile Include="ViewModel\GameDetailViewModel.cs" />
     <Compile Include="ViewModel\HomeViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

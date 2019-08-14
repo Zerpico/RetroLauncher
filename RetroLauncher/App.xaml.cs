@@ -1,4 +1,6 @@
-﻿using GalaSoft.MvvmLight.Threading;
+﻿using GalaSoft.MvvmLight.Ioc;
+using GalaSoft.MvvmLight.Threading;
+using RetroLauncher.Services;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -15,7 +17,18 @@ namespace RetroLauncher
     {
         static App()
         {
+            RegisterServices();
+
             DispatcherHelper.Initialize();
+        }
+
+        /// <summary>
+        /// Зарегестрировать наши сервисы в DI
+        /// </summary>
+        private static void RegisterServices()
+        {
+            SimpleIoc.Default.Register<IFileUrlService, YadiskFileUrlService>(true);
+            SimpleIoc.Default.Register<IGameDbService, SqliteGameDbService>(true);
         }
     }
 }

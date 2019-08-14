@@ -8,12 +8,15 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
 using RetroLauncher.Model;
+using RetroLauncher.Services;
 
 namespace RetroLauncher.ViewModel
 {
     public class HomeViewModel : ViewModelBase
     {
-        private IFrameNavigationService _navigationService;
+        private readonly IFrameNavigationService _navigationService;
+        private readonly IGameDbService _gameDb;
+
         private string _myProperty = "MainPageText";
         public string MainPageText
         {
@@ -30,7 +33,7 @@ namespace RetroLauncher.ViewModel
                 }
 
                 _myProperty = value;
-                RaisePropertyChanged("MainPageText");
+                RaisePropertyChanged(nameof(MainPageText));
             }
         }
 
@@ -67,16 +70,18 @@ namespace RetroLauncher.ViewModel
                     ?? (_detailCommand = new RelayCommand(
                     () =>
                     {
-                        MessengerInstance.Send<Game>(SelectedGame);
+                        MessengerInstance.Send(SelectedGame);
                         _navigationService.NavigateTo("GameDetail", SelectedGame);
                     }));
             }
         }
 
-        public HomeViewModel(IFrameNavigationService navigationService)
+        public HomeViewModel(IFrameNavigationService navigationService, IGameDbService gameDb)
         {
             _navigationService = navigationService;
-            Games = new ObservableCollection<Game>(Services.RepositoryBase.GetGamesAsync().Result.Distinct());
+            _gameDb = gameDb;
+
+            Games = new ObservableCollection<Game>(_gameDb.GetGamesAsync().Result.Distinct());
         }
     }
 }
