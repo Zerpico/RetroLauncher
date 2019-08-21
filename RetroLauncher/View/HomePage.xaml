@@ -44,10 +44,50 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="50"/>
             <RowDefinition/>
+            <RowDefinition Height="40"/>
         </Grid.RowDefinitions>
 
         <!--Верхняя панель-->
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" >
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top">              
+<!--                <Rectangle Width="100" Height="30" RadiusX="5" RadiusY="5"  Fill="#7F27273E" Stroke="{StaticResource ButtonGrayBackground}">   
+                    <Rectangle.ContextMenu>
+                        <ContextMenu>
+                            <Menu>sad</Menu>
+                        </ContextMenu>
+                    </Rectangle.ContextMenu>
+                </Rectangle>
+-->
+                <ToggleButton Style="{StaticResource FilterButton}">
+                    <StackPanel Opacity="0.9" Margin="5" Orientation="Horizontal" >
+                        <Image Width="24" Height="24" Source="../icon/filter.png"/>
+                        <TextBlock FontSize="16" Margin="5,0,0,0" VerticalAlignment="Center">Фильтр</TextBlock>
+                    </StackPanel>     
+                </ToggleButton>
+                <TextBox  Margin="10,0,0,0" BorderThickness="1" Width="200" MaxLength="50" Style="{StaticResource FilterTextBox}"
+                     MaxWidth="450" Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=500}" 
+                     FontSize="16" 
+                      >
+                <!--    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Setter Property="BorderBrush" Value="#BFBFBF" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsNameCheck, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                                    <Setter Property="BorderBrush" Value="#FF8F64A3"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>-->
+                </TextBox>
+                <!--
+                <Button Style="{StaticResource GrayButton}">
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="24" Height="24" Opacity="0.5" Source="../icon/filter.png"/>
+                        <TextBlock VerticalAlignment="Center" Margin="5,0">Фильтр</TextBlock>
+                    </StackPanel>
+                </Button>
+                -->
+            </StackPanel>
             <!--StackPanel Orientation="Horizontal">
                 <Button Width="100" Height="30" Content="download" Command="{Binding Page1Command}"/>
                 <Image Source="{Binding SelectedGame.ImgUrl, UpdateSourceTrigger=PropertyChanged}"/>
@@ -86,7 +126,7 @@
                                         <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="#FFBCBCBC" FontSize="14" Text="{Binding Path=SecondName}" VerticalAlignment="Center" />
                                         <TextBlock Margin="0,3,0,0" Foreground="#FF6C5858" FontSize="14" Text="{Binding Path=Genre}" VerticalAlignment="Center" />
                                         <TextBlock Foreground="#FF68586C" FontSize="14" Text="{Binding Path=Year}" VerticalAlignment="Center" />
-                                        <TextBlock Foreground="#FF6E6B94" FontSize="14" Text="{Binding Path=Platform}" VerticalAlignment="Center" />
+                                        <TextBlock Foreground="#FF6E6B94" FontSize="14" Text="{Binding Path=Platform.PlatformName}" VerticalAlignment="Center" />
                                     </StackPanel>
 
                                     <StackPanel HorizontalAlignment="Right" VerticalAlignment="Bottom"
@@ -123,6 +163,17 @@
             </DataGrid>
               
         </Grid>
-
+        
+        <!-- Панель навигации по страницам -->
+        <Grid Grid.Row="2"  >
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" >
+                <Button Command="{Binding PrevPageCommand}" Style="{StaticResource GrayButton}" Margin="10,0"  Content=" 	&lt; " />
+                <TextBlock VerticalAlignment="Center" Foreground="#595959" Margin="10,0" Text="{Binding CurrentPage}" FontSize="16"  />
+                <TextBlock VerticalAlignment="Center" Foreground="#595959" Margin="10,0" Text="из" FontSize="16"  />
+                <TextBlock VerticalAlignment="Center" Foreground="#595959" Margin="10,0" Text="{Binding MaxPage}" FontSize="16"  />
+                <Button Margin="10,0" Command="{Binding NextPageCommand}" Style="{StaticResource GrayButton}" Content=" 	&gt; " />
+            </StackPanel>
+        </Grid>
+        
     </Grid>
 </Page>

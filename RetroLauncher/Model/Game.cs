@@ -45,7 +45,9 @@ namespace RetroLauncher.Model
         {
             get
             {
-                if (GameLinks != null && string.IsNullOrEmpty(imgUrl))
+                var file = GameLinks.Where(lnk => lnk.TypeUrl == TypeUrl.MainScreen).FirstOrDefault().Url;
+                return @"https://www.zerpico.ru/RetroLauncher/" + file;
+                /*if (GameLinks != null && string.IsNullOrEmpty(imgUrl))
                 {
                     var fireUrlService = SimpleIoc.Default.GetInstance<IFileUrlService>();
                     var file = GameLinks.Where(lnk => lnk.TypeUrl == TypeUrl.MainScreen).FirstOrDefault().Url;
@@ -57,7 +59,7 @@ namespace RetroLauncher.Model
                         OnPropertyChanged(nameof(ImgUrl));
                     });
                 }
-                return imgUrl;
+                return imgUrl;*/
             }
         }
 

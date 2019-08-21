@@ -43,7 +43,7 @@
 
 
         <!--Главный фрейм-->
-        <Frame Margin="15" x:Name="MainFrame" Grid.Column="1" NavigationUIVisibility="Hidden" 
+        <Frame Margin="10,0,10,10" x:Name="MainFrame" Grid.Column="1" NavigationUIVisibility="Hidden" 
                    VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
 
     </Grid>

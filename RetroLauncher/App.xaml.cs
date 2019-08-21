@@ -23,11 +23,10 @@ namespace RetroLauncher
         }
 
         /// <summary>
-        /// Зарегестрировать наши сервисы в DI
+        /// Зарегистрировать наши сервисы в DI
         /// </summary>
         private static void RegisterServices()
-        {
-            SimpleIoc.Default.Register<IFileUrlService, YadiskFileUrlService>(true);
+        {           
             SimpleIoc.Default.Register<IGameDbService, SqliteGameDbService>(true);
         }
     }
