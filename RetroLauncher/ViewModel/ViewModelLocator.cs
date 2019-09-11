@@ -1,8 +1,13 @@
 ﻿using CommonServiceLocator;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using RetroLauncher.Helpers;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using RetroLauncher.Data.Service;
+using RetroLauncher.Service;
 
 namespace RetroLauncher.ViewModel
 {
@@ -20,7 +25,7 @@ namespace RetroLauncher.ViewModel
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
             SimpleIoc.Default.Register<MainViewModel>();
             SimpleIoc.Default.Register<RecentViewModel>();
-            SimpleIoc.Default.Register<DownloadedViewModel>();
+          //  SimpleIoc.Default.Register<DownloadedViewModel>();
             SimpleIoc.Default.Register<HomeViewModel>();
             SimpleIoc.Default.Register<GameDetailViewModel>();
             SetupNavigation();
@@ -31,9 +36,10 @@ namespace RetroLauncher.ViewModel
             var navigationService = new FrameNavigationService();
             navigationService.Configure("Home", new Uri("../View/HomePage.xaml", UriKind.Relative));
             navigationService.Configure("Recent", new Uri("../View/RecentPage.xaml", UriKind.Relative));
-            navigationService.Configure("Downloaded", new Uri("../View/DownloadedPage.xaml", UriKind.Relative));
+          /*  navigationService.Configure("Downloaded", new Uri("../View/DownloadedPage.xaml", UriKind.Relative));*/
             navigationService.Configure("GameDetail", new Uri("../View/GameDetailPage.xaml", UriKind.Relative));
             SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
+            SimpleIoc.Default.Register<IRepository, WebRestRepository>(true);
         }
         public MainViewModel Main
         {
@@ -49,13 +55,7 @@ namespace RetroLauncher.ViewModel
                 return ServiceLocator.Current.GetInstance<HomeViewModel>();
             }
         }
-        public DownloadedViewModel DownloadedViewModel
-        {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<DownloadedViewModel>();
-            }
-        }
+
         public RecentViewModel RecentViewModel
         {
             get
@@ -71,6 +71,17 @@ namespace RetroLauncher.ViewModel
                 return ServiceLocator.Current.GetInstance<GameDetailViewModel>();
             }
         }
+        /*public DownloadedViewModel DownloadedViewModel
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<DownloadedViewModel>();
+            }
+        }
+
+
+        */
+
         /// <summary>
         /// Cleans up all the resources.
         /// </summary>

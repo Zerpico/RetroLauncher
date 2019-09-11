@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 namespace RetroLauncher.View
 {
     /// <summary>
-    /// Логика взаимодействия для GameDetailPage.xaml
+    /// Логика взаимодействия для GameDetail.xaml
     /// </summary>
     public partial class GameDetailPage : Page
     {

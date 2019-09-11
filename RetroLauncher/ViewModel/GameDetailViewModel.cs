@@ -1,7 +1,7 @@
 ﻿using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
+using RetroLauncher.Data.Model;
+using RetroLauncher.Data.Service;
 using RetroLauncher.Helpers;
-using RetroLauncher.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,39 +12,24 @@ namespace RetroLauncher.ViewModel
 {
     public class GameDetailViewModel : ViewModelBase
     {
-        private IFrameNavigationService _navigationService;
-
-        private object selGame;
+        private readonly IFrameNavigationService _navigationService;
+        private readonly IRepository _repository;
 
         private Game selectedGame;
         public Game SelectedGame { get { return selectedGame; } set { selectedGame = value; } }
 
-        public GameDetailViewModel(IFrameNavigationService navigationService)
+        public GameDetailViewModel(IFrameNavigationService navigationService, IRepository repository)
         {
-            _navigationService = navigationService;
-            SelectedGame = (Game)_navigationService.Parameter;           
+            _repository = repository;
+            _navigationService = navigationService;            
             MessengerInstance.Register<Game>(this, RefreshGame);
+            RefreshGame((Game)_navigationService.Parameter);
         }
 
-        private void RefreshGame(Game recGame)
+        private async void RefreshGame(Game recGame)
         {
-            SelectedGame = recGame;
+            SelectedGame = await _repository.GetGameById(recGame.GameId);
             RaisePropertyChanged(nameof(SelectedGame));
-        }
-
-
-        private RelayCommand _backCommand;
-        public RelayCommand BackCommand
-        {
-            get
-            {
-                return _backCommand
-                    ?? (_backCommand = new RelayCommand(
-                    () =>
-                    {                       
-                        _navigationService.NavigateTo("Home");
-                    }));
-            }
         }
     }
 }

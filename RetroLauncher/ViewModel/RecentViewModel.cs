@@ -1,20 +1,26 @@
-﻿using GalaSoft.MvvmLight;
-using RetroLauncher.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RetroLauncher.Helpers;
+using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Command;
+using System.Collections.ObjectModel;
+using RetroLauncher.Data.Model;
+using RetroLauncher.Data.Service;
 
 namespace RetroLauncher.ViewModel
 {
     public class RecentViewModel : ViewModelBase
     {
         private readonly IFrameNavigationService _navigationService;
+        private readonly IRepository _gameDb;
 
-        public RecentViewModel(IFrameNavigationService navigationService)
+        public RecentViewModel(IFrameNavigationService navigationService, IRepository gameDb)
         {
             _navigationService = navigationService;
+
         }
     }
 }

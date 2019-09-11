@@ -57,6 +57,15 @@ namespace RetroLauncher.Helpers
                 MessageBox.Show("You are at Main Page");
             }*/
         }
+
+        public void GoForward()
+        {
+            if (_historic.Count > 1)
+            {
+                _historic.RemoveAt(_historic.Count - 1);
+                NavigateTo(_historic.Last(), null);
+            }
+        }
         public void NavigateTo(string pageKey)
         {
             NavigateTo(pageKey, null);

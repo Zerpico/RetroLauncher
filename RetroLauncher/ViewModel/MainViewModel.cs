@@ -47,15 +47,30 @@ namespace RetroLauncher.ViewModel
                     () =>
                     {
                         _navigationService.NavigateTo("Downloaded");
+
+                    }));
+            }
+        }
+
+        private RelayCommand _navigateNextCommand;
+        public RelayCommand NavigateNextCommand
+        {
+            get
+            {
+                return _navigateNextCommand
+                    ?? (_navigateNextCommand = new RelayCommand(
+                    () =>
+                    {
+                        _navigationService.GoBack();
+
                     }));
             }
         }
 
         public MainViewModel(IFrameNavigationService navigationService)
         {
-            _navigationService = navigationService;            
+            _navigationService = navigationService;
         }
 
-        public string PropText { get { return "sample"; } }
     }
 }

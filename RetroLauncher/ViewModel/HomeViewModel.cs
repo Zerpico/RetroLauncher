@@ -7,30 +7,45 @@ using RetroLauncher.Helpers;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
-using RetroLauncher.Model;
-using RetroLauncher.Services;
+using RetroLauncher.Data.Model;
+using RetroLauncher.Data.Service;
 
 namespace RetroLauncher.ViewModel
 {
     public class HomeViewModel : ViewModelBase
     {
         private readonly IFrameNavigationService _navigationService;
-        private readonly IGameDbService _gameDb;
+        private readonly IRepository _gameDb;
 
-        public HomeViewModel(IFrameNavigationService navigationService, IGameDbService gameDb)
+        public HomeViewModel(IFrameNavigationService navigationService, IRepository gameDb)
         {
             _navigationService = navigationService;
             _gameDb = gameDb;
             currentPage = 1;
-            maxShowGames = 100;
+            maxShowGames = 50;
             GetGames();
         }
 
         //коллекция игр
         public ObservableCollection<Game> Games { get; set; }
-        
-        //выбраная игры из списка
-        public Game SelectedGame { get; set; }
+
+        //выбранная текущая игра
+        private Game selectedGame;
+        public Game SelectedGame
+        {
+            get { return selectedGame; }
+            set
+            {
+                selectedGame = value;
+                RaisePropertyChanged("SelectedGame");
+                if (selectedGame != null)
+                {
+                    MessengerInstance.Send(SelectedGame);
+                    _navigationService.NavigateTo("GameDetail", SelectedGame);
+                }
+            }
+        }
+
 
         //сколько макс игр показывать на странице
         private int maxShowGames;
@@ -60,14 +75,15 @@ namespace RetroLauncher.ViewModel
         /// Получить список игр, включая фильтры и номер страниц
         /// </summary>
         async void GetGames()
-        {            
+        {
+
             //наши фильтры
-            FilterGame filter = new FilterGame();
+            FilterGame filter = new FilterGame() { Count = 100, Skip = 100 };
             if (!string.IsNullOrEmpty(searchText))
                 filter.Name = searchText;
 
             //получение списка
-            var db = await _gameDb.GetBaseFilter(currentPage * 100, (currentPage - 1) * 100, filter);
+            var db = await _gameDb.GetBaseFilter(filter);
             Games = new ObservableCollection<Game>(db.Item2);
 
             //найдем макс кол-во страниц
@@ -77,6 +93,8 @@ namespace RetroLauncher.ViewModel
 
             RaisePropertyChanged(nameof(MaxPage));
             RaisePropertyChanged(nameof(Games));
+
+
         }
 
         #region Commands
@@ -110,14 +128,14 @@ namespace RetroLauncher.ViewModel
                         PrevPageCommand.RaiseCanExecuteChanged();
                         NextPageCommand.RaiseCanExecuteChanged();
                     }
-                }, 
+                },
                 () => CanMoveToNextPage));
             }
         }
 
         //блокировка кнопки если текущая страница последняя
         bool CanMoveToNextPage
-        {   
+        {
             get { return currentPage < maxPage; }
         }
 
