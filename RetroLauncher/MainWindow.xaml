@@ -54,10 +54,41 @@
                         VerticalAlignment="Stretch"
                         HorizontalAlignment="Stretch"/>
 
-        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Margin="10,0,10,10">
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Margin="10,5,10,10">
             <StackPanel Orientation="Horizontal">
-                <Button Command="{Binding NavigateNextCommand}" Width="24" Height="24" Content="-"/>
-                <Button Width="24" Height="24" Content="+"/>
+                <Button Command="{Binding NavigateNextCommand}" Width="38" Height="32">
+                    
+                    <Button.Effect>
+                        <DropShadowEffect Color="#FFAF29D6" BlurRadius="10" Opacity="0.5"/>
+                    </Button.Effect>
+                    <Button.Content>
+                        <Path Stretch="Fill" Data="M464.344,207.418l0.768,0.168H135.888l103.496-103.724c5.068-5.064,7.848-11.924,7.848-19.124
+			c0-7.2-2.78-14.012-7.848-19.088L223.28,49.538c-5.064-5.064-11.812-7.864-19.008-7.864c-7.2,0-13.952,2.78-19.016,7.844
+			L7.844,226.914C2.76,231.998-0.02,238.77,0,245.974c-0.02,7.244,2.76,14.02,7.844,19.096l177.412,177.412
+			c5.064,5.06,11.812,7.844,19.016,7.844c7.196,0,13.944-2.788,19.008-7.844l16.104-16.112c5.068-5.056,7.848-11.808,7.848-19.008
+			c0-7.196-2.78-13.592-7.848-18.652L134.72,284.406h329.992c14.828,0,27.288-12.78,27.288-27.6v-22.788
+			C492,219.198,479.172,207.418,464.344,207.418z" Fill="#FFE0D6D6">
+                            <Path.Style>
+                                <Style TargetType="Path">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Fill" Value="Red"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Path.Style>
+                        </Path>
+                    </Button.Content>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Grid Background="#01ffffff">                                
+                                <ContentPresenter />
+                            </Grid>
+                        </ControlTemplate>
+                    </Button.Template>
+                   
+                </Button>
+               
             </StackPanel>
         </Grid>
     </Grid>
