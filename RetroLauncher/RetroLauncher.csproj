@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
@@ -21,8 +21,8 @@
     </Reference>
   </ItemGroup>
 
-  
 
-  
+
+
 
 </Project>

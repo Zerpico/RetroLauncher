@@ -78,7 +78,7 @@ namespace RetroLauncher.ViewModel
         {
 
             //наши фильтры
-            FilterGame filter = new FilterGame() { Count = 100, Skip = 100 };
+            FilterGame filter = new FilterGame() { Count = 100, Skip = (currentPage-1)*100 };
             if (!string.IsNullOrEmpty(searchText))
                 filter.Name = searchText;
 
@@ -93,7 +93,8 @@ namespace RetroLauncher.ViewModel
 
             RaisePropertyChanged(nameof(MaxPage));
             RaisePropertyChanged(nameof(Games));
-
+            PrevPageCommand.RaiseCanExecuteChanged();
+            NextPageCommand.RaiseCanExecuteChanged();
 
         }
 
