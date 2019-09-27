@@ -14,9 +14,14 @@ namespace RetroLauncher.Data.Model
         private string name { get; set; }
         public string Name { get { return name; } set { name = value != null ? value.ToLower() : null; } }
 
-        public int Platform { get; set; }
-
         private string genre { get; set; }
         public string Genre { get { return genre; } set { genre = value != null ? value.ToLower() : null; } }
+
+        public int Platform { get; set; }
+
+        public int OrderByName { get; set; }
+        public int OrderByPlatform { get; set; }
+        public int OrderByRating { get; set; }
+        public int OrderByDownload { get; set; }
     }
 }

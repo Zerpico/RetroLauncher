@@ -52,20 +52,6 @@ namespace RetroLauncher.ViewModel
             }
         }
 
-        private RelayCommand _navigateNextCommand;
-        public RelayCommand NavigateNextCommand
-        {
-            get
-            {
-                return _navigateNextCommand
-                    ?? (_navigateNextCommand = new RelayCommand(
-                    () =>
-                    {
-                        _navigationService.GoBack();
-
-                    }));
-            }
-        }
 
         public MainViewModel(IFrameNavigationService navigationService)
         {

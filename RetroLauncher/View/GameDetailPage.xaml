@@ -14,6 +14,36 @@
             <RowDefinition/>            
         </Grid.RowDefinitions>
 
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="1" Margin="10,5,10,10">
+            <StackPanel Orientation="Horizontal">
+                <Button Command="{Binding NavigateBackCommand}">
+
+                    <Button.Effect>
+                        <DropShadowEffect Color="#0A0809" BlurRadius="10" Opacity="0.5"/>
+                    </Button.Effect>
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" >
+                            <Polygon VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="Uniform" Width="20"  Height="20"  Points="11.79 9.71 18.09 16 11.79 22.29 13.21 23.71 20.91 16 13.21 8.29 11.79 9.71" Fill="White">
+                                <Polygon.LayoutTransform>
+                                    <RotateTransform Angle="180"/>
+                                </Polygon.LayoutTransform>
+                            </Polygon>
+                            <TextBlock Margin="5,0" FontSize="20" Foreground="{StaticResource TextBrush}">Вернуть к списку</TextBlock>
+                        </StackPanel>
+                    </Button.Content>
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Grid Background="#01ffffff">
+                                <ContentPresenter />
+                            </Grid>
+                        </ControlTemplate>
+                    </Button.Template>
+
+                </Button>
+
+            </StackPanel>
+        </Grid>
+
         <!--Главная область-->
         <Grid Grid.Row="1" Margin="7">
             <Grid.RowDefinitions>
@@ -26,30 +56,30 @@
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.Row="0" VerticalAlignment="Top">
-                <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="#D3D3D3" FontSize="32" 
-                           Text="{Binding SelectedGame.Name}" VerticalAlignment="Center" >
+                <TextBlock MaxWidth="600" HorizontalAlignment="Left" Foreground="{StaticResource MainTitle}" FontSize="32" 
+                           Text="{Binding SelectedGame.Name}" VerticalAlignment="Center" TextWrapping="Wrap" >
                     <TextBlock.Effect>
-                        <DropShadowEffect BlurRadius="7" Opacity="0.6" Color="#FF004C70"/>
+                        <DropShadowEffect BlurRadius="7" Opacity="0.6" Color="#FF3C87AA"/>
                     </TextBlock.Effect>
                 </TextBlock>
 
-                <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="#D3D3D3" FontSize="28" 
+                <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="28" 
                            Text="{Binding SelectedGame.NameSecond}" VerticalAlignment="Center" />                              
             </StackPanel>
 
             <TextBlock Grid.Row="0" MaxWidth="500" HorizontalAlignment="Left" Foreground="#FFFBFBCC" FontSize="20" 
-                           Text="3.7" VerticalAlignment="Center" />
+                           Text="{Binding SelectedGame.Rating}" VerticalAlignment="Center" />
 
             <StackPanel Grid.Row="0" Margin="0,0,0,20" VerticalAlignment="Bottom" Orientation="Horizontal">
-                <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="#D3D3D3" FontSize="20" 
+                <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20" 
                            Text="{Binding SelectedGame.Platform.PlatformName}" VerticalAlignment="Center" />
-                <TextBlock Margin="10,0" MaxWidth="500" HorizontalAlignment="Left" Foreground="#D3D3D3" FontSize="20" 
+                <TextBlock Margin="10,0" MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20" 
                            Text="|" VerticalAlignment="Center" />
-                <TextBlock  MaxWidth="500" HorizontalAlignment="Left" Foreground="#D3D3D3" FontSize="20" 
+                <TextBlock  MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20" 
                            Text="{Binding SelectedGame.Genre}" VerticalAlignment="Center" />
-                <TextBlock Margin="10,0" MaxWidth="500" HorizontalAlignment="Left" Foreground="#D3D3D3" FontSize="20" 
+                <TextBlock Margin="10,0" MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20" 
                            Text="|" VerticalAlignment="Center" />
-                <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="#D3D3D3" FontSize="20" 
+                <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20" 
                            Text="{Binding SelectedGame.Year}" VerticalAlignment="Center" />
             </StackPanel>
 
@@ -72,12 +102,12 @@
 
             </ListView>
 
-            <StackPanel Grid.Row="2" VerticalAlignment="Top">
-                <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="#6F6F6F" FontSize="28" 
+            <StackPanel Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Top">
+                <TextBlock  MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="28" 
                            Text="Описание" VerticalAlignment="Center" />
-                <Separator Foreground="#6F6F6F"  />
+                <Separator Width="250" HorizontalAlignment="Left" Foreground="#6F6F6F"  />
 
-                <TextBlock TextWrapping="Wrap" Margin="0,10,0,0" Text="{Binding SelectedGame.Annotation}" Foreground="#D3D3D3" FontSize="20" />
+                <TextBlock  TextWrapping="Wrap" Margin="0,10,0,0" Text="{Binding SelectedGame.Annotation}" Foreground="{StaticResource MainTitle}" FontSize="20" />
             </StackPanel>
 
         </Grid>

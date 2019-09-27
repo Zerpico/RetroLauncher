@@ -27,15 +27,8 @@ namespace RetroLauncher.Data.Service
         /// Получить одну игру по Id
         /// </summary>
         /// <returns></returns>
-        Task<Game> GetGameById(int gameId);
+        Task<IGame> GetGameById(int gameId);
 
-        /// <summary>
-        /// Получить список игр выбраного количество 
-        /// </summary>
-        /// <param name="Count">количество выводимых игр</param>
-        /// <param name="SkipCount">размер сдвига</param>
-        /// <returns>возвращает общее количество игр без сдвига и список игр</returns>
-        Task<(int, IEnumerable<Game>)> GetBase(int Count, int SkipCount);
 
         /// <summary>
         /// Поиск игр по названию, платформе, жанру
@@ -46,6 +39,6 @@ namespace RetroLauncher.Data.Service
         /// <param name="platform">платформа</param>
         /// <param name="genre">жанр</param>
         /// <returns>возвращает количество игр без сдвига и список игр</returns>
-        Task<(int, IEnumerable<Game>)> GetBaseFilter(FilterGame filters);
+        Task<(int, IEnumerable<IGame>)> GetBaseFilter(FilterGame filters);
     }
 }

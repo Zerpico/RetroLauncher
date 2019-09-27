@@ -40,14 +40,14 @@ namespace RetroLauncher.WebApi.Controllers
 
         // GET: api/Games/5
         [HttpGet("{id}", Name = "Get")]
-        public async Task<Game> Get(int id)
+        public async Task<IGame> Get(int id)
         {
             return await _gbLibrary.GetGameById(id);
         }
 
         // GET: api/Games/GetFilter?name=NAME&genre=GENRE&platform=id&count=100&skip=100
         [HttpGet("GetFilter")]
-        public async Task<(int, IEnumerable<Game>)> GetFilter([FromQuery]FilterGame filter)
+        public async Task<(int, IEnumerable<IGame>)> GetFilter([FromQuery]FilterGame filter)
         {
             return await _gbLibrary.GetBaseFilter(filter);
         }

@@ -60,7 +60,7 @@ public class FaderFrame : Frame
                 _contentPresenter.IsHitTestVisible = false;
 
                 DoubleAnimation da = new DoubleAnimation(0.0d, FadeDuration);
-                ThicknessAnimation animation = new ThicknessAnimation(new Thickness(0, _contentPresenter.ActualHeight, 0, 0), SlideDuration); // Генерируем анимацию в коде на основе Offset
+                ThicknessAnimation animation = new ThicknessAnimation(new Thickness(_contentPresenter.ActualWidth, 0, 0, 0), SlideDuration); // Генерируем анимацию в коде на основе Offset
                     animation.Completed += OnAnimationCompleted; //Нужно подписаться на окончание анимации
 
                 da.DecelerationRatio = 1.0d;

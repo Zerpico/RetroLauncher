@@ -23,6 +23,6 @@ namespace RetroLauncher.View
         public HomePage()
         {
             InitializeComponent();
-        }
+        }        
     }
 }

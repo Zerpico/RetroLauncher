@@ -13,14 +13,14 @@ namespace RetroLauncher.Service
 {
     public class WebRestRepository : IRepository
     {
-        public Task<(int, IEnumerable<Game>)> GetBase(int Count, int SkipCount)
+        public Task<(int, IEnumerable<IGame>)> GetBase(int Count, int SkipCount)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<(int, IEnumerable<Game>)> GetBaseFilter(FilterGame filter)
+        public async Task<(int, IEnumerable<IGame>)> GetBaseFilter(FilterGame filter)
         {
-            List<Game> games = new List<Game>();
+           // List<IGame> games = new List<Model.Game>();
             try
             {
                 //словарь фильтров
@@ -74,7 +74,7 @@ namespace RetroLauncher.Service
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
-                        var result =  JsonConvert.DeserializeObject<(int, IEnumerable<Game>)>(content);
+                        var result =  JsonConvert.DeserializeObject<(int, IEnumerable<Model.Game>)>(content);
                         return result;
                     }
                 }
@@ -83,9 +83,9 @@ namespace RetroLauncher.Service
             return (0, null);
         }
 
-        public async Task<Game> GetGameById(int gameId)
+        public async Task<IGame> GetGameById(int gameId)
         {
-            Game game = new Game();
+            IGame game = new Model.Game();
             try
             {
                 using (HttpClient client = new HttpClient() { Timeout = TimeSpan.FromSeconds(5) })
@@ -95,7 +95,7 @@ namespace RetroLauncher.Service
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
-                        game = JsonConvert.DeserializeObject<Game>(content);
+                        game = JsonConvert.DeserializeObject<Model.Game>(content);
                     }
                 }
             }

@@ -9,9 +9,9 @@
         <ResourceDictionary>
             <vm:ViewModelLocator x:Key="Locator" />
 
-            <!-- ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Themes\FlatControlStyles.xaml" />
-            -->
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes\FlatDarkControlStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

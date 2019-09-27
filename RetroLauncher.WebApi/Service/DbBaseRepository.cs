@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using RetroLauncher.Data;
+using RetroLauncher.WebApi.Model;
 
 namespace RetroLauncher.WebApi.Service
 {
@@ -29,19 +30,16 @@ namespace RetroLauncher.WebApi.Service
                 return connectionString;
             }
         }
+              
 
-        public Task<(int, IEnumerable<Game>)> GetBase(int Count, int SkipCount)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<(int, IEnumerable<Game>)> GetBaseFilter(FilterGame filter)
+        public async Task<(int, IEnumerable<IGame>)> GetBaseFilter(FilterGame filter)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 if (filter.Count == 0 && filter.Skip == 0) return (0, new List<Game>());
                 if (filter.Count > 1000) return (0, new List<Game>());
 
+                /*
                 var sql = @"select gb.game_id as GameId, gb.game_name as Name, gb.name_second as NameSecond, gb.name_other as NameOther, gnr.genre_name as Genre, gb.year, gb.developer, down.Downloads, rat.Rating, 
                             pl.platform_id as PlatformId, pl.platform_name as PlatformName, pl.alias, lnk.link_id as LinkId, lnk.url, lnk.type_url as TypeUrl
                             FROM gb_games gb
@@ -50,46 +48,24 @@ namespace RetroLauncher.WebApi.Service
                             left join (select lnks.* from gb_links lnks where lnks.type_url = 2) lnk on lnk.game_id = gb.game_id
                             OUTER APPLY(SELECT COUNT(*) as Downloads FROM lg_downloads down WHERE down.game_id = gb.game_id) down                            
                             OUTER APPLY(SELECT cast(AVG(cast(rat.rating as numeric(18,8))) as numeric(18,2)) as rating FROM lg_ratings rat WHERE rat.game_id = gb.game_id) rat ";
-
-                //var filterSql = string.Format("WHERE (gb.game_name like '%{0}%' or gb.name_second like '%{0}%' or gb.name_other like '%{0}%' ) or (genre_name = '{1}') or (gb.platform_id = {2})", filter.Name, filter.Genre, filter.Platform.PlatformId);
-                string filterSql = string.Empty;
-                //словарь фильтров
-                Dictionary<string, object> filters = new Dictionary<string, object>();
-
-                if (!string.IsNullOrEmpty(filter.Name))
-                    filters["Name"] = filter.Name;
-                if (!string.IsNullOrEmpty(filter.Genre))
-                    filters["Genre"] = filter.Name;
-                if (filter.Platform != 0)
-                    filters["Platform"] = filter.Platform;
-
-                int i = 0;
-                foreach (var dic in filters)
-                {
-                    switch (dic.Key)
-                    {
-                        case "Name":
-                            if (i > 0) filterSql = " or " + filterSql;
-                            filterSql += string.Format("(LOWER(gb.game_name) like '%{0}%' or LOWER(gb.name_second) like '%{0}%' or LOWER(gb.name_other) like '%{0}%' )", dic.Value);
-                            break;
-                        case "Genre":
-                            if (i > 0) filterSql = " or " + filterSql;
-                            filterSql += string.Format("(LOWER(gnr.genre_name) = '{0}')", dic.Value);
-                            break;
-                        case "Platform":
-                            if (i > 0) filterSql = " or " + filterSql;
-                            filterSql += string.Format("(gb.platform_id = {0})", dic.Value);
-                            break;
-                    }
-                    i++;
-                }
-
-                if (!string.IsNullOrEmpty(filterSql)) sql = sql + "\nWHERE " + filterSql;
+*/
+                var sql = string.Format("SELECT * FROM dbo.GetFilterGames({0},{1},'{2}','{3}', {4}, {5}, {6}, {7}, {8})",
+                    filter.Count,
+                    filter.Skip,
+                    filter.Name,
+                    filter.Genre,
+                    filter.Platform,
+                    filter.OrderByName,
+                    filter.OrderByPlatform,
+                    filter.OrderByRating,
+                    filter.OrderByDownload);
+                
+                
                 try
                 {
                     connection.Open();
                     var games = await connection.QueryAsync<Game, Platform, GameLink, Game>
-                        (sql + ("\n ORDER BY GameId  \n OFFSET "+ filter.Skip + " ROWS \n FETCH NEXT "+ filter.Count + " ROWS ONLY").ToString(), (game, platform, gamelink) =>
+                        (sql, (game, platform, gamelink) =>
                         {
                             game.Platform = platform;
                             gamelink.Url = "https://zerpico.ru/retrolauncher/" + gamelink.Url;
@@ -97,27 +73,20 @@ namespace RetroLauncher.WebApi.Service
                             return game;
                         }, splitOn: "PlatformId, LinkId");
 
-                    var count =  await GetCount(sql, connection);                  
+                    var count =  await GetCount(filter, connection);                  
                     return (count, games);
                 }
                 catch (Exception e) { throw new Exception("Ошибка", e); }
             }
         }
 
-        public async Task<Game> GetGameById(int gameId)
+        public async Task<IGame> GetGameById(int gameId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 //списко игр для уникальности
                 var gameDictionary = new Dictionary<int, Game>();
-                var sql = @"select gb.game_id as GameId, gb.game_name as Name, gb.name_second as NameSecond, gb.name_other as NameOther, gnr.genre_name as Genre, gb.year, gb.developer, gb.annotation, 
-                                pl.platform_id as PlatformId, pl.platform_name as PlatformName, pl.alias, 
-                                lnk.link_id as LinkId, lnk.url, lnk.type_url as TypeUrl
-                            FROM gb_games gb
-                            JOIN gb_genres gnr ON gnr.genre_id = gb.genre_id
-                            JOIN gb_platforms pl ON gb.platform_id = pl.platform_id
-                            JOIN gb_links lnk ON lnk.game_id = gb.game_id
-                            WHERE gb.game_id =  " + gameId.ToString();
+                var sql = string.Format("SELECT * FROM GetGameById({0})", gameId);
 
                 connection.Open();
                 
@@ -167,24 +136,32 @@ namespace RetroLauncher.WebApi.Service
             }
         }
 
+
+
         #region Count Method
-        private async Task<int> GetCount(string querysql)
+        private async Task<int> GetCount(FilterGame filter)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                string sql = @"SELECT COUNT(*) FROM (" + querysql + ") T";
-                connection.Open();
+                var sql = string.Format("SELECT dbo.GetFilterMaxCountGames('{0}','{1}',{2})",
+                    filter.Name,
+                    filter.Genre,
+                    filter.Platform);
                 int count = await connection.QueryFirstOrDefaultAsync<int>(sql);
                 return count;
             }
         }
 
-        private async Task<int> GetCount(string querysql, SqlConnection connection)
+        private async Task<int> GetCount(FilterGame filter, SqlConnection connection)
         {
-            string sql = @"SELECT COUNT(*) FROM (" + querysql + ") T";
+            var sql = string.Format("SELECT dbo.GetFilterMaxCountGames('{0}','{1}',{2})",                   
+                    filter.Name,
+                    filter.Genre,
+                    filter.Platform );            
             int count = await connection.QueryFirstOrDefaultAsync<int>(sql);
             return count;
         }
+                
         #endregion
     }
 }
