@@ -76,7 +76,7 @@
                 <TextBlock Margin="10,0" MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20" 
                            Text="|" VerticalAlignment="Center" />
                 <TextBlock  MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20" 
-                           Text="{Binding SelectedGame.Genre}" VerticalAlignment="Center" />
+                           Text="{Binding SelectedGame.Genre.GenreName}" VerticalAlignment="Center" />
                 <TextBlock Margin="10,0" MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20" 
                            Text="|" VerticalAlignment="Center" />
                 <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20" 

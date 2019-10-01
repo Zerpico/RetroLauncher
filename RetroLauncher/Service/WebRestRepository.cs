@@ -13,6 +13,8 @@ namespace RetroLauncher.Service
 {
     public class WebRestRepository : IRepository
     {
+        const string url = "https://www.zerpico.ru/api";//"https://localhost:5001/api";//"https://www.zerpico.ru/api";
+
         public Task<(int, IEnumerable<IGame>)> GetBase(int Count, int SkipCount)
         {
             throw new NotImplementedException();
@@ -24,22 +26,22 @@ namespace RetroLauncher.Service
             try
             {
                 //словарь фильтров
-                Dictionary<string, string> filters = new Dictionary<string, string>();
+                Dictionary<string, object> filters = new Dictionary<string, object>();
 
                 if (!string.IsNullOrEmpty(filter.Name))
                     filters["Name"] = filter.Name;
-                if (!string.IsNullOrEmpty(filter.Genre))
-                    filters["Genre"] = filter.Name;
-                if (filter.Platform != 0)
-                    filters["Platform"] = filter.Platform.ToString();
-                if (filter.Count != 0)
-                    filters["Count"] = filter.Count.ToString();
-                if (filter.Skip != 0)
-                    filters["Skip"] = filter.Skip.ToString();
+                if (filter.Genre != null && filter.Genre.Count() > 0)
+                    filters["Genre"] = filter.Genre;
+                if (filter.Platform != null && filter.Platform.Count() > 0)
+                    filters["Platform"] = filter.Platform;
+                // if (filter.Count != 0)
+                filters["Count"] = filter.Count.ToString();
+                // if (filter.Skip != 0)
+                filters["Skip"] = filter.Skip.ToString();
 
                 using (HttpClient client = new HttpClient() { Timeout = TimeSpan.FromSeconds(5) })
                 {
-                    //состовляем строку параметров
+                    //составляем строку параметров
                     string parameters = string.Empty;
                     int i = 0;
                     foreach (var dic in filters)
@@ -51,12 +53,22 @@ namespace RetroLauncher.Service
                                 parameters += nameof(FilterGame.Name) + $"={dic.Value}";
                                 break;
                             case nameof(FilterGame.Genre):
-                                if (i > 0) parameters =  parameters + "&";
-                                parameters += nameof(FilterGame.Genre) + $"={dic.Value}";
+                                int[] genres = (dic.Value as int[]);
+                                for (int j = 0; j < genres.Count(); j++)
+                                {
+                                    if (i > 0) parameters = parameters + "&";
+                                    parameters += nameof(FilterGame.Genre) + $"={genres[j]}";
+                                    i++;
+                                }                                
                                 break;
                             case nameof(FilterGame.Platform):
-                                if (i > 0) parameters =  parameters + "&";
-                                parameters += nameof(FilterGame.Platform) + $"={dic.Value}";
+                                int[] platforms = (dic.Value as int[]);
+                                for (int j = 0; j < platforms.Count(); j++)
+                                {
+                                    if (i > 0) parameters = parameters + "&";
+                                    parameters += nameof(FilterGame.Platform) + $"={platforms[j]}";
+                                    i++;
+                                }
                                 break;
                             case nameof(FilterGame.Count):
                                 if (i > 0) parameters =  parameters + "&";
@@ -70,7 +82,7 @@ namespace RetroLauncher.Service
                         i++;
                     }
 
-                    var response = await client.GetAsync(@"https://www.zerpico.ru/api/games/getfilter?"+parameters);
+                    var response = await client.GetAsync(url+@"/games/getfilter?" +parameters);
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
@@ -91,7 +103,7 @@ namespace RetroLauncher.Service
                 using (HttpClient client = new HttpClient() { Timeout = TimeSpan.FromSeconds(5) })
                 {
 
-                    var response = await client.GetAsync($"https://www.zerpico.ru/api/games/{gameId}");
+                    var response = await client.GetAsync(url + $"/games/{gameId}");
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
@@ -103,17 +115,17 @@ namespace RetroLauncher.Service
             return game;
         }
 
-        public async Task<IEnumerable<string>> GetGenres()
+        public async Task<IEnumerable<Genre>> GetGenres()
         {
-            IEnumerable<string> genres = new List<string>();
+            IEnumerable<Genre> genres = new List<Genre>();
             using (HttpClient client = new HttpClient())
             {
 
-                var response = await client.GetAsync(@"https://www.zerpico.ru/api/games/getgenres");
+                var response = await client.GetAsync(url +@"/games/getgenres");
                 if(response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
-                    genres = JsonConvert.DeserializeObject<IEnumerable<string>>(content);
+                    genres = JsonConvert.DeserializeObject<IEnumerable<Genre>>(content);
                 }
             }
             return genres;
@@ -125,7 +137,7 @@ namespace RetroLauncher.Service
             using (HttpClient client = new HttpClient())
             {
 
-                var response = await client.GetAsync(@"https://www.zerpico.ru/api/games/getplatforms");
+                var response = await client.GetAsync(url +@"/games/getplatforms");
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();

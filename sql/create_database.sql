@@ -113,3 +113,8 @@ CREATE TABLE [dbo].[lg_ratings]
 		ON UPDATE NO ACTION ON DELETE NO ACTION, 
 	CHECK ([rating]>=(1) AND [rating]<=(5))
 ) ON [PRIMARY]
+
+
+
+
+

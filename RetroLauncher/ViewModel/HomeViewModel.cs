@@ -25,13 +25,13 @@ namespace RetroLauncher.ViewModel
             _gameDb = gameDb;
             currentPage = 1;
             filter = new FilterGame();
-            maxShowGames = 50;
-            GetGames();
+            maxShowGames = 50;            
             GetGenres();
             GetPlatforms();
+            GetGames();
         }
 
-        public ObservableCollection<CheckedListItem<string>> Genres { get; set; }
+        public ObservableCollection<CheckedListItem<Genre>> Genres { get; set; }
         public ObservableCollection<CheckedListItem<Platform>> Platforms { get; set; }
         //коллекция игр
         public ObservableCollection<IGame> Games { get; set; }
@@ -81,10 +81,10 @@ namespace RetroLauncher.ViewModel
         async void GetGenres()
         {
             var db = await _gameDb.GetGenres();
-            Genres = new ObservableCollection<CheckedListItem<string>>();
-            foreach (var g in db.OrderBy(d=>d))
+            Genres = new ObservableCollection<CheckedListItem<Genre>>();
+            foreach (var g in db.OrderBy(d=>d.GenreName))
             {
-                Genres.Add(new CheckedListItem<string>(g));
+                Genres.Add(new CheckedListItem<Genre>(g));
             }
         }
 
@@ -112,6 +112,12 @@ namespace RetroLauncher.ViewModel
             
             if (!string.IsNullOrEmpty(searchText))
                 filter.Name = searchText;
+
+            if (Genres != null && Genres.Any(g => g.IsChecked))
+                filter.Genre = Genres.Where(g => g.IsChecked).Select(g => g.Item.GenreId).ToArray();
+
+            if (Platforms != null && Platforms.Any(p => p.IsChecked))
+                filter.Platform = Platforms.Where(p => p.IsChecked).Select(p => p.Item.PlatformId).ToArray();
 
             //получение списка
             var db = await _gameDb.GetBaseFilter(filter);
@@ -207,7 +213,7 @@ namespace RetroLauncher.ViewModel
                     ?? (_checkGenreCommand = new RelayCommand(
                     () =>
                     {
-                        var ff = Genres.Where(d=>d.IsChecked).ToList();
+                        GetGames();
                     }));
             }
         }

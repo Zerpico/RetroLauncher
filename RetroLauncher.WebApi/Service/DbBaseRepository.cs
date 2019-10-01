@@ -49,12 +49,22 @@ namespace RetroLauncher.WebApi.Service
                             OUTER APPLY(SELECT COUNT(*) as Downloads FROM lg_downloads down WHERE down.game_id = gb.game_id) down                            
                             OUTER APPLY(SELECT cast(AVG(cast(rat.rating as numeric(18,8))) as numeric(18,2)) as rating FROM lg_ratings rat WHERE rat.game_id = gb.game_id) rat ";
 */
-                var sql = string.Format("SELECT * FROM dbo.GetFilterGames({0},{1},'{2}','{3}', {4}, {5}, {6}, {7}, {8})",
+                string genres = "", platforms = "";
+
+                if (filter.Genre != null)
+                    for (int i = 0; i < filter.Genre.Count(); i++)
+                        genres += filter.Genre[i] + ",";
+
+                if (filter.Platform != null)
+                    for (int i = 0; i < filter.Platform.Count(); i++)
+                        platforms += filter.Platform[i] + ",";
+
+                var sql = string.Format("SELECT * FROM dbo.GetFilterGames({0}, {1}, '{2}', '{3}', '{4}', {5}, {6}, {7}, {8})",
                     filter.Count,
                     filter.Skip,
                     filter.Name,
-                    filter.Genre,
-                    filter.Platform,
+                    genres,
+                    platforms,
                     filter.OrderByName,
                     filter.OrderByPlatform,
                     filter.OrderByRating,
@@ -64,14 +74,15 @@ namespace RetroLauncher.WebApi.Service
                 try
                 {
                     connection.Open();
-                    var games = await connection.QueryAsync<Game, Platform, GameLink, Game>
-                        (sql, (game, platform, gamelink) =>
+                    var games = await connection.QueryAsync<Game, Platform, Genre, GameLink, Game>
+                        (sql, (game, platform, genre, gamelink ) =>
                         {
+                            game.Genre = genre;
                             game.Platform = platform;
                             gamelink.Url = "https://zerpico.ru/retrolauncher/" + gamelink.Url;
                             game.GameLinks = new List<GameLink>() { gamelink };
                             return game;
-                        }, splitOn: "PlatformId, LinkId");
+                        }, splitOn: "PlatformId, GenreId, LinkId");
 
                     var count =  await GetCount(filter, connection);                  
                     return (count, games);
@@ -90,8 +101,8 @@ namespace RetroLauncher.WebApi.Service
 
                 connection.Open();
                 
-                var games = await connection.QueryAsync<Game, Platform, GameLink, Game>
-                    (sql, (game, platform, gamelink) =>
+                var games = await connection.QueryAsync<Game, Platform, Genre, GameLink, Game>
+                    (sql, (game, platform, genre, gamelink) =>
                     {
                         //проверям есть ли списка уже
                         if (!gameDictionary.TryGetValue(game.GameId, out var gameEntry))
@@ -102,24 +113,25 @@ namespace RetroLauncher.WebApi.Service
                             gameDictionary.Add(gameEntry.GameId, gameEntry);
                         }
                         gamelink.Url = "https://zerpico.ru/retrolauncher/" + gamelink.Url;
+                        gameEntry.Genre = genre;
                         gameEntry.Platform = platform;
                         gameEntry.GameLinks.Add(gamelink);
                         return gameEntry;
-                    }, splitOn: "PlatformId,LinkId");
+                    }, splitOn: "PlatformId,GenreId,LinkId");
                 var result = (games != null && games.Count() > 0) ? games.FirstOrDefault() : new Game();
                 return result;
             }
               //  return new Task<IGame>(() => { return new Game() { GameId = 1, Name = "sample" }; });
         }
 
-        public async Task<IEnumerable<string>> GetGenres()
+        public async Task<IEnumerable<Genre>> GetGenres()
         {
             using (var connection = new SqlConnection(_connectionString))
             {                
-                var sql = @"SELECT [genre_name] FROM [gb_genres]";
+                var sql = @"SELECT genre_id as GenreId, genre_name as GenreName FROM gb_genres";
 
                 connection.Open();
-                var genres = await connection.QueryAsync<string>(sql);
+                var genres = await connection.QueryAsync<Genre>(sql);
                 return genres;
             }
         }
@@ -143,10 +155,20 @@ namespace RetroLauncher.WebApi.Service
         {
             using (var connection = new SqlConnection(_connectionString))
             {
-                var sql = string.Format("SELECT dbo.GetFilterMaxCountGames('{0}','{1}',{2})",
+                string genres = "", platforms = "";
+
+                if (filter.Genre != null)
+                    for (int i = 0; i < filter.Genre.Count(); i++)
+                        genres += filter.Genre[i] + ",";
+
+                if (filter.Platform != null)
+                    for (int i = 0; i < filter.Platform.Count(); i++)
+                        platforms += filter.Platform[i] + ",";
+
+                var sql = string.Format("SELECT dbo.GetFilterMaxCountGames('{0}','{1}','{2}')",
                     filter.Name,
-                    filter.Genre,
-                    filter.Platform);
+                    genres,
+                    platforms);
                 int count = await connection.QueryFirstOrDefaultAsync<int>(sql);
                 return count;
             }
@@ -154,10 +176,20 @@ namespace RetroLauncher.WebApi.Service
 
         private async Task<int> GetCount(FilterGame filter, SqlConnection connection)
         {
-            var sql = string.Format("SELECT dbo.GetFilterMaxCountGames('{0}','{1}',{2})",                   
+            string genres = "", platforms = "";
+
+            if (filter.Genre != null)
+                for (int i = 0; i < filter.Genre.Count(); i++)
+                    genres += filter.Genre[i] + ",";
+
+            if (filter.Platform != null)
+                for (int i = 0; i < filter.Platform.Count(); i++)
+                    platforms += filter.Platform[i] + ",";
+
+            var sql = string.Format("SELECT dbo.GetFilterMaxCountGames('{0}','{1}','{2}')",                   
                     filter.Name,
-                    filter.Genre,
-                    filter.Platform );            
+                    genres,
+                    platforms );            
             int count = await connection.QueryFirstOrDefaultAsync<int>(sql);
             return count;
         }

@@ -26,7 +26,7 @@ namespace RetroLauncher.WebApi.Controllers
 
         // GET: api/Games/GetGenres
         [HttpGet("GetGenres")]
-        public async Task<IEnumerable<string>> GetGenres()
+        public async Task<IEnumerable<Genre>> GetGenres()
         {
             return await _gbLibrary.GetGenres();
         }
@@ -45,10 +45,10 @@ namespace RetroLauncher.WebApi.Controllers
             return await _gbLibrary.GetGameById(id);
         }
 
-        // GET: api/Games/GetFilter?name=NAME&genre=GENRE&platform=id&count=100&skip=100
+        // GET: api/Games/GetFilter?name=NAME&genre=1,2,3&platform=1,2,3&count=100&skip=100
         [HttpGet("GetFilter")]
         public async Task<(int, IEnumerable<IGame>)> GetFilter([FromQuery]FilterGame filter)
-        {
+        {    
             return await _gbLibrary.GetBaseFilter(filter);
         }
 

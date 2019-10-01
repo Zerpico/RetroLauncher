@@ -11,13 +11,12 @@ namespace RetroLauncher.Data.Model
     {
         public int Count { get; set; }
         public int Skip { get; set; }
+
         private string name { get; set; }
-        public string Name { get { return name; } set { name = value != null ? value.ToLower() : null; } }
+        public string Name { get { return name; } set { name = value != null ? value.ToLower() : null; } }      
 
-        private string genre { get; set; }
-        public string Genre { get { return genre; } set { genre = value != null ? value.ToLower() : null; } }
-
-        public int Platform { get; set; }
+        public int[] Genre { get; set; }
+        public int[] Platform { get; set; }
 
         public int OrderByName { get; set; }
         public int OrderByPlatform { get; set; }

@@ -234,7 +234,7 @@
                                     <StackPanel Orientation="Horizontal">
                                         <CheckBox VerticalContentAlignment="Center" 
                                                   VerticalAlignment="Center" 
-                                                  Content="{Binding Path=Item}" 
+                                                  Content="{Binding Path=Item.GenreName}" 
                                                   IsChecked="{Binding IsChecked}" >
                                             <i:Interaction.Triggers>
                                                 <i:EventTrigger EventName="Checked">
@@ -346,7 +346,7 @@
                                                 <TextBlock MaxWidth="500"  HorizontalAlignment="Left" Foreground="#A5A581" FontSize="16" Text="{Binding Path=Rating}" VerticalAlignment="Center" />
                                             </StackPanel>
                                         </StackPanel>
-                                        <TextBlock MaxWidth="500" Grid.Column="1" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20" Text="{Binding Path=Genre}" VerticalAlignment="Center" />
+                                        <TextBlock MaxWidth="500" Grid.Column="1" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20" Text="{Binding Path=Genre.GenreName}" VerticalAlignment="Center" />
                                         <TextBlock MaxWidth="500" Grid.Column="2" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20" Text="{Binding Path=Platform.Alias}" VerticalAlignment="Center" />
 
                                     </Grid>

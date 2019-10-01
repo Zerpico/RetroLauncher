@@ -15,7 +15,7 @@ namespace RetroLauncher.Data.Service
         /// Получить список жанров
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<string>> GetGenres();
+        Task<IEnumerable<Genre>> GetGenres();
 
         /// <summary>
         /// Получить список платформ
