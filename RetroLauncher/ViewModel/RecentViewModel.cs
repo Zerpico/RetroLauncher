@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RetroLauncher.Helpers;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
 using RetroLauncher.Data.Model;
 using RetroLauncher.Data.Service;
+using RetroLauncher.ViewModel.Base;
 
 namespace RetroLauncher.ViewModel
 {

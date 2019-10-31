@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using GalaSoft.MvvmLight.Threading;
 
 namespace RetroLauncher
 {
@@ -17,9 +16,9 @@ namespace RetroLauncher
     {
         static App()
         {
-            DispatcherHelper.Initialize();
+            //DispatcherHelper.Initialize();
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(Application_ThreadException);
-            DispatcherHelper.UIDispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(Dispatcher_ThreadException);
+            //DispatcherHelper.UIDispatcher.UnhandledException += new DispatcherUnhandledExceptionEventHandler(Dispatcher_ThreadException);
         }
 
         private static void Dispatcher_ThreadException(object sender, DispatcherUnhandledExceptionEventArgs e)
