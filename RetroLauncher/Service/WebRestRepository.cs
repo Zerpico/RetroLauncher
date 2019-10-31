@@ -4,6 +4,7 @@ using RetroLauncher.Data.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -11,9 +12,75 @@ using System.Threading.Tasks;
 
 namespace RetroLauncher.Service
 {
+    public enum TypeProxy
+    {
+        Default,
+        Http
+    }
     public class WebRestRepository : IRepository
     {
         const string url = "https://www.zerpico.ru/api";//"https://localhost:5001/api";//"https://www.zerpico.ru/api";
+        HttpClient _client;
+
+        public WebRestRepository()
+        {
+            _client = CreateClient();
+        }
+
+        /// <summary>
+        /// создать новый http клиент
+        /// </summary>
+        /// <returns></returns>
+        private HttpClient CreateClient()
+        {
+
+            HttpClientHandler  httpClientHandler;
+            //сначала определем тип прокси
+            TypeProxy typeProxy = Service.Storage.Source.GetValue<TypeProxy>("ProxyType");
+
+
+            if (typeProxy != TypeProxy.Default)
+            {
+                //определим настройки для прокси
+                WebProxy proxy = new WebProxy();
+
+                string proxyHost = Service.Storage.Source.GetValue("ProxyHost").ToString();
+                string proxyPort = Service.Storage.Source.GetValue("ProxyPort").ToString();
+                proxy.Address = new Uri($"http://{proxyHost}:{proxyPort}");
+                proxy.BypassProxyOnLocal = false;
+                proxy.UseDefaultCredentials = false;
+
+                  /*Credentials = new NetworkCredential(
+                    userName: proxyUserName,
+                    password: proxyPassword)*/
+
+                httpClientHandler = new HttpClientHandler { Proxy = proxy };
+            }
+            else
+            {
+                httpClientHandler = new HttpClientHandler();
+                httpClientHandler.DefaultProxyCredentials = CredentialCache.DefaultCredentials;
+            }
+
+
+
+
+
+            // Omit this part if you don't need to authenticate with the web server:
+        /*     if (needServerAuthentication)
+            {
+                httpClientHandler.PreAuthenticate = true;
+                httpClientHandler.UseDefaultCredentials = false;
+
+                // *** These creds are given to the web server, not the proxy server ***
+                httpClientHandler.Credentials = new NetworkCredential(
+                    userName: serverUserName,
+                    password: serverPassword);
+            }*/
+
+            // Finally, create the HTTP client object
+            return new HttpClient(handler: httpClientHandler, disposeHandler: true)  { Timeout = TimeSpan.FromSeconds(10) };
+        }
 
         public Task<(int, IEnumerable<IGame>)> GetBase(int Count, int SkipCount)
         {
@@ -34,13 +101,10 @@ namespace RetroLauncher.Service
                     filters["Genre"] = filter.Genre;
                 if (filter.Platform != null && filter.Platform.Count() > 0)
                     filters["Platform"] = filter.Platform;
-                // if (filter.Count != 0)
                 filters["Count"] = filter.Count.ToString();
-                // if (filter.Skip != 0)
                 filters["Skip"] = filter.Skip.ToString();
 
-                using (HttpClient client = new HttpClient() { Timeout = TimeSpan.FromSeconds(5) })
-                {
+
                     //составляем строку параметров
                     string parameters = string.Empty;
                     int i = 0;
@@ -59,7 +123,7 @@ namespace RetroLauncher.Service
                                     if (i > 0) parameters = parameters + "&";
                                     parameters += nameof(FilterGame.Genre) + $"={genres[j]}";
                                     i++;
-                                }                                
+                                }
                                 break;
                             case nameof(FilterGame.Platform):
                                 int[] platforms = (dic.Value as int[]);
@@ -82,14 +146,14 @@ namespace RetroLauncher.Service
                         i++;
                     }
 
-                    var response = await client.GetAsync(url+@"/games/getfilter?" +parameters);
+                    var response = await _client.GetAsync(url+@"/games/getfilter?" +parameters);
                     if (response.IsSuccessStatusCode)
                     {
                         var content = await response.Content.ReadAsStringAsync();
                         var result =  JsonConvert.DeserializeObject<(int, IEnumerable<Model.Game>)>(content);
                         return result;
                     }
-                }
+
             }
             catch (Exception e) { throw new Exception("Не удалось получить данные:.\n"+e.ToString());  }
             return (0, null);
@@ -100,50 +164,46 @@ namespace RetroLauncher.Service
             IGame game = new Model.Game();
             try
             {
-                using (HttpClient client = new HttpClient() { Timeout = TimeSpan.FromSeconds(5) })
-                {
 
-                    var response = await client.GetAsync(url + $"/games/{gameId}");
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var content = await response.Content.ReadAsStringAsync();
-                        game = JsonConvert.DeserializeObject<Model.Game>(content);
-                    }
+                var response = await _client.GetAsync(url + $"/games/{gameId}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    game = JsonConvert.DeserializeObject<Model.Game>(content);
                 }
+
             }
-            catch(Exception e) { throw new Exception("Не удалось получить данные:.\n"+e.ToString());  }
+            catch (Exception e) { throw new Exception("Не удалось получить данные:.\n" + e.ToString()); }
             return game;
         }
 
         public async Task<IEnumerable<Genre>> GetGenres()
         {
             IEnumerable<Genre> genres = new List<Genre>();
-            using (HttpClient client = new HttpClient())
-            {
 
-                var response = await client.GetAsync(url +@"/games/getgenres");
+
+                var response = await _client.GetAsync(url +@"/games/getgenres");
                 if(response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     genres = JsonConvert.DeserializeObject<IEnumerable<Genre>>(content);
                 }
-            }
+
             return genres;
         }
 
         public async Task<IEnumerable<Platform>> GetPlatforms()
         {
             IEnumerable<Platform> platforms = new List<Platform>();
-            using (HttpClient client = new HttpClient())
-            {
 
-                var response = await client.GetAsync(url +@"/games/getplatforms");
+
+                var response = await _client.GetAsync(url +@"/games/getplatforms");
                 if (response.IsSuccessStatusCode)
                 {
                     var content = await response.Content.ReadAsStringAsync();
                     platforms = JsonConvert.DeserializeObject<IEnumerable<Platform>>(content);
                 }
-            }
+
             return platforms;
         }
     }

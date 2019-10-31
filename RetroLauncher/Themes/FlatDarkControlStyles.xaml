@@ -2,8 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     >
-    
-   
+
+
     <SolidColorBrush x:Key="ButtonBorderBrush" Color="#007ACC" />
 
     <SolidColorBrush x:Key="AditionalTitleBrush" Color="#6F6F6F" />
@@ -51,7 +51,7 @@
     <Color x:Key="ActiveHover2">#FF66798A</Color>
     <Color x:Key="Border">#FF292929</Color>
     <Color x:Key="Dark">#FF252525</Color>
-    
+
     <Color x:Key="buttonPressedGradientStartColor">#FF595959</Color>
     <Color x:Key="buttonPressedGradientStopColor">#FF5B5B5B</Color>
     <Color x:Key="buttonDisabledGradientStartColor">#FF505050</Color>
@@ -82,18 +82,24 @@
     <SolidColorBrush x:Key="checkBoxHoverBottomRight2Brush" Color="{StaticResource checkBoxHoverBottomRight2}" />
     <SolidColorBrush x:Key="DarkBrush" Color="{StaticResource Dark}" />
     <SolidColorBrush x:Key="BorderBrush" Color="{StaticResource Border}" />
-    
-    
+
+
     <LinearGradientBrush x:Key="ButtonBrush" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="{StaticResource baseGradientStartColor}" Offset="0.0" />
         <GradientStop Color="{StaticResource baseGradientStopColor}" Offset="1.0" />
     </LinearGradientBrush>
 
+    <LinearGradientBrush x:Key="ButtonGreenBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#8F64A3" Offset="0.0"/>
+        <GradientStop Color="#50385B" Offset="1.0"/>
+    </LinearGradientBrush>
+
+
     <LinearGradientBrush x:Key="ButtonDarkBrush" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="{StaticResource baseDarkGradientStartColor}" Offset="0.0" />
         <GradientStop Color="{StaticResource baseDarkGradientStopColor}" Offset="1.0" />
     </LinearGradientBrush>
-    
+
     <LinearGradientBrush x:Key="ButtonPressedBrush" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="{StaticResource buttonPressedGradientStartColor}" Offset="0.0" />
         <GradientStop Color="{StaticResource buttonPressedGradientStopColor}" Offset="1.0" />
@@ -108,7 +114,7 @@
         <GradientStop Color="{StaticResource checkBoxGradientStartColor}" Offset="0.0" />
         <GradientStop Color="{StaticResource checkBoxGradientStopColor}" Offset="1.0" />
     </LinearGradientBrush>
-    
+
     <ScaleTransform x:Key="FontStretchExpanded" ScaleX="1.2" />
 
     <!-- Button -->
@@ -137,7 +143,7 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
+
     <Style TargetType="Control" x:Key="CommonStyle">
         <Setter Property="Background" Value="{DynamicResource WindowBrush}" />
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
@@ -148,21 +154,33 @@
         <!-- Setter Property="LayoutTransform" Value="{DynamicResource FontStretchExpanded}" / -->
         <Setter Property="FontStyle" Value="Normal" />
     </Style>
-    
+
     <Style x:Key="ButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CommonStyle}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Template" Value="{DynamicResource ButtonTemplate}" />
         <Setter Property="Background" Value="{DynamicResource ButtonBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
-        <Setter Property="BorderThickness" Value="1" />        
+        <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="5" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
     </Style>
 
-    
+    <Style x:Key="GreenButtonStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CommonStyle}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Template" Value="{DynamicResource ButtonTemplate}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonGreenBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    </Style>
+
     <Style x:Key="ButtonFilterStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CommonStyle}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -302,9 +320,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    
+
                     <Border x:Name="borderBtn" CornerRadius="3" Background="{TemplateBinding Background}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" >
-                        <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" 
+                        <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}"
                                           HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                     </Border>
                     <ControlTemplate.Triggers>
@@ -339,7 +357,7 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <ControlTemplate x:Key="MenuItemTemplate" TargetType="{x:Type MenuItem}">
         <Grid x:Name="GridRoot"  VerticalAlignment="Top">
             <Border x:Name="Border"  CornerRadius="3" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
@@ -368,7 +386,7 @@
                     <Grid Grid.Column="3" Margin="4,0,6,0" x:Name="ArrowPanel" VerticalAlignment="Center">
                         <Path x:Name="ArrowPanelPath" HorizontalAlignment="Right" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,0 L0,8 L4,4 Z" />
                     </Grid>
-                    <Popup x:Name="SubMenuPopup" Placement="Right" HorizontalOffset="5" VerticalOffset="-3" VerticalAlignment="Top" Focusable="False" IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}" 
+                    <Popup x:Name="SubMenuPopup" Placement="Right" HorizontalOffset="5" VerticalOffset="-3" VerticalAlignment="Top" Focusable="False" IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
                            PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}" AllowsTransparency="True">
                         <Grid Margin="0,0,4,4" SnapsToDevicePixels="True">
                             <Border x:Name="SubMenuBorder" BitmapEffect="{DynamicResource DropDownShadow}" CornerRadius="3" BorderThickness="1" BorderBrush="{DynamicResource BaseBrush}" Background="{DynamicResource WindowBrush}" Margin="0">
@@ -503,12 +521,12 @@
 
     <SolidColorBrush x:Key="SolidBorderBrush" Color="#888" />
     <SolidColorBrush x:Key="GlyphBrush" Color="#444" />
-    
-   
-   
+
+
+
     <Style TargetType="{x:Type MenuItem}" BasedOn="{StaticResource CommonStyle}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
-        <Setter Property="OverridesDefaultStyle" Value="True" />        
+        <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Template" Value="{DynamicResource MenuItemTemplate}" />
         <!--Setter Property="Background" Value="Transparent" /-->
         <!--Setter Property="Foreground" Value="{DynamicResource TextBrush}" /-->
@@ -549,14 +567,14 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
-    <Style TargetType="{x:Type Menu}" BasedOn="{StaticResource CommonStyle}">        
+
+    <Style TargetType="{x:Type Menu}" BasedOn="{StaticResource CommonStyle}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Grid.IsSharedSizeScope" Value="true" />
         <Setter Property="Template" Value="{DynamicResource MenuTemplate}" />
         <Setter Property="Background" Value="{DynamicResource WindowBrush}" />
-        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />       
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
     </Style>
 
     <ControlTemplate x:Key="ContextMenuTemplate" TargetType="{x:Type ContextMenu}">
@@ -566,7 +584,7 @@
         </Grid>-->
         <Border x:Name="Border"
                     CornerRadius="3" Background="#99191418"
-                    BorderThickness="1" BorderBrush="{DynamicResource ButtonClickBackground}">            
+                    BorderThickness="1" BorderBrush="{DynamicResource ButtonClickBackground}">
             <StackPanel IsItemsHost="True"
                         KeyboardNavigation.DirectionalNavigation="Cycle" />
         </Border>
@@ -574,10 +592,10 @@
             <Trigger Property="IsEnabled" Value="False">
                 <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}" />
             </Trigger>
-            
+
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
+
     <Style TargetType="{x:Type ContextMenu}" BasedOn="{StaticResource CommonStyle}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -586,7 +604,7 @@
         <Setter Property="Template" Value="{DynamicResource ContextMenuTemplate}" />
         <!--Setter Property="Background" Value="{DynamicResource WindowBrushOpacity}" /-->
         <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
-       
+
     </Style>
 
 
@@ -630,20 +648,20 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
+
     <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource CommonStyle}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Template" Value="{DynamicResource CheckBoxTemplate}" />
         <Setter Property="BorderBrush" Value="{DynamicResource DarkBrush}" />
         <Setter Property="Background" Value="{DynamicResource BorderBrush}" />
-        
+
         <!-- Setter Property="Width" Value="13" / -->
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
     </Style>
 
 
-    <!-- ListBox 
+    <!-- ListBox
     <Style x:Key="MayaScrollViewer" TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource CommonStyle}">
         <Setter Property="Template">
             <Setter.Value>
@@ -665,9 +683,9 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
     <Style TargetType="{x:Type ScrollViewer}" BasedOn="{StaticResource MayaScrollViewer}" />
-    
+
     <ControlTemplate x:Key="ListBoxTemplate" TargetType="{x:Type ListBox}">
         <Grid>
             <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{DynamicResource ButtonBrush}" CornerRadius="2" />
@@ -691,7 +709,7 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
+
     <Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource CommonStyle}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
@@ -707,8 +725,8 @@
     <ControlTemplate x:Key="ListBoxItemTemplate" TargetType="{x:Type ListBoxItem}">
         <Grid SnapsToDevicePixels="True">
             <Rectangle x:Name="SelectedRectangle" IsHitTestVisible="False" Opacity="0" Fill="{DynamicResource listboxItemSelectedBrush}" />
-            <ContentPresenter x:Name="contentPresenter" Margin="0" 
-                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+            <ContentPresenter x:Name="contentPresenter" Margin="0"
+                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
         </Grid>
         <ControlTemplate.Triggers>
@@ -732,7 +750,7 @@
             </MultiTrigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
+
     <Style TargetType="{x:Type ListBoxItem}"  BasedOn="{StaticResource CommonStyle}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />

@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RetroLauncher.Helpers;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 using System.Collections.ObjectModel;
 using RetroLauncher.Data.Model;
 using RetroLauncher.Data.Service;
 using RetroLauncher.Model;
 using RetroLauncher.Controls;
+using RetroLauncher.ViewModel.Base;
+using Game = RetroLauncher.Model.Game;
 
 namespace RetroLauncher.ViewModel
 {
@@ -25,7 +25,7 @@ namespace RetroLauncher.ViewModel
             _gameDb = gameDb;
             currentPage = 1;
             filter = new FilterGame();
-            maxShowGames = 50;            
+            maxShowGames = 50;
             GetGenres();
             GetPlatforms();
             GetGames();
@@ -109,7 +109,7 @@ namespace RetroLauncher.ViewModel
             //наши фильтры
             filter.Count = 100;
             filter.Skip = (currentPage-1)*100;
-            
+
             if (!string.IsNullOrEmpty(searchText))
                 filter.Name = searchText;
 

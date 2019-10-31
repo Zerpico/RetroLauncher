@@ -1,42 +1,35 @@
 ﻿<Window x:Class="RetroLauncher.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"      
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:RetroLauncher"
         xmlns:trans="clr-namespace:RetroLauncher.Controls"
-        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-        xmlns:command="http://www.galasoft.ch/mvvmlight"   
-        WindowStartupLocation="CenterScreen"     Background="{StaticResource MainGradient}"
-        Title="MainWindow" Height="900" Width="1200" 
-    DataContext="{Binding Main, Source={StaticResource Locator}}">
-<!--Background="{StaticResource MainGradient}"-->
-    <i:Interaction.Triggers>
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:command="http://www.galasoft.ch/mvvmlight"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource MainGradient}"
+        Title="MainWindow" Height="900" Width="1200"
+        DataContext="{Binding Main, Source={StaticResource Locator}}">
+   <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
-            <command:EventToCommand Command="{Binding LoadedCommand, Mode=OneWay}" />
+            <i:InvokeCommandAction Command="{Binding LoadedCommand, Mode=OneWay}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 
-    <!--
-    <Window.Background>
-        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-            <GradientStop Color="#333333" Offset="0.33"/>
-            <GradientStop Color="#52476B" Offset="1.10"/>
-        </LinearGradientBrush>
-    </Window.Background>
-    -->
 
-    <Grid>       
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" MinWidth="100" MaxWidth="200"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-       
+
+
         <Grid Grid.Column="0" Background="#4C31213D">
             <StackPanel Margin="5,10">
                 <TextBlock FontSize="20" Text="Игры" Foreground="{StaticResource AditionalTitleBrush}"/>
                 <Separator Background="{StaticResource AditionalTitleBrush}" Margin="0,0,0,10" />
 
-                <TextBlock FontSize="20" Text="Последнии" Foreground="{StaticResource MainTitle}"/>
+                <TextBlock FontSize="20" Text="Недавние" Foreground="{StaticResource MainTitle}"/>
                 <TextBlock FontSize="20" Text="Все игры" Foreground="{StaticResource MainTitle}"/>
                 <TextBlock FontSize="20" Text="Скачанные" Foreground="{StaticResource MainTitle}"/>
 
@@ -45,11 +38,9 @@
 
                 <TextBlock FontSize="20" Text="Управление" Foreground="{StaticResource MainTitle}"/>
 
-                
+
             </StackPanel>
         </Grid>
-
-
 
 
         <trans:FaderFrame x:Name="MainFrame" Grid.Column="1" Margin="10,0,10,10"
@@ -57,6 +48,6 @@
                         VerticalAlignment="Stretch"
                         HorizontalAlignment="Stretch"/>
 
-        
+
     </Grid>
 </Window>

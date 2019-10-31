@@ -18,7 +18,7 @@ namespace RetroLauncher.Helpers
         private readonly List<string> _historic;
         private string _currentPageKey;
         #endregion
-        #region Properties                                              
+        #region Properties
         public string CurrentPageKey
         {
             get
@@ -60,12 +60,9 @@ namespace RetroLauncher.Helpers
 
         public void GoForward()
         {
-            if (_historic.Count > 1)
-            {
-                _historic.RemoveAt(_historic.Count - 1);
-                NavigateTo(_historic.Last(), null);
-            }
+            //TODO: сделать навигацию вперед (зачем ?)
         }
+
         public void NavigateTo(string pageKey)
         {
             NavigateTo(pageKey, null);

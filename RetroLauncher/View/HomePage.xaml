@@ -3,9 +3,9 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-      xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+      xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
       xmlns:crop="clr-namespace:RetroLauncher.Helpers"
-      xmlns:local="clr-namespace:RetroLauncher.View"     
+      xmlns:local="clr-namespace:RetroLauncher.View"
       mc:Ignorable="d"
       d:DesignHeight="450" d:DesignWidth="800"
       Title="HomePage" DataContext="{Binding  HomeViewModel,Source={StaticResource Locator}}">
@@ -206,7 +206,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="20,0" />
         </Style>
-        
+
     </Page.Resources>
 
     <Grid>
@@ -218,7 +218,7 @@
 
         <!--область поиска-->
         <StackPanel x:Name="filterPanel" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal">
-            <Button  x:Name="filtrBtn" FontSize="20" Style="{StaticResource ButtonFilterStyle}" 
+            <Button  x:Name="filtrBtn" FontSize="20" Style="{StaticResource ButtonFilterStyle}"
                     Width="150" Height="42" Margin="5" ContextMenuService.Placement="Bottom" ContextMenuService.VerticalOffset="5" > <!-- Fill="#99191418" -->
                 <StackPanel Margin="5,2" Orientation="Horizontal">
                     <Grid HorizontalAlignment="Left" Margin="3,0" Width="30" Height="30">
@@ -232,9 +232,9 @@
                             <MenuItem.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <CheckBox VerticalContentAlignment="Center" 
-                                                  VerticalAlignment="Center" 
-                                                  Content="{Binding Path=Item.GenreName}" 
+                                        <CheckBox VerticalContentAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Content="{Binding Path=Item.GenreName}"
                                                   IsChecked="{Binding IsChecked}" >
                                             <i:Interaction.Triggers>
                                                 <i:EventTrigger EventName="Checked">
@@ -245,7 +245,7 @@
                                                 </i:EventTrigger>
                                             </i:Interaction.Triggers>
                                         </CheckBox>
-                                                  
+
                                     </StackPanel>
                                 </DataTemplate>
                             </MenuItem.ItemTemplate>
@@ -255,9 +255,9 @@
                             <MenuItem.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <CheckBox VerticalContentAlignment="Center" 
-                                                  VerticalAlignment="Center" 
-                                                  Content="{Binding Path=Item.PlatformName}" 
+                                        <CheckBox VerticalContentAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Content="{Binding Path=Item.PlatformName}"
                                                   IsChecked="{Binding IsChecked}" >
                                             <i:Interaction.Triggers>
                                                 <i:EventTrigger EventName="Checked">
@@ -278,15 +278,15 @@
             </Button>
 
 
-            
-            <TextBox x:Name="txtUserEntry" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" Style="{StaticResource FilterTextBox}"  Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=500}"  
+
+            <TextBox x:Name="txtUserEntry" HorizontalAlignment="Center" VerticalAlignment="Top" FontSize="20" Style="{StaticResource FilterTextBox}"  Text="{Binding SearchText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=500}"
                      Width="250" Height="42" Margin="5"/>
-           
-
-            
 
 
-            <Button Visibility="Hidden" FontSize="20" Style="{StaticResource ButtonFilterStyle}" Width="50" Height="40" 
+
+
+
+            <Button Visibility="Hidden" FontSize="20" Style="{StaticResource ButtonFilterStyle}" Width="50" Height="40"
                     Margin="5" ContextMenuService.Placement="Bottom" ContextMenuService.VerticalOffset="5"> <!-- Fill="#99191418" -->
                 <StackPanel>
                 <Grid  Height="30" Width="30">

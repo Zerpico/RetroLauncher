@@ -1,7 +1,6 @@
-﻿using GalaSoft.MvvmLight;
-using System.Windows.Input;
-using GalaSoft.MvvmLight.Command;
+﻿using System.Windows.Input;
 using RetroLauncher.Helpers;
+using RetroLauncher.ViewModel.Base;
 
 namespace RetroLauncher.ViewModel
 {
