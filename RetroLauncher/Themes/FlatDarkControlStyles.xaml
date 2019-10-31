@@ -143,6 +143,7 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
+    
 
     <Style TargetType="Control" x:Key="CommonStyle">
         <Setter Property="Background" Value="{DynamicResource WindowBrush}" />
@@ -192,6 +193,8 @@
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="ContextMenuService.Placement" Value="Bottom" />
+        <Setter Property="ContextMenuService.VerticalOffset" Value="5" />        
     </Style>
 
     <!-- СТИЛЬ СЕРОЙ КНОПКИ -->
@@ -360,7 +363,7 @@
 
     <ControlTemplate x:Key="MenuItemTemplate" TargetType="{x:Type MenuItem}">
         <Grid x:Name="GridRoot"  VerticalAlignment="Top">
-            <Border x:Name="Border"  CornerRadius="3" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+            <Border x:Name="Border"  CornerRadius="3" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition x:Name="Col0" MinWidth="17" Width="Auto" SharedSizeGroup="MenuItemIconColumnGroup" />
@@ -372,7 +375,7 @@
                     <Grid x:Name="GlyphPanel" Grid.Column="0" Margin="4,0,6,0" VerticalAlignment="Center" Visibility="Hidden">
                         <!--Path x:Name="GlyphPanelpath" VerticalAlignment="Center" Fill="{TemplateBinding Foreground}" Data="M0,2 L0,4.8 L2.5,7.4 L7.1,2.8 L7.1,0 L2.5,4.6 z" FlowDirection="LeftToRight" /-->
 
-                        <Border x:Name="CheckBox" Width="13" Height="13" BorderThickness="1" BorderBrush="{DynamicResource DarkBrush}" Background="{DynamicResource BorderBrush}" CornerRadius="3">
+                        <Border x:Name="CheckBox" Width="13" Height="13" BorderThickness="0" BorderBrush="{DynamicResource DarkBrush}" Background="{DynamicResource BorderBrush}" CornerRadius="3">
                             <Path x:Name="CheckMark" RenderOptions.EdgeMode="Aliased" Width="11" Height="11" SnapsToDevicePixels="False" StrokeThickness="2" Stroke="{DynamicResource TextBrush}" Data="">
                                 <Path.Clip>
                                     <RectangleGeometry Rect="1,1,9,9" />
@@ -389,7 +392,7 @@
                     <Popup x:Name="SubMenuPopup" Placement="Right" HorizontalOffset="5" VerticalOffset="-3" VerticalAlignment="Top" Focusable="False" IsOpen="{Binding Path=IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
                            PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}" AllowsTransparency="True">
                         <Grid Margin="0,0,4,4" SnapsToDevicePixels="True">
-                            <Border x:Name="SubMenuBorder" BitmapEffect="{DynamicResource DropDownShadow}" CornerRadius="3" BorderThickness="1" BorderBrush="{DynamicResource BaseBrush}" Background="{DynamicResource WindowBrush}" Margin="0">
+                            <Border x:Name="SubMenuBorder" BitmapEffect="{DynamicResource DropDownShadow}" CornerRadius="3" BorderThickness="0" BorderBrush="{DynamicResource BaseBrush}" Background="{DynamicResource WindowBrush}" Margin="0">
                                 <Grid x:Name="SubMenu" Grid.IsSharedSizeScope="True">
                                     <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" Margin="0" />
                                 </Grid>

@@ -92,7 +92,7 @@
                     Content="Скачать"/>
 -->
             <ListView ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                      ScrollViewer.HorizontalScrollBarVisibility="Hidden" x:Name="lv"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto" x:Name="lv"
                       Margin="10,10,10,20"  Background="Transparent" BorderThickness="0"
                       Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedGame.Screens, UpdateSourceTrigger=PropertyChanged}">
                 <ListView.ItemsPanel>

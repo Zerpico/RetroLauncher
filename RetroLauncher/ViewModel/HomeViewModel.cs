@@ -30,8 +30,13 @@ namespace RetroLauncher.ViewModel
             GetPlatforms();
             GetGames();
         }
-
+                
+        public int GenreCheckCount { get { return Genres.Where(d => d.IsChecked).Count(); } }
+        public bool GenreCheckVisible { get { return GenreCheckCount > 0; } }
         public ObservableCollection<CheckedListItem<Genre>> Genres { get; set; }
+                
+        public int PlatformCheckCount { get { return Platforms.Where(d => d.IsChecked).Count(); } }
+        public bool PlatformCheckVisible { get { return PlatformCheckCount > 0; } }
         public ObservableCollection<CheckedListItem<Platform>> Platforms { get; set; }
         //коллекция игр
         public ObservableCollection<IGame> Games { get; set; }
@@ -130,6 +135,10 @@ namespace RetroLauncher.ViewModel
 
             RaisePropertyChanged(nameof(MaxPage));
             RaisePropertyChanged(nameof(Games));
+            RaisePropertyChanged(nameof(GenreCheckCount));
+            RaisePropertyChanged(nameof(PlatformCheckCount));
+            RaisePropertyChanged(nameof(GenreCheckVisible));
+            RaisePropertyChanged(nameof(PlatformCheckVisible));
             PrevPageCommand.RaiseCanExecuteChanged();
             NextPageCommand.RaiseCanExecuteChanged();
 

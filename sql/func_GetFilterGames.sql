@@ -97,7 +97,7 @@ FROM gb_games gb
 JOIN gb_genres gnr ON gnr.genre_id = gb.genre_id
 JOIN gb_platforms pl ON gb.platform_id = pl.platform_id
 WHERE CASE
-          WHEN @name IS NOT NULL AND gb.game_name LIKE '%'+@name+'%' THEN 1
+          WHEN @name IS NOT NULL AND ((gb.game_name LIKE '%'+@name+'%') OR (gb.name_second LIKE '%'+@name+'%') OR (gb.name_other LIKE '%'+@name+'%')) THEN 1
           WHEN @name IS NULL THEN 1
           ELSE 0
       END = 1
@@ -150,14 +150,14 @@ SELECT *
 FROM @result_noorder t
 ORDER BY CASE
              WHEN @orderbyname = 1 THEN t.Name
+	     ELSE ''
          END,
          CASE
              WHEN @orderbyplatform = 1 THEN t.PlatformId
              WHEN @orderbydownload = 1 THEN t.Downloads
              WHEN @orderbyrating = 1 THEN t.Rating
-         END DESC ,
-	 CASE
-             WHEN @noOrder = 1 THEN t.GameId END
+         END DESC 
+
 	     
 OFFSET @skip ROWS 
 FETCH NEXT @count ROWS ONLY;
