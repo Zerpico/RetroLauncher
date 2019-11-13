@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RetroLauncher.ViewModel.Base;
 using Game = RetroLauncher.Model.Game;
+using RetroLauncher.Service;
 
 namespace RetroLauncher.ViewModel
 {
@@ -16,24 +17,36 @@ namespace RetroLauncher.ViewModel
     {
         private readonly IFrameNavigationService _navigationService;
         private readonly IRepository _repository;
+        FileDownloader fileDownloader;
 
         private IGame selectedGame;
         public IGame SelectedGame { get { return selectedGame; } set { selectedGame = value; } }
 
         public GameDetailViewModel(IFrameNavigationService navigationService, IRepository repository)
         {
+            //инициализируем всякие репы и прочии службы
             _repository = repository;
             _navigationService = navigationService;
             MessengerInstance.Register<Game>(this, RefreshGame);
+            //получаем инфу об игре которую выбрали
             RefreshGame((Game)_navigationService.Parameter);
+
+            fileDownloader = new FileDownloader();
+            fileDownloader.DownloadComplete += () => { fileDownloader.ProgressChanged -= ProgressChanged; Progress = 0; DownloadBytes="";};
         }
 
+        /// <summary>
+        /// обновление информации о игре для просмотра
+        /// </summary>
+        /// <param name="recGame"></param>
+        /// <returns></returns>
         private async void RefreshGame(Game recGame)
         {
             selectedGame =  await _repository.GetGameById(recGame.GameId);
             RaisePropertyChanged(nameof(SelectedGame));
         }
 
+        //навигация назад
         private RelayCommand _navigateBackCommand;
         public RelayCommand NavigateBackCommand
         {
@@ -45,10 +58,11 @@ namespace RetroLauncher.ViewModel
                     {
                         _navigationService.GoBack();
 
-                    }));
+                    },() => Progress == 0));
             }
         }
 
+        //команда скачать игру
         private RelayCommand _downloadCommand;
         public RelayCommand DownloadCommand
         {
@@ -58,9 +72,45 @@ namespace RetroLauncher.ViewModel
                     ?? (_downloadCommand = new RelayCommand(
                     () =>
                     {
-                        //bla-bla-bla
+                        fileDownloader.ProgressChanged += ProgressChanged;
+                        fileDownloader.DownloadFile((Game)SelectedGame);
 
-                    }));
+                    }, () => Progress == 0 )); //заблокируем нах кнопку если уже что-то скачиваем
+            }
+        }
+
+        //измнения прогресса скачивания
+        private void ProgressChanged(double progress, long reciveBytes, string reciveBytesStr)
+        {
+            Progress = progress;
+            DownloadBytes = reciveBytesStr;
+        }
+
+
+        //прогресс скачивания в процентах
+        private double progress;
+        public double Progress
+        {
+            get => this.progress;
+            set
+            {
+                this.progress = value;
+                RaisePropertyChanged(nameof(Progress));
+                //ужасный костыль (возможно)
+                DownloadCommand.RaiseCanExecuteChanged();
+                NavigateBackCommand.RaiseCanExecuteChanged();
+            }
+        }
+
+        //кол-во скачаных байт
+        private string downloadBytes;
+        public string DownloadBytes
+        {
+            get => this.downloadBytes;
+            set
+            {
+                this.downloadBytes = value;
+                RaisePropertyChanged(nameof(DownloadBytes));
             }
         }
     }

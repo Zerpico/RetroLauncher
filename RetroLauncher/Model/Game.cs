@@ -12,7 +12,7 @@ namespace RetroLauncher.Model
         public int GameId { get; set; }
         public string Name { get; set; }
         public string NameSecond { get; set; }
-        public string NameOther { get; set; }        
+        public string NameOther { get; set; }
         public int? Year { get; set; }
         public string Developer { get; set; }
         public string Annotation { get; set; }
@@ -23,7 +23,9 @@ namespace RetroLauncher.Model
         public Platform Platform { get; set; }
         public List<GameLink> GameLinks { get; set; }
 
-        public string ImgUrl => (GameLinks != null && GameLinks.Count > 0) ? GameLinks.Where(i => i.TypeUrl == TypeUrl.MainScreen).FirstOrDefault().Url.Replace(@"\","/") : string.Empty;
+        public string ImgUrl => (GameLinks != null && GameLinks.Count > 0) ? GameLinks.Where(i => i.TypeUrl == TypeUrl.MainScreen).FirstOrDefault().Url : string.Empty;
+
+        public string RomUrl => (GameLinks != null && GameLinks.Count > 0) ? GameLinks.Where(i => i.TypeUrl == TypeUrl.Rom).FirstOrDefault().Url : string.Empty;
         public List<GameLink> Screens => (GameLinks != null && GameLinks.Count > 0) ? GameLinks.Where(i => i.TypeUrl != TypeUrl.Rom).ToList() : new List<GameLink>();
 
     }

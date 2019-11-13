@@ -84,13 +84,32 @@
             </StackPanel>
             </StackPanel>
 
-<!--            <Button Grid.Row="0" Grid.Column="1" Width="120"
-                    VerticalAlignment="Bottom" HorizontalAlignment="Left"
-                    FontSize="20" Height="40"
-                    Margin="0,0,0,20" Command="{Binding DownloadCommand}"
-                    Style="{StaticResource GreenButtonStyle}"
-                    Content="Скачать"/>
--->
+            <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,20">
+
+            <Button  Width="120" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                        FontSize="20" Height="40"
+                        Command="{Binding DownloadCommand}"
+                        Style="{StaticResource GreenButtonStyle}"
+                        Content="Скачать"/>
+
+                <ProgressBar Margin="0,5" Width="120" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                            Height="5" Value="{Binding Progress, UpdateSourceTrigger=PropertyChanged}">
+                            <ProgressBar.Style> <!-- Мне пока лень делать нормальное сокрытие, временно пока такой костыль -->
+                            <Style TargetType="ProgressBar">
+                            <Style.Triggers>
+                                <Trigger Property="Value" Value="0">
+                                    <Setter Property="Visibility" Value="Hidden" />
+                                </Trigger>
+                            </Style.Triggers>
+                            </Style>
+                            </ProgressBar.Style>
+                </ProgressBar>
+
+                <TextBlock  Width="120" VerticalAlignment="Bottom" HorizontalAlignment="Center"
+                            Text="{Binding DownloadBytes}" Foreground="{StaticResource AditionalTitleBrush}"/>
+
+            </StackPanel>
+
             <ListView ScrollViewer.VerticalScrollBarVisibility="Hidden"
                       ScrollViewer.HorizontalScrollBarVisibility="Auto" x:Name="lv"
                       Margin="10,10,10,20"  Background="Transparent" BorderThickness="0"
