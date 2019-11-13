@@ -69,16 +69,37 @@ namespace RetroLauncher.ViewModel
             get
             {
                 return _downloadCommand
-                    ?? (_downloadCommand = new RelayCommand(
-                    () =>
+                    ?? (_downloadCommand = new RelayCommand(() =>
                     {
+                        
                         fileDownloader.ProgressChanged += ProgressChanged;
-                        fileDownloader.DownloadFile((Game)SelectedGame);
+                        fileDownloader.DownloadFile((Game)SelectedGame); 
 
-                    }, () => Progress == 0 )); //заблокируем нах кнопку если уже что-то скачиваем
+                    }, () => Progress == 0)); //заблокируем нах кнопку если уже что-то скачиваем
             }
         }
+        private RelayCommand _download2Command;
+        public RelayCommand Download2Command
+        {
+            get
+            {
+                return _download2Command
+                    ?? (_download2Command = new RelayCommand(() =>
+                    {
+                        //Тут использую кортеж так как хотим видеть 2 значения а в контсруктор можно только один. Можно заменит ьнапример на класс.
+                        var progress = new Progress<(int progress, string bytes)>(
 
+                         (value) =>
+                         {
+                             Progress = value.progress;
+                             DownloadBytes = value.bytes;
+                         }); 
+                        fileDownloader.DownloadFile((Game)SelectedGame, progress);
+
+                    }, () => Progress == 0)); //заблокируем нах кнопку если уже что-то скачиваем
+            }
+        }
+         
         //измнения прогресса скачивания
         private void ProgressChanged(double progress, long reciveBytes, string reciveBytesStr)
         {

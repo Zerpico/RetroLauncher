@@ -88,10 +88,13 @@
 
             <Button  Width="120" VerticalAlignment="Bottom" HorizontalAlignment="Center"
                         FontSize="20" Height="40"
-                        Command="{Binding DownloadCommand}"
                         Style="{StaticResource GreenButtonStyle}"
-                        Content="Скачать"/>
-
+                        Content="Скачать">
+                <Button.InputBindings>
+                        <MouseBinding   Command="{Binding DownloadCommand}" MouseAction="LeftClick" />
+                        <MouseBinding   Command="{Binding Download2Command}" MouseAction="RightClick" />
+                </Button.InputBindings>
+            </Button>
                 <ProgressBar Margin="0,5" Width="120" VerticalAlignment="Bottom" HorizontalAlignment="Center"
                             Height="5" Value="{Binding Progress, UpdateSourceTrigger=PropertyChanged}">
                             <ProgressBar.Style> <!-- Мне пока лень делать нормальное сокрытие, временно пока такой костыль -->

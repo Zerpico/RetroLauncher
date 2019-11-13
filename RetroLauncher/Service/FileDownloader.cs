@@ -7,7 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices; 
 using RetroLauncher.Model;
 
 namespace RetroLauncher.Service
@@ -104,7 +104,76 @@ public class FileDownloader : INotifyPropertyChanged
         webClient.DownloadFileAsync(new Uri(CurrentDownloadGame.RomUrl), filePath+Path.GetExtension(CurrentDownloadGame.RomUrl));
 
     }
-    public void CancelDownloading()
+
+        internal  void DownloadFile(Game gameToDownload, IProgress<(int progress, string bytes)> progress)
+        {
+            //ProgressChanged?.Invoke(5, 0, string.Empty); //имитация бурной деятельности
+            progress.Report((5, string.Empty));
+
+
+            this.CurrentDownloadGame = gameToDownload;
+            if (webClient.IsBusy)
+                throw new Exception("The client is busy");
+
+            //начала таймера
+            var startDownloading = DateTime.UtcNow;
+
+            //т.к. у нас всё через жопу то сначала получим все настройки прокси для клиента
+
+            //сначала определем тип прокси из настроек
+            TypeProxy typeProxy = Service.Storage.Source.GetValue<TypeProxy>("ProxyType");
+
+            if (typeProxy != TypeProxy.Default) //если выбрали http или еще какую дрянь, пока только http поддержка
+            {
+                //определим настройки для прокси
+                WebProxy proxy = new WebProxy();
+
+                string proxyHost = Service.Storage.Source.GetValue("ProxyHost").ToString();
+                string proxyPort = Service.Storage.Source.GetValue("ProxyPort").ToString();
+                proxy.Address = new Uri($"http://{proxyHost}:{proxyPort}");
+                proxy.BypassProxyOnLocal = false;
+                proxy.UseDefaultCredentials = false;
+
+                webClient.Proxy = proxy;
+            }
+            else //иначе системные выбираем
+            {
+                webClient.Credentials = CredentialCache.DefaultCredentials;
+            }
+
+            //следует определить в какую папку заливать файл
+            var filePath = SelectFolder();
+            if (string.IsNullOrEmpty(filePath))
+            {
+                DownloadingError();
+                return;
+            }
+
+            //начинаем отсчёт, для вычисления скорости и всё такое. хотя хз зачем нам скорость загрузки 300 кб
+            stopWatch.Start();
+
+            //прогресс загрузки
+            webClient.DownloadProgressChanged += (o, args) =>
+            {
+                //ProgressChanged?.Invoke(args.ProgressPercentage, args.BytesReceived, PrettyBytes(args.BytesReceived));
+                progress.Report((args.ProgressPercentage,PrettyBytes(args.BytesReceived)));
+                //DownloadingSpeed(args.BytesReceived, DateTime.UtcNow - startDownloading); //скорость скачивания
+                /* ProgressPercentageChanged(args.ProgressPercentage);
+                 UpdateFileSize(args.TotalBytesToReceive);
+                 UpdateProgressBytesRead(args.BytesReceived, DateTime.UtcNow - startDownloading);*/
+            };
+
+            webClient.DownloadFileCompleted += (o, args) =>
+            {
+                progress.Report((0, ""));
+            };
+            
+            //запуск асинхроного скачивания
+            webClient.DownloadFileAsync(new Uri(CurrentDownloadGame.RomUrl), filePath + Path.GetExtension(CurrentDownloadGame.RomUrl));
+
+        }
+
+        public void CancelDownloading()
     {
       webClient.CancelAsync();
       webClient.Dispose();
