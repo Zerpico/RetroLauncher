@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 
 namespace RetroLauncher.ViewModel.Base
 {
@@ -89,7 +90,7 @@ namespace RetroLauncher.ViewModel.Base
         /// exception is thrown in DEBUG configuration only.</remarks>
         /// <param name="propertyName">The name of the property that
         /// changed.</param>        
-        public virtual void RaisePropertyChanging( string propertyName)
+        public virtual void RaisePropertyChanging([CallerMemberName] string propertyName =null)
         {
             VerifyPropertyName(propertyName);
 

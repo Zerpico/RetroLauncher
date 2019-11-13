@@ -31,8 +31,16 @@ namespace RetroLauncher.ViewModel
             //получаем инфу об игре которую выбрали
             RefreshGame((Game)_navigationService.Parameter);
 
-            fileDownloader = new FileDownloader();
-            fileDownloader.DownloadComplete += () => { fileDownloader.ProgressChanged -= ProgressChanged; Progress = 0; DownloadBytes="";};
+            //Тут использую кортеж так как хотим видеть 2 значения а в контсруктор можно только один. Можно заменить например на клас.
+            var progress = new Progress<(int progress, string bytes)>( 
+             (value) =>
+             {
+                 Progress = value.progress;
+                 DownloadBytes = value.bytes;
+             });
+            fileDownloader = new FileDownloader(progress);
+
+            //fileDownloader.DownloadComplete += () => { fileDownloader.ProgressChanged -= ProgressChanged; Progress = 0; DownloadBytes="";};
         }
 
         /// <summary>
@@ -69,23 +77,14 @@ namespace RetroLauncher.ViewModel
             get
             {
                 return _downloadCommand
-                    ?? (_downloadCommand = new RelayCommand(
-                    () =>
+                    ?? (_downloadCommand = new RelayCommand(() =>
                     {
-                        fileDownloader.ProgressChanged += ProgressChanged;
+                      
                         fileDownloader.DownloadFile((Game)SelectedGame);
 
-                    }, () => Progress == 0 )); //заблокируем нах кнопку если уже что-то скачиваем
+                    }, () => Progress == 0)); //заблокируем нах кнопку если уже что-то скачиваем
             }
-        }
-
-        //измнения прогресса скачивания
-        private void ProgressChanged(double progress, long reciveBytes, string reciveBytesStr)
-        {
-            Progress = progress;
-            DownloadBytes = reciveBytesStr;
-        }
-
+        } 
 
         //прогресс скачивания в процентах
         private double progress;
