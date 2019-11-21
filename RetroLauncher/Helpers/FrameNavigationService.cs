@@ -17,6 +17,8 @@ namespace RetroLauncher.Helpers
         private readonly Dictionary<string, Uri> _pagesByKey;
         private readonly List<string> _historic;
         private string _currentPageKey;
+
+        private bool isLoadPage;
         #endregion
         #region Properties
         public string CurrentPageKey
@@ -87,6 +89,24 @@ namespace RetroLauncher.Helpers
                 _historic.Add(pageKey);
                 CurrentPageKey = pageKey;
             }
+        }
+
+        public void ShowWaitPage()
+        {
+
+            var frame = GetDescendantFromName(Application.Current.MainWindow, "MainFrame") as Frame;
+            if (frame != null)
+                frame.Source = _pagesByKey["WaitPage"];
+            isLoadPage = true;
+        }
+
+        public void HideWaitPage()
+        {
+            if (isLoadPage == false) return;
+            var frame = GetDescendantFromName(Application.Current.MainWindow, "MainFrame") as Frame;
+            if (frame != null)
+                frame.Source = _pagesByKey[CurrentPageKey];
+            isLoadPage = false;
         }
 
         public void Configure(string key, Uri pageType)

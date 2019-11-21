@@ -8,7 +8,7 @@ namespace RetroLauncher.Helpers
     }
     */
     /// <summary>
-    /// Интерфейс, определяющий навигацию между страницами     
+    /// Интерфейс, определяющий навигацию между страницами
     /// </summary>
     public interface IFrameNavigationService
     {
@@ -21,22 +21,25 @@ namespace RetroLauncher.Helpers
         }
 
         /// <summary>
-        /// Перейти на предыдущую страницу из стека.     
+        /// Перейти на предыдущую страницу из стека.
         /// </summary>
         void GoBack();
 
         /// <summary>
-        /// Указывает сервису отобразить страницу по указаному ключу        
+        /// Указывает сервису отобразить страницу по указаному ключу
         /// </summary>
         /// <param name="pageKey">Ключ отображаемой страницы</param>
         void NavigateTo(string pageKey);
 
         /// <summary>
-        /// Указывает сервису отобразить страницу по указаному ключу и передать параметр     
+        /// Указывает сервису отобразить страницу по указаному ключу и передать параметр
         /// </summary>
         /// <param name="pageKey">Ключ отображаемой страницы</param>
         /// <param name="parameter">Параметр для передачи</param>
         void NavigateTo(string pageKey, object parameter);
+
+        void ShowWaitPage();
+        void HideWaitPage();
 
         object Parameter { get; }
     }

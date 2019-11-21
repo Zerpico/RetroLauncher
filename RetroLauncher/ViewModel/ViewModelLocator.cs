@@ -57,6 +57,7 @@ namespace RetroLauncher.ViewModel
             navigationService.Configure("Recent", new Uri("../View/RecentPage.xaml", UriKind.Relative));
           /*  navigationService.Configure("Downloaded", new Uri("../View/DownloadedPage.xaml", UriKind.Relative));*/
             navigationService.Configure("GameDetail", new Uri("../View/GameDetailPage.xaml", UriKind.Relative));
+            navigationService.Configure("WaitPage", new Uri("../View/WaitPage.xaml", UriKind.Relative));
             /*  SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
               SimpleIoc.Default.Register<IRepository, WebRestRepository>(true);
               */

@@ -26,15 +26,16 @@ namespace RetroLauncher.ViewModel
             currentPage = 1;
             filter = new FilterGame();
             maxShowGames = 50;
+            _navigationService.ShowWaitPage();
             GetGenres();
             GetPlatforms();
             GetGames();
         }
-                
+
         public int GenreCheckCount { get { return Genres.Where(d => d.IsChecked).Count(); } }
         public bool GenreCheckVisible { get { return GenreCheckCount > 0; } }
         public ObservableCollection<CheckedListItem<Genre>> Genres { get; set; }
-                
+
         public int PlatformCheckCount { get { return Platforms.Where(d => d.IsChecked).Count(); } }
         public bool PlatformCheckVisible { get { return PlatformCheckCount > 0; } }
         public ObservableCollection<CheckedListItem<Platform>> Platforms { get; set; }
@@ -120,9 +121,11 @@ namespace RetroLauncher.ViewModel
 
             if (Genres != null && Genres.Any(g => g.IsChecked))
                 filter.Genre = Genres.Where(g => g.IsChecked).Select(g => g.Item.GenreId).ToArray();
+            else filter.Genre = null;
 
             if (Platforms != null && Platforms.Any(p => p.IsChecked))
                 filter.Platform = Platforms.Where(p => p.IsChecked).Select(p => p.Item.PlatformId).ToArray();
+            else filter.Platform = null;
 
             //получение списка
             var db = await _gameDb.GetBaseFilter(filter);
@@ -142,6 +145,7 @@ namespace RetroLauncher.ViewModel
             PrevPageCommand.RaiseCanExecuteChanged();
             NextPageCommand.RaiseCanExecuteChanged();
 
+            _navigationService.HideWaitPage();
         }
 
         #region Commands

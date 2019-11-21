@@ -32,7 +32,7 @@ namespace RetroLauncher.ViewModel
             RefreshGame((Game)_navigationService.Parameter);
 
             //Тут использую кортеж так как хотим видеть 2 значения а в контсруктор можно только один. Можно заменить например на клас.
-            var progress = new Progress<(int progress, string bytes)>( 
+            var progress = new Progress<(int progress, string bytes)>(
              (value) =>
              {
                  Progress = value.progress;
@@ -79,12 +79,12 @@ namespace RetroLauncher.ViewModel
                 return _downloadCommand
                     ?? (_downloadCommand = new RelayCommand(() =>
                     {
-                      
+
                         fileDownloader.DownloadFile((Game)SelectedGame);
 
                     }, () => Progress == 0)); //заблокируем нах кнопку если уже что-то скачиваем
             }
-        } 
+        }
 
         //прогресс скачивания в процентах
         private double progress;
