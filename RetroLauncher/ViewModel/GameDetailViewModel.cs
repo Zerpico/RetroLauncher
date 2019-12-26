@@ -19,8 +19,8 @@ namespace RetroLauncher.ViewModel
         private readonly IRepository _repository;
         FileDownloader fileDownloader;
 
-        private IGame selectedGame;
-        public IGame SelectedGame { get { return selectedGame; } set { selectedGame = value; } }
+        private Game selectedGame;
+        public Game SelectedGame { get { return selectedGame; } set { selectedGame = value; } }
 
         public GameDetailViewModel(IFrameNavigationService navigationService, IRepository repository)
         {
@@ -50,7 +50,10 @@ namespace RetroLauncher.ViewModel
         /// <returns></returns>
         private async void RefreshGame(Game recGame)
         {
-            selectedGame =  await _repository.GetGameById(recGame.GameId);
+            selectedGame =  (Game)(await _repository.GetGameById(recGame.GameId));
+            FileService serv = new FileService();
+            selectedGame = await serv.GetGame(selectedGame);
+
             RaisePropertyChanged(nameof(SelectedGame));
         }
 
@@ -80,7 +83,11 @@ namespace RetroLauncher.ViewModel
                     ?? (_downloadCommand = new RelayCommand(() =>
                     {
 
-                        fileDownloader.DownloadFile((Game)SelectedGame);
+                        var path = fileDownloader.DownloadGame(SelectedGame);
+                        FileService serv = new FileService();
+                        SelectedGame.LocalPath = new GamePath() { GameId = SelectedGame.GameId, LocalPath = path };
+                        serv.UpdateGame(SelectedGame);
+
 
                     }, () => Progress == 0)); //заблокируем нах кнопку если уже что-то скачиваем
             }

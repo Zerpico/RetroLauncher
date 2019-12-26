@@ -17,6 +17,7 @@ namespace RetroLauncher.Service
         public readonly string PathEmulator;        //%AppDATA%\RetroLauncher\emulator
         public readonly string PathEmulatorConfig;  //%AppDATA%\RetroLauncher\emulator\mednafen.cfg
         public readonly string PathGames;           //%AppDATA%\RetroLauncher\Games
+        public readonly string PathLocalDb;           //%AppDATA%\RetroLauncher\localdb.db
 
 
         private Storage()
@@ -28,6 +29,7 @@ namespace RetroLauncher.Service
             PathEmulator = Path.Combine(PathApp,"emulator");
             PathEmulatorConfig = Path.Combine(PathEmulator,"mednafen.cfg");
             PathGames = Path.Combine(PathApp,"Games");
+            PathLocalDb = Path.Combine(PathApp,"localdb.db");
 
             //инициализация справочника
             if (!IsCreateSettings()) Create();
@@ -62,7 +64,7 @@ namespace RetroLauncher.Service
         /// <param name="name">название параметра</param>
         /// <returns></returns>
         public object GetValue(string name)
-        {            
+        {
             if (items.ContainsKey(name))
                 return Convert.ChangeType(items[name].value, items[name].type);
             return null; //TODO: изменить такой фатал
@@ -70,7 +72,7 @@ namespace RetroLauncher.Service
 
         public T GetValue<T>(string name)
         {
-            
+
             if (items.ContainsKey(name))
             {
                 if (typeof(T).IsEnum)
@@ -181,7 +183,7 @@ namespace RetroLauncher.Service
                 foreach (var item in items)
                 {
                     XmlElement subRoot = xmlDoc.CreateElement(item.Key);
-                    subRoot.InnerText = item.Value.value.ToString();                    
+                    subRoot.InnerText = item.Value.value.ToString();
                     subRoot.SetAttribute("type", item.Value.type.Name);
                     xmlDoc.DocumentElement.AppendChild(subRoot);
                 }
@@ -213,7 +215,7 @@ namespace RetroLauncher.Service
                 textWritter.WriteStartElement("settings");
                 textWritter.WriteEndElement();
                 textWritter.Close();
-                
+
 
                 //Создаем элементы
                 XmlDocument xmlDoc = new XmlDocument();

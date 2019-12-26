@@ -100,6 +100,17 @@ namespace RetroLauncher.Helpers
             isLoadPage = true;
         }
 
+        public void LoadWaitPage()
+        {
+
+            var frame = GetDescendantFromName(Application.Current.MainWindow, "MainFrame") as Frame;
+            if (frame != null)
+                frame.Source = _pagesByKey["LoadPage"];
+
+
+            isLoadPage = true;
+        }
+
         public void HideWaitPage()
         {
             if (isLoadPage == false) return;

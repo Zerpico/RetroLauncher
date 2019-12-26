@@ -23,12 +23,16 @@ namespace RetroLauncher.ViewModel
     {
         static ViewModelLocator()
         {
+            FileService s = new FileService();
+
+
             var builder = new ContainerBuilder();
 
             builder.RegisterType<MainViewModel>().SingleInstance();
             builder.RegisterType<HomeViewModel>().SingleInstance();
             builder.RegisterType<RecentViewModel>();
             builder.RegisterType<GameDetailViewModel>();
+            builder.RegisterType<LoadViewModel>();
 
             var navigation = SetupNavigation();
 
@@ -41,12 +45,6 @@ namespace RetroLauncher.ViewModel
             var csl = new AutofacServiceLocator(container);
             ServiceLocator.SetLocatorProvider(() => csl);
 
-    /*        ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-            SimpleIoc.Default.Register<MainViewModel>();
-            SimpleIoc.Default.Register<RecentViewModel>();
-          //  SimpleIoc.Default.Register<DownloadedViewModel>();
-            SimpleIoc.Default.Register<HomeViewModel>();
-            SimpleIoc.Default.Register<GameDetailViewModel>();*/
             SetupNavigation();
         }
 
@@ -55,12 +53,10 @@ namespace RetroLauncher.ViewModel
             var navigationService = new FrameNavigationService();
             navigationService.Configure("Home", new Uri("../View/HomePage.xaml", UriKind.Relative));
             navigationService.Configure("Recent", new Uri("../View/RecentPage.xaml", UriKind.Relative));
-          /*  navigationService.Configure("Downloaded", new Uri("../View/DownloadedPage.xaml", UriKind.Relative));*/
             navigationService.Configure("GameDetail", new Uri("../View/GameDetailPage.xaml", UriKind.Relative));
             navigationService.Configure("WaitPage", new Uri("../View/WaitPage.xaml", UriKind.Relative));
-            /*  SimpleIoc.Default.Register<IFrameNavigationService>(() => navigationService);
-              SimpleIoc.Default.Register<IRepository, WebRestRepository>(true);
-              */
+            navigationService.Configure("LoadPage", new Uri("../View/LoadPage.xaml", UriKind.Relative));
+
             return navigationService;
         }
         public MainViewModel Main
@@ -93,16 +89,16 @@ namespace RetroLauncher.ViewModel
                 return ServiceLocator.Current.GetInstance<GameDetailViewModel>();
             }
         }
-        /*public DownloadedViewModel DownloadedViewModel
+        public LoadViewModel DownloadedViewModel
         {
             get
             {
-                return ServiceLocator.Current.GetInstance<DownloadedViewModel>();
+                return ServiceLocator.Current.GetInstance<LoadViewModel>();
             }
         }
 
 
-        */
+
 
         /// <summary>
         /// Cleans up all the resources.

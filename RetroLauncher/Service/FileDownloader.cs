@@ -26,10 +26,11 @@ namespace RetroLauncher.Service
         //таймер для измерения скорости скачивания (возможно не нужен вовсе)
         public Stopwatch stopWatch = new Stopwatch();
 
-        internal void DownloadFile(Game gameToDownload)
+        internal string DownloadGame(Game gameToDownload)
         {
             //ProgressChanged?.Invoke(5, 0, string.Empty); //имитация бурной деятельности
             progress.Report((5, string.Empty));
+            string pathDown = string.Empty;
 
 
             this.CurrentDownloadGame = gameToDownload;
@@ -67,7 +68,7 @@ namespace RetroLauncher.Service
             if (string.IsNullOrEmpty(filePath))
             {
                 DownloadingError();
-                return;
+                return null;
             }
 
             //начинаем отсчёт, для вычисления скорости и всё такое. хотя хз зачем нам скорость загрузки 300 кб
@@ -85,8 +86,69 @@ namespace RetroLauncher.Service
                 progress.Report((0, ""));
             };
 
+            pathDown = filePath + Path.GetExtension(CurrentDownloadGame.RomUrl);
             //запуск асинхроного скачивания
-            webClient.DownloadFileAsync(new Uri(CurrentDownloadGame.RomUrl), filePath + Path.GetExtension(CurrentDownloadGame.RomUrl));
+            webClient.DownloadFileAsync(new Uri(CurrentDownloadGame.RomUrl), pathDown);
+
+            return pathDown;
+
+        }
+
+
+        internal void DownloadFile(string url, string pathToLoad)
+        {
+            //ProgressChanged?.Invoke(5, 0, string.Empty); //имитация бурной деятельности
+            progress.Report((5, string.Empty));
+
+            this.CurrentDownloadGame = null;
+            if (webClient.IsBusy)
+                throw new Exception("The client is busy");
+
+            //начала таймера
+            var startDownloading = DateTime.UtcNow;
+
+            //т.к. у нас всё через жопу то сначала получим все настройки прокси для клиента
+
+            //сначала определем тип прокси из настроек
+            TypeProxy typeProxy = Service.Storage.Source.GetValue<TypeProxy>("ProxyType");
+
+            if (typeProxy != TypeProxy.Default) //если выбрали http или еще какую дрянь, пока только http поддержка
+            {
+                //определим настройки для прокси
+                WebProxy proxy = new WebProxy();
+
+                string proxyHost = Service.Storage.Source.GetValue("ProxyHost").ToString();
+                string proxyPort = Service.Storage.Source.GetValue("ProxyPort").ToString();
+                proxy.Address = new Uri($"http://{proxyHost}:{proxyPort}");
+                proxy.BypassProxyOnLocal = false;
+                proxy.UseDefaultCredentials = false;
+
+                webClient.Proxy = proxy;
+            }
+            else //иначе системные выбираем
+            {
+                webClient.Credentials = CredentialCache.DefaultCredentials;
+            }
+
+
+            //начинаем отсчёт, для вычисления скорости и всё такое. хотя хз зачем нам скорость загрузки 300 кб
+            stopWatch.Start();
+
+            //прогресс загрузки
+            webClient.DownloadProgressChanged += (o, args) =>
+            {
+                //ProgressChanged?.Invoke(args.ProgressPercentage, args.BytesReceived, PrettyBytes(args.BytesReceived));
+                progress.Report((args.ProgressPercentage, PrettyBytes(args.BytesReceived)));
+            };
+
+            webClient.DownloadFileCompleted += (o, args) =>
+            {
+                progress.Report((0, ""));
+            };
+
+
+            //запуск асинхроного скачивания
+            webClient.DownloadFileAsync(new Uri(url), pathToLoad);
 
         }
 

@@ -40,6 +40,7 @@ namespace RetroLauncher.Helpers
 
         void ShowWaitPage();
         void HideWaitPage();
+        void LoadWaitPage();
 
         object Parameter { get; }
     }

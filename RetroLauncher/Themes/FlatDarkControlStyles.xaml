@@ -143,7 +143,7 @@
             </Trigger>
         </ControlTemplate.Triggers>
     </ControlTemplate>
-    
+
 
     <Style TargetType="Control" x:Key="CommonStyle">
         <Setter Property="Background" Value="{DynamicResource WindowBrush}" />
@@ -180,6 +180,14 @@
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding SelectedGame.IsInstall, UpdateSourceTrigger=PropertyChanged}" Value="True">
+                <Setter Property="Content" Value="Играть"/>
+            </DataTrigger>
+            <DataTrigger Binding="{Binding SelectedGame.IsInstall, UpdateSourceTrigger=PropertyChanged}" Value="False">
+                <Setter Property="Content" Value="Скачать"/>
+            </DataTrigger>
+        </Style.Triggers>
     </Style>
 
     <Style x:Key="ButtonFilterStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CommonStyle}">
@@ -194,7 +202,7 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="ContextMenuService.Placement" Value="Bottom" />
-        <Setter Property="ContextMenuService.VerticalOffset" Value="5" />        
+        <Setter Property="ContextMenuService.VerticalOffset" Value="5" />
     </Style>
 
     <!-- СТИЛЬ СЕРОЙ КНОПКИ -->

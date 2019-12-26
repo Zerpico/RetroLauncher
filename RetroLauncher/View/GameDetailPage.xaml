@@ -90,7 +90,8 @@
                         FontSize="20" Height="40"
                      Command="{Binding DownloadCommand}"
                         Style="{StaticResource GreenButtonStyle}"
-                        Content="Скачать">
+                        >
+
                 <!--<Button.InputBindings>
                         <MouseBinding    MouseAction="LeftClick" />
                         <MouseBinding   Command="{Binding Download2Command}" MouseAction="RightClick" />
