@@ -14,7 +14,7 @@ namespace RetroLauncher.ViewModel
     public class RecentViewModel : ViewModelBase
     {
         private readonly IFrameNavigationService _navigationService;
-        private readonly IRepository _gameDb;
+       // private readonly IRepository _gameDb;
 
         public RecentViewModel(IFrameNavigationService navigationService, IRepository gameDb)
         {

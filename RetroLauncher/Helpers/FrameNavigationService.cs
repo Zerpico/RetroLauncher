@@ -107,7 +107,6 @@ namespace RetroLauncher.Helpers
             if (frame != null)
                 frame.Source = _pagesByKey["LoadPage"];
 
-
             isLoadPage = true;
         }
 

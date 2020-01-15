@@ -14,19 +14,22 @@ namespace RetroLauncher.ViewModel
 {
     public class LoadViewModel : ViewModelBase
     {
-        private readonly IFrameNavigationService _navigationService;
+       // private readonly IFrameNavigationService _navigationService;
 
         public LoadViewModel()
         {
-            Progress = 0;
+            Progress = 0; RaisePropertyChanged(nameof(Progress));
             Message = "Загрузка";
-            MessengerInstance.Register<(int, string)>(this, RefreshPage);
+           // MessengerInstance.Register<ProgressMessage>(this, (d)=>{ RefreshPage(d);});
+            RefreshPage(new ProgressMessage(){Percent = 0, Message = "кря"});
+
+            MessengerInstance.Register<ProgressMessage>(this, RefreshPage);
         }
 
-        private void RefreshPage((int progres, string message) obj)
+        private void RefreshPage(ProgressMessage obj)
         {
-            Progress = obj.progres;
-            Message = obj.message;
+            Progress = obj.Percent;
+            Message = obj.Message;
             RaisePropertyChanged(nameof(Progress));
             RaisePropertyChanged(nameof(Message));
 

@@ -22,6 +22,8 @@ namespace RetroLauncher.ViewModel
         private Game selectedGame;
         public Game SelectedGame { get { return selectedGame; } set { selectedGame = value; } }
 
+        string downloadPath;
+
         public GameDetailViewModel(IFrameNavigationService navigationService, IRepository repository)
         {
             //инициализируем всякие репы и прочии службы
@@ -37,6 +39,12 @@ namespace RetroLauncher.ViewModel
              {
                  Progress = value.progress;
                  DownloadBytes = value.bytes;
+                 if (value.progress == 100)
+                 {
+                     Service.ArchiveExtractor.ExtractAll(downloadPath, System.IO.Path.GetDirectoryName(downloadPath));
+                     System.IO.File.Delete(downloadPath);
+                 }
+
              });
             fileDownloader = new FileDownloader(progress);
 
@@ -83,10 +91,12 @@ namespace RetroLauncher.ViewModel
                     ?? (_downloadCommand = new RelayCommand(() =>
                     {
 
-                        var path = fileDownloader.DownloadGame(SelectedGame);
+                        downloadPath = fileDownloader.DownloadGame(SelectedGame);
                         FileService serv = new FileService();
-                        SelectedGame.LocalPath = new GamePath() { GameId = SelectedGame.GameId, LocalPath = path };
+
+                        SelectedGame.LocalPath = new GamePath() { GameId = SelectedGame.GameId, LocalPath = System.IO.Path.GetDirectoryName(downloadPath) };
                         serv.UpdateGame(SelectedGame);
+
 
 
                     }, () => Progress == 0)); //заблокируем нах кнопку если уже что-то скачиваем

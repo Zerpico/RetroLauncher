@@ -8,11 +8,12 @@
       d:DesignHeight="450" d:DesignWidth="800"
       DataContext="{Binding LoadViewModel,Source={StaticResource Locator}}">
 
+
     <Grid Width="300" Height="200">
         <StackPanel>
             <TextBlock x:Name="txtLoad" Foreground="{StaticResource MainTitle}" FontSize="32" VerticalAlignment="Center"
                        Text="{Binding Message, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left"/>
-            <ProgressBar Maximum="0" Margin="0,5" x:Name="prgsLoad" Value="{Binding Progress, UpdateSourceTrigger=PropertyChanged}"
+            <ProgressBar Maximum="100" Margin="0,5" x:Name="prgsLoad" Value="{Binding Progress, UpdateSourceTrigger=PropertyChanged}"
                        VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Height="35"/>
         </StackPanel>
 

@@ -89,7 +89,7 @@ namespace RetroLauncher.ViewModel
                 return ServiceLocator.Current.GetInstance<GameDetailViewModel>();
             }
         }
-        public LoadViewModel DownloadedViewModel
+        public LoadViewModel LoadViewModel
         {
             get
             {

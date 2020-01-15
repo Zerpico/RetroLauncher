@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RetroLauncher.Data\RetroLauncher.Data.csproj" />
+    <ProjectReference Include="..\SevenZipExtractor\SevenZipExtractor.csproj" />
   </ItemGroup>
 
   <ItemGroup>

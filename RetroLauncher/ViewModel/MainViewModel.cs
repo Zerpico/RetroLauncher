@@ -21,13 +21,12 @@ namespace RetroLauncher.ViewModel
                     () =>
                     {
                         if (System.IO.Directory.Exists(Service.Storage.Source.PathEmulator))
-                        {
                             _navigationService.NavigateTo("Home");
-                        }
                         else
                         {
                             _navigationService.LoadWaitPage();
                             loadEmulator();
+
                         }
 
 
@@ -35,19 +34,30 @@ namespace RetroLauncher.ViewModel
             }
         }
 
+        int lastPercent = 0;
         private void loadEmulator()
         {
+
             var progress = new Progress<(int progress, string bytes)>(
              (value) =>
              {
-                 MessengerInstance.Send((value.progress, "Загрузка эмулятора"));
+                 if (value.progress != lastPercent)
+                 {
+                    this.MessengerInstance.Send<ProgressMessage, int>(null);
+                    MessengerInstance.Send(new ProgressMessage() { Percent = value.progress, Message = "Загрузка эмулятора" });
+                    lastPercent = value.progress;
+
+                 }
                  if (value.progress >= 100)
                  {
+                     Service.ArchiveExtractor.ExtractAll(System.IO.Path.Combine(Service.Storage.Source.PathApp, "mednafen.zip"),Service.Storage.Source.PathEmulator);
+                     System.IO.File.Delete(System.IO.Path.Combine(Service.Storage.Source.PathApp, "mednafen.zip"));
+
                      _navigationService.NavigateTo("Home");
                  }
              });
             var fileDownloader = new Service.FileDownloader(progress);
-            fileDownloader.DownloadFile("http://www.zerpico.ru/retrolauncher/mednafen.zip", @"C:\TMP\mednafen.zip");
+            fileDownloader.DownloadFile("https://www.zerpico.ru/retrolauncher/mednafen.zip", System.IO.Path.Combine(Service.Storage.Source.PathApp, "mednafen.zip"));
 
 
 

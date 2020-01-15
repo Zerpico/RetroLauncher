@@ -143,8 +143,14 @@ namespace RetroLauncher.Service
 
             webClient.DownloadFileCompleted += (o, args) =>
             {
+                if (args.Error != null)
+                {
+                    System.IO.File.WriteAllText("log.txt",args.Error.ToString()+Environment.NewLine);
+                }
                 progress.Report((0, ""));
             };
+
+
 
 
             //запуск асинхроного скачивания

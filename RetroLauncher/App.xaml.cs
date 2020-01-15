@@ -39,4 +39,10 @@ namespace RetroLauncher
             System.IO.File.WriteAllText("log.txt",exception.ToString()+Environment.NewLine);
         }
     }
+
+    public class ProgressMessage
+    {
+        public int Percent;
+        public string Message;
+    }
 }
