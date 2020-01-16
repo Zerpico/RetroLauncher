@@ -43,6 +43,7 @@ namespace RetroLauncher.ViewModel
                  {
                      Service.ArchiveExtractor.ExtractAll(downloadPath, System.IO.Path.GetDirectoryName(downloadPath));
                      System.IO.File.Delete(downloadPath);
+                     RunOrDownloadGame();
                  }
 
              });
@@ -90,16 +91,28 @@ namespace RetroLauncher.ViewModel
                 return _downloadCommand
                     ?? (_downloadCommand = new RelayCommand(() =>
                     {
-
-                        downloadPath = fileDownloader.DownloadGame(SelectedGame);
-                        FileService serv = new FileService();
-
-                        SelectedGame.LocalPath = new GamePath() { GameId = SelectedGame.GameId, LocalPath = System.IO.Path.GetDirectoryName(downloadPath) };
-                        serv.UpdateGame(SelectedGame);
-
+                        RunOrDownloadGame();
 
 
                     }, () => Progress == 0)); //заблокируем нах кнопку если уже что-то скачиваем
+            }
+        }
+
+        private void RunOrDownloadGame()
+        {
+            if (SelectedGame.IsInstall)
+            {
+                var f_rom = System.IO.Directory.GetFiles(SelectedGame.LocalPathRom)[0];
+                Service.EmulatorService emulator = new EmulatorService();
+                emulator.StartRom(f_rom);
+            }
+            else
+            {
+                downloadPath = fileDownloader.DownloadGame(SelectedGame);
+                FileService serv = new FileService();
+
+                SelectedGame.LocalPath = new GamePath() { GameId = SelectedGame.GameId, LocalPath = System.IO.Path.GetDirectoryName(downloadPath) };
+                serv.UpdateGame(SelectedGame);
             }
         }
 

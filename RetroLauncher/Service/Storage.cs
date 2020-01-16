@@ -15,6 +15,7 @@ namespace RetroLauncher.Service
         public readonly string PathApp ;            //%AppDATA%\RetroLauncher
         public readonly string PathSettingsApp;     //%AppDATA%\RetroLauncher\settings.xml
         public readonly string PathEmulator;        //%AppDATA%\RetroLauncher\emulator
+        public readonly string PathEmulatorExe;        //%AppDATA%\RetroLauncher\emulator\mednafen.exe
         public readonly string PathEmulatorConfig;  //%AppDATA%\RetroLauncher\emulator\mednafen.cfg
         public readonly string PathGames;           //%AppDATA%\RetroLauncher\Games
         public readonly string PathLocalDb;           //%AppDATA%\RetroLauncher\localdb.db
@@ -27,6 +28,7 @@ namespace RetroLauncher.Service
             PathApp = Path.Combine(AppDataPath,WorkFolder);
             PathSettingsApp = Path.Combine(PathApp, "settings.xml");
             PathEmulator = Path.Combine(PathApp,"emulator");
+            PathEmulatorExe = Path.Combine(PathEmulator,"mednafen.exe");
             PathEmulatorConfig = Path.Combine(PathEmulator,"mednafen.cfg");
             PathGames = Path.Combine(PathApp,"Games");
             PathLocalDb = Path.Combine(PathApp,"localdb.db");
