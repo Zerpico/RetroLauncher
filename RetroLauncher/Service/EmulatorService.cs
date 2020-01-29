@@ -20,6 +20,7 @@ namespace RetroLauncher.Service
             process.StartInfo.FileName = Storage.Source.PathEmulatorExe;
             process.StartInfo.Arguments = $"\"{gamepath}\"";
             process.Start();
+
         }
 
     }

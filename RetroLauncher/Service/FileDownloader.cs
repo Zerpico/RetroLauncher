@@ -20,6 +20,9 @@ namespace RetroLauncher.Service
         /// <value></value>
         public Game CurrentDownloadGame { get; set; }
 
+        public delegate void CompleteProgressAgrs ();
+        public event  CompleteProgressAgrs DownloadComplete;
+
         //сам клиент для скачивания
         public WebClient webClient = new WebClient();
 
@@ -84,6 +87,7 @@ namespace RetroLauncher.Service
             webClient.DownloadFileCompleted += (o, args) =>
             {
                 progress.Report((0, ""));
+                DownloadComplete();
             };
 
             pathDown = filePath + Path.GetExtension(CurrentDownloadGame.RomUrl);
