@@ -12,11 +12,15 @@ namespace RetroLauncher.Service
             if (!Directory.Exists(pathToExtract))
                 Directory.CreateDirectory(pathToExtract);
 
-            using (Stream stream = File.OpenRead(pathArchive))
-            {
-                using (SevenZipExtractor.ArchiveFile archive = new SevenZipExtractor.ArchiveFile(stream))
+           // using (Stream stream = File.OpenRead(pathArchive))
+            //{
+                using (SevenZipExtractor.ArchiveFile archive = new SevenZipExtractor.ArchiveFile(pathArchive))
                     archive.Extract(pathToExtract, true);
-            }
+
+
+
+
+           // }
 
 
         }

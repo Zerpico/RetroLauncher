@@ -21,7 +21,7 @@ namespace RetroLauncher.ViewModel
             Progress = 0; RaisePropertyChanged(nameof(Progress));
             Message = "Загрузка";
            // MessengerInstance.Register<ProgressMessage>(this, (d)=>{ RefreshPage(d);});
-            RefreshPage(new ProgressMessage(){Percent = 0, Message = "кря"});
+            RefreshPage(new ProgressMessage(){Percent = 0, Message = "Загрузка"});
 
             MessengerInstance.Register<ProgressMessage>(this, RefreshPage);
         }

@@ -39,17 +39,20 @@ namespace RetroLauncher.ViewModel
              {
                  Progress = value.progress;
                  DownloadBytes = value.bytes;
-                 if (value.progress == 100)
-                 {
-                     Service.ArchiveExtractor.ExtractAll(downloadPath, System.IO.Path.GetDirectoryName(downloadPath));
-                     System.IO.File.Delete(downloadPath);
-                     RunOrDownloadGame();
-                 }
 
              });
             fileDownloader = new FileDownloader(progress);
+            fileDownloader.DownloadComplete += downComplete;
 
             //fileDownloader.DownloadComplete += () => { fileDownloader.ProgressChanged -= ProgressChanged; Progress = 0; DownloadBytes="";};
+        }
+
+        private void downComplete()
+        {
+            Service.ArchiveExtractor.ExtractAll(downloadPath, System.IO.Path.GetDirectoryName(downloadPath));
+            System.Threading.Thread.Sleep(10);
+            System.IO.File.Delete(downloadPath);
+            RunOrDownloadGame();
         }
 
         /// <summary>
@@ -91,6 +94,8 @@ namespace RetroLauncher.ViewModel
                 return _downloadCommand
                     ?? (_downloadCommand = new RelayCommand(() =>
                     {
+
+
                         RunOrDownloadGame();
 
 
@@ -98,13 +103,23 @@ namespace RetroLauncher.ViewModel
             }
         }
 
-        private void RunOrDownloadGame()
+        private async void RunOrDownloadGame()
         {
             if (SelectedGame.IsInstall)
             {
-                var f_rom = System.IO.Directory.GetFiles(SelectedGame.LocalPathRom)[0];
-                Service.EmulatorService emulator = new EmulatorService();
-                emulator.StartRom(f_rom);
+                var rootRegistry = (DisplayRootRegistry)CommonServiceLocator.ServiceLocator.Current.GetInstance(typeof(DisplayRootRegistry));
+
+                var fileVM = new FileSelectViewModel(SelectedGame.LocalPathRom);
+                var result = await rootRegistry.ShowModalPresentation(fileVM);
+
+                if (result == true)
+                {
+                    Service.EmulatorService emulator = new EmulatorService();
+                    emulator.StartRom(System.IO.Path.Combine(SelectedGame.LocalPathRom, fileVM.SelectRom));
+                }
+
+                //var f_rom = System.IO.Directory.GetFiles(SelectedGame.LocalPathRom)[0];
+
             }
             else
             {

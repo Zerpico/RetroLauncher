@@ -45,8 +45,8 @@ namespace RetroLauncher.Service
                 WebProxy proxy = new WebProxy();
 
                 string proxyHost = Service.Storage.Source.GetValue("ProxyHost").ToString();
-                string proxyPort = Service.Storage.Source.GetValue("ProxyPort").ToString();
-                proxy.Address = new Uri($"http://{proxyHost}:{proxyPort}");
+                int proxyPort = Service.Storage.Source.GetValue<int>("ProxyPort");
+                proxy.Address = new Uri($"http://{proxyHost.Trim()}:{proxyPort.ToString()}");
                 proxy.BypassProxyOnLocal = false;
                 proxy.UseDefaultCredentials = false;
 

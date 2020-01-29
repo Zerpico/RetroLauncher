@@ -36,6 +36,10 @@ namespace RetroLauncher.ViewModel
 
             var navigation = SetupNavigation();
 
+            DisplayRootRegistry rootRegistry = new DisplayRootRegistry();
+            rootRegistry.RegisterWindowType<FileSelectViewModel, View.FileSelectWindow>();
+            builder.RegisterInstance<DisplayRootRegistry>(rootRegistry);
+
             builder.RegisterInstance<IFrameNavigationService>(navigation);
             builder.RegisterType<WebRestRepository>().As<IRepository>().SingleInstance();
 
@@ -44,6 +48,7 @@ namespace RetroLauncher.ViewModel
             // Set the service locator to an AutofacServiceLocator.
             var csl = new AutofacServiceLocator(container);
             ServiceLocator.SetLocatorProvider(() => csl);
+
 
             SetupNavigation();
         }
