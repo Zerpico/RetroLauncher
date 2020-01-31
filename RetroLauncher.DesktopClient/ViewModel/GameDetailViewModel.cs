@@ -1,5 +1,7 @@
 ﻿using System;
+using RetroLauncher.Common;
 using RetroLauncher.DAL.Model;
+using RetroLauncher.DAL.Service;
 using RetroLauncher.DesktopClient.Helpers;
 using RetroLauncher.DesktopClient.Service;
 using RetroLauncher.DesktopClient.ViewModel.Base;
@@ -43,7 +45,7 @@ namespace RetroLauncher.DesktopClient.ViewModel
 
         private void downComplete()
         {
-            Service.ArchiveExtractor.ExtractAll(downloadPath, System.IO.Path.GetDirectoryName(downloadPath));
+            ArchiveExtractor.ExtractAll(downloadPath, System.IO.Path.GetDirectoryName(downloadPath));
             System.Threading.Thread.Sleep(10);
             System.IO.File.Delete(downloadPath);
             RunOrDownloadGame();
@@ -58,7 +60,7 @@ namespace RetroLauncher.DesktopClient.ViewModel
         {
             selectedGame =  (Game)(await _repository.GetGameById(recGame.GameId));
             FileService serv = new FileService();
-            selectedGame = await serv.GetGame(selectedGame);
+            selectedGame = await FileService.GetGame(selectedGame);
 
             RaisePropertyChanged(nameof(SelectedGame));
         }
@@ -121,7 +123,7 @@ namespace RetroLauncher.DesktopClient.ViewModel
                 FileService serv = new FileService();
 
                 SelectedGame.LocalPath = new GamePath() { GameId = SelectedGame.GameId, LocalPath = System.IO.Path.GetDirectoryName(downloadPath) };
-                serv.UpdateGame(SelectedGame);
+                FileService.UpdateGame(SelectedGame);
             }
         }
 

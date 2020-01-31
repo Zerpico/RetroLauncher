@@ -8,44 +8,33 @@ namespace RetroLauncher.DesktopClient.Service
 {
     public class FileService //: IFileService
     {
-
-        public FileService()
+        public static async void UpdateGame(Game game)
         {
+            await using var db = new LocalGameContext();
 
+            if(db.Set<Game>().Any( a => a.GameId == game.GameId))
+            {
+                db.Games.Update(game);
+            }
+            else
+            {
+                db.Games.Add(game);
+            }
+            await db.SaveChangesAsync();
         }
 
-        public async void UpdateGame(Game game)
+        public static async Task<Game> GetGame(Game game)
         {
-            using (var db = new LocalGameContext())
+            await using var db = new LocalGameContext();
+            if (!await db.Set<GamePath>().AnyAsync(a => a.GameId == game.GameId))
             {
-                if(db.Set<Game>().Any( a => a.GameId == game.GameId))
-                {
-                    db.Games.Update(game);
-                }
-                else
-                {
-                    db.Games.Add(game);
-                }
-                await db.SaveChangesAsync();
+                return game;
             }
-        }
 
-        public async Task<Game> GetGame(Game game)
-        {
-            using (var db = new LocalGameContext())
-            {
-                if( await db.Set<GamePath>().AnyAsync( a => a.GameId == game.GameId))
-                {
-                    var find = db.GamePaths.Where(d => d.GameId == game.GameId).First();
+            var find = db.GamePaths.First(d => d.GameId == game.GameId);
 
-                    game.LocalPath = find;
-                    return game;
-                }
-
-            }
+            game.LocalPath = find;
             return game;
         }
     }
-
-    
 }

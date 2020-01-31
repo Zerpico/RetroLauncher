@@ -1,4 +1,9 @@
 ﻿using System;
+using Autofac;
+using Autofac.Extras.CommonServiceLocator;
+using CommonServiceLocator;
+using RetroLauncher.DAL.Repository;
+using RetroLauncher.DAL.Service;
 using RetroLauncher.DesktopClient.Helpers;
 using RetroLauncher.DesktopClient.Service;
 

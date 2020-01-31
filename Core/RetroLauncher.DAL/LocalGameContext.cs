@@ -1,20 +1,23 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.IO;
+using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
+using RetroLauncher.Common;
 using RetroLauncher.DAL.Model;
 
 namespace RetroLauncher.DAL
 {
-    public class LocalGameContext : DbContext
+    public sealed class LocalGameContext : DbContext
     {
         public DbSet<Game> Games { get; set; }
         public DbSet<GamePath> GamePaths { get; set; }
-        public LocalGameContext()
-        {
-            Database.EnsureCreated();
-        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             builder.UseSqlite($"DataSource={Storage.Source.PathLocalDb}");
+            if (!File.Exists($"{Storage.Source.PathLocalDb}"))
+            {
+                CreateFile(Storage.Source.PathLocalDb);
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -32,5 +35,15 @@ namespace RetroLauncher.DAL
             }
         }
 
+        /// <summary>
+        /// Creates a database file.  This just creates a zero-byte file which SQLite
+        /// will turn into a database when the file is opened properly.
+        /// </summary>
+        /// <param name="databaseFileName">The file to create</param>
+        private void CreateFile(string databaseFileName)
+        {
+            var fs = File.Create(databaseFileName);
+            fs.Close();
+        }
     }
 }

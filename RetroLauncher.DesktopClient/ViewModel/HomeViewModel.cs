@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.Linq;
+using RetroLauncher.DAL.Model;
+using RetroLauncher.DAL.Service;
 using RetroLauncher.DesktopClient.Controls;
 using RetroLauncher.DesktopClient.Helpers;
 using RetroLauncher.DesktopClient.ViewModel.Base;

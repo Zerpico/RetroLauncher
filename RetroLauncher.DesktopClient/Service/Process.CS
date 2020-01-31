@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.ComponentModel;
+using System.Management;
 
 namespace RetroLauncher.DesktopClient.Service {
     // Функции ShouldSerialize<PropertyName> используются обозревателем свойств VS чтобы проверить, должно ли конкретное свойство быть сериализовано. Эти функции добавляются для всех свойств ValueType (свойства типа Int32, BOOL и т.д., для которых не может быть установлено значение null). Эти функции используют функцию Is<PropertyName>Null. Также эти функции используются в реализации TypeConverter для свойств для проверки значения NULL свойства, чтобы пустое значение могло быть отображено в обозревателе свойств для перетаскивания и копирования в Visual studio.
@@ -8,7 +9,7 @@ namespace RetroLauncher.DesktopClient.Service {
     // Каждое свойство, добавленное к классу для свойства WMI, имеет набор атрибутов, который определяет его поведение в Visual Studio designer, а также определяет используемый TypeConverter.
     // Функции преобразования даты и времени ToDateTime и ToDmtfDateTime добавлены к классу для преобразования даты и времени DMTF в System.DateTime и наоборот.
     // Класс Early Bound создан для класса WMI.Win32_Process
-    public class WIN32_Process : System.ComponentModel.Component {
+    public class WIN32_Process : Component {
 
         // Частное свойство, которое хранит пространство имен WMI, в котором находится этот класс.
         private static string CreatedWmiNamespace = "root\\cimv2";
@@ -17,55 +18,55 @@ namespace RetroLauncher.DesktopClient.Service {
         private static string CreatedClassName = "Win32_Process";
 
         // Частное поле для хранения ManagementScope, используемое различными методами.
-        private static System.Management.ManagementScope statMgmtScope = null;
+        private static ManagementScope statMgmtScope = null;
 
         private ManagementSystemProperties PrivateSystemProperties;
 
         // Зависимый объект WMI lateBound.
-        private System.Management.ManagementObject PrivateLateBoundObject;
+        private ManagementObject PrivateLateBoundObject;
 
         // Поле для хранения поведения "автоматической отправки" класса.
         private bool AutoCommitProp;
 
         // Частная переменная, которая хранит встроенное свойство, соответствующее экземпляру.
-        private System.Management.ManagementBaseObject embeddedObj;
+        private ManagementBaseObject embeddedObj;
 
         // Текущий используемый объект WMI
-        private System.Management.ManagementBaseObject curObj;
+        private ManagementBaseObject curObj;
 
         // Флаг, указывающий, является ли экземпляр встроенным объектом.
         private bool isEmbedded;
 
         // Ниже приводятся различные перезагрузки конструкторов для инициализации экземпляра класса с объектом WMI.
         public WIN32_Process() {
-            this.InitializeObject(null, null, null);
+            InitializeObject(null, null, null);
         }
 
         public WIN32_Process(string keyHandle) {
-            this.InitializeObject(null, new System.Management.ManagementPath(WIN32_Process.ConstructPath(keyHandle)), null);
+            InitializeObject(null, new ManagementPath(ConstructPath(keyHandle)), null);
         }
 
-        public WIN32_Process(System.Management.ManagementScope mgmtScope, string keyHandle) {
-            this.InitializeObject(((System.Management.ManagementScope)(mgmtScope)), new System.Management.ManagementPath(WIN32_Process.ConstructPath(keyHandle)), null);
+        public WIN32_Process(ManagementScope mgmtScope, string keyHandle) {
+            InitializeObject(((ManagementScope)(mgmtScope)), new ManagementPath(ConstructPath(keyHandle)), null);
         }
 
-        public WIN32_Process(System.Management.ManagementPath path, System.Management.ObjectGetOptions getOptions) {
-            this.InitializeObject(null, path, getOptions);
+        public WIN32_Process(ManagementPath path, ObjectGetOptions getOptions) {
+            InitializeObject(null, path, getOptions);
         }
 
-        public WIN32_Process(System.Management.ManagementScope mgmtScope, System.Management.ManagementPath path) {
-            this.InitializeObject(mgmtScope, path, null);
+        public WIN32_Process(ManagementScope mgmtScope, ManagementPath path) {
+            InitializeObject(mgmtScope, path, null);
         }
 
-        public WIN32_Process(System.Management.ManagementPath path) {
-            this.InitializeObject(null, path, null);
+        public WIN32_Process(ManagementPath path) {
+            InitializeObject(null, path, null);
         }
 
-        public WIN32_Process(System.Management.ManagementScope mgmtScope, System.Management.ManagementPath path, System.Management.ObjectGetOptions getOptions) {
-            this.InitializeObject(mgmtScope, path, getOptions);
+        public WIN32_Process(ManagementScope mgmtScope, ManagementPath path, ObjectGetOptions getOptions) {
+            InitializeObject(mgmtScope, path, getOptions);
         }
 
-        public WIN32_Process(System.Management.ManagementObject theObject) {
+        public WIN32_Process(ManagementObject theObject) {
             Initialize();
             if ((CheckIfProperClass(theObject) == true)) {
                 PrivateLateBoundObject = theObject;
@@ -77,7 +78,7 @@ namespace RetroLauncher.DesktopClient.Service {
             }
         }
 
-        public WIN32_Process(System.Management.ManagementBaseObject theObject) {
+        public WIN32_Process(ManagementBaseObject theObject) {
             Initialize();
             if ((CheckIfProperClass(theObject) == true)) {
                 embeddedObj = theObject;
@@ -129,7 +130,7 @@ namespace RetroLauncher.DesktopClient.Service {
         // Свойство, возвращающее объект lateBound.
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public System.Management.ManagementBaseObject LateBoundObject {
+        public ManagementBaseObject LateBoundObject {
             get {
                 return curObj;
             }
@@ -138,7 +139,7 @@ namespace RetroLauncher.DesktopClient.Service {
         // ManagementScope объекта.
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public System.Management.ManagementScope Scope {
+        public ManagementScope Scope {
             get {
                 if ((isEmbedded == false)) {
                     return PrivateLateBoundObject.Scope;
@@ -168,7 +169,7 @@ namespace RetroLauncher.DesktopClient.Service {
 
         // ManagementPath зависимого объекта WMI.
         [Browsable(true)]
-        public System.Management.ManagementPath Path {
+        public ManagementPath Path {
             get {
                 if ((isEmbedded == false)) {
                     return PrivateLateBoundObject.Path;
@@ -190,7 +191,7 @@ namespace RetroLauncher.DesktopClient.Service {
         // Свойство общей статической области, используемое различными методами.
         [Browsable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public static System.Management.ManagementScope StaticScope {
+        public static ManagementScope StaticScope {
             get {
                 return statMgmtScope;
             }
@@ -1179,19 +1180,19 @@ namespace RetroLauncher.DesktopClient.Service {
             }
         }
 
-        private bool CheckIfProperClass(System.Management.ManagementScope mgmtScope, System.Management.ManagementPath path, System.Management.ObjectGetOptions OptionsParam) {
+        private bool CheckIfProperClass(ManagementScope mgmtScope, ManagementPath path, ObjectGetOptions OptionsParam) {
             if (((path != null)
-                        && (string.Compare(path.ClassName, this.ManagementClassName, true, System.Globalization.CultureInfo.InvariantCulture) == 0))) {
+                        && (string.Compare(path.ClassName, ManagementClassName, true, System.Globalization.CultureInfo.InvariantCulture) == 0))) {
                 return true;
             }
             else {
-                return CheckIfProperClass(new System.Management.ManagementObject(mgmtScope, path, OptionsParam));
+                return CheckIfProperClass(new ManagementObject(mgmtScope, path, OptionsParam));
             }
         }
 
-        private bool CheckIfProperClass(System.Management.ManagementBaseObject theObj) {
+        private bool CheckIfProperClass(ManagementBaseObject theObj) {
             if (((theObj != null)
-                        && (string.Compare(((string)(theObj["__CLASS"])), this.ManagementClassName, true, System.Globalization.CultureInfo.InvariantCulture) == 0))) {
+                        && (string.Compare(((string)(theObj["__CLASS"])), ManagementClassName, true, System.Globalization.CultureInfo.InvariantCulture) == 0))) {
                 return true;
             }
             else {
@@ -1199,7 +1200,7 @@ namespace RetroLauncher.DesktopClient.Service {
                 if ((parentClasses != null)) {
                     int count = 0;
                     for (count = 0; (count < parentClasses.Length); count = (count + 1)) {
-                        if ((string.Compare(((string)(parentClasses.GetValue(count))), this.ManagementClassName, true, System.Globalization.CultureInfo.InvariantCulture) == 0)) {
+                        if ((string.Compare(((string)(parentClasses.GetValue(count))), ManagementClassName, true, System.Globalization.CultureInfo.InvariantCulture) == 0)) {
                             return true;
                         }
                     }
@@ -1333,224 +1334,224 @@ namespace RetroLauncher.DesktopClient.Service {
         }
 
         private bool ShouldSerializeCreationDate() {
-            if ((this.IsCreationDateNull == false)) {
+            if ((IsCreationDateNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeExecutionState() {
-            if ((this.IsExecutionStateNull == false)) {
+            if ((IsExecutionStateNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeHandleCount() {
-            if ((this.IsHandleCountNull == false)) {
+            if ((IsHandleCountNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeInstallDate() {
-            if ((this.IsInstallDateNull == false)) {
+            if ((IsInstallDateNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeKernelModeTime() {
-            if ((this.IsKernelModeTimeNull == false)) {
+            if ((IsKernelModeTimeNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeMaximumWorkingSetSize() {
-            if ((this.IsMaximumWorkingSetSizeNull == false)) {
+            if ((IsMaximumWorkingSetSizeNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeMinimumWorkingSetSize() {
-            if ((this.IsMinimumWorkingSetSizeNull == false)) {
+            if ((IsMinimumWorkingSetSizeNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeOtherOperationCount() {
-            if ((this.IsOtherOperationCountNull == false)) {
+            if ((IsOtherOperationCountNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeOtherTransferCount() {
-            if ((this.IsOtherTransferCountNull == false)) {
+            if ((IsOtherTransferCountNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializePageFaults() {
-            if ((this.IsPageFaultsNull == false)) {
+            if ((IsPageFaultsNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializePageFileUsage() {
-            if ((this.IsPageFileUsageNull == false)) {
+            if ((IsPageFileUsageNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeParentProcessId() {
-            if ((this.IsParentProcessIdNull == false)) {
+            if ((IsParentProcessIdNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializePeakPageFileUsage() {
-            if ((this.IsPeakPageFileUsageNull == false)) {
+            if ((IsPeakPageFileUsageNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializePeakVirtualSize() {
-            if ((this.IsPeakVirtualSizeNull == false)) {
+            if ((IsPeakVirtualSizeNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializePeakWorkingSetSize() {
-            if ((this.IsPeakWorkingSetSizeNull == false)) {
+            if ((IsPeakWorkingSetSizeNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializePriority() {
-            if ((this.IsPriorityNull == false)) {
+            if ((IsPriorityNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializePrivatePageCount() {
-            if ((this.IsPrivatePageCountNull == false)) {
+            if ((IsPrivatePageCountNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeProcessId() {
-            if ((this.IsProcessIdNull == false)) {
+            if ((IsProcessIdNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeQuotaNonPagedPoolUsage() {
-            if ((this.IsQuotaNonPagedPoolUsageNull == false)) {
+            if ((IsQuotaNonPagedPoolUsageNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeQuotaPagedPoolUsage() {
-            if ((this.IsQuotaPagedPoolUsageNull == false)) {
+            if ((IsQuotaPagedPoolUsageNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeQuotaPeakNonPagedPoolUsage() {
-            if ((this.IsQuotaPeakNonPagedPoolUsageNull == false)) {
+            if ((IsQuotaPeakNonPagedPoolUsageNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeQuotaPeakPagedPoolUsage() {
-            if ((this.IsQuotaPeakPagedPoolUsageNull == false)) {
+            if ((IsQuotaPeakPagedPoolUsageNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeReadOperationCount() {
-            if ((this.IsReadOperationCountNull == false)) {
+            if ((IsReadOperationCountNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeReadTransferCount() {
-            if ((this.IsReadTransferCountNull == false)) {
+            if ((IsReadTransferCountNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeSessionId() {
-            if ((this.IsSessionIdNull == false)) {
+            if ((IsSessionIdNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeTerminationDate() {
-            if ((this.IsTerminationDateNull == false)) {
+            if ((IsTerminationDateNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeThreadCount() {
-            if ((this.IsThreadCountNull == false)) {
+            if ((IsThreadCountNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeUserModeTime() {
-            if ((this.IsUserModeTimeNull == false)) {
+            if ((IsUserModeTimeNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeVirtualSize() {
-            if ((this.IsVirtualSizeNull == false)) {
+            if ((IsVirtualSizeNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeWorkingSetSize() {
-            if ((this.IsWorkingSetSizeNull == false)) {
+            if ((IsWorkingSetSizeNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeWriteOperationCount() {
-            if ((this.IsWriteOperationCountNull == false)) {
+            if ((IsWriteOperationCountNull == false)) {
                 return true;
             }
             return false;
         }
 
         private bool ShouldSerializeWriteTransferCount() {
-            if ((this.IsWriteTransferCountNull == false)) {
+            if ((IsWriteTransferCountNull == false)) {
                 return true;
             }
             return false;
@@ -1564,7 +1565,7 @@ namespace RetroLauncher.DesktopClient.Service {
         }
 
         [Browsable(true)]
-        public void CommitObject(System.Management.PutOptions putOptions) {
+        public void CommitObject(PutOptions putOptions) {
             if ((isEmbedded == false)) {
                 PrivateLateBoundObject.Put(putOptions);
             }
@@ -1581,14 +1582,14 @@ namespace RetroLauncher.DesktopClient.Service {
             return strPath;
         }
 
-        private void InitializeObject(System.Management.ManagementScope mgmtScope, System.Management.ManagementPath path, System.Management.ObjectGetOptions getOptions) {
+        private void InitializeObject(ManagementScope mgmtScope, ManagementPath path, ObjectGetOptions getOptions) {
             Initialize();
             if ((path != null)) {
                 if ((CheckIfProperClass(mgmtScope, path, getOptions) != true)) {
                     throw new System.ArgumentException("Имя класса не совпадает.");
                 }
             }
-            PrivateLateBoundObject = new System.Management.ManagementObject(mgmtScope, path, getOptions);
+            PrivateLateBoundObject = new ManagementObject(mgmtScope, path, getOptions);
             PrivateSystemProperties = new ManagementSystemProperties(PrivateLateBoundObject);
             curObj = PrivateLateBoundObject;
         }
@@ -1610,47 +1611,47 @@ namespace RetroLauncher.DesktopClient.Service {
             return GetInstances(null, condition, selectedProperties);
         }
 
-        public static ProcessCollection GetInstances(System.Management.ManagementScope mgmtScope, System.Management.EnumerationOptions enumOptions) {
+        public static ProcessCollection GetInstances(ManagementScope mgmtScope, EnumerationOptions enumOptions) {
             if ((mgmtScope == null)) {
                 if ((statMgmtScope == null)) {
-                    mgmtScope = new System.Management.ManagementScope();
+                    mgmtScope = new ManagementScope();
                     mgmtScope.Path.NamespacePath = "root\\cimv2";
                 }
                 else {
                     mgmtScope = statMgmtScope;
                 }
             }
-            System.Management.ManagementPath pathObj = new System.Management.ManagementPath();
+            ManagementPath pathObj = new ManagementPath();
             pathObj.ClassName = "Win32_Process";
             pathObj.NamespacePath = "root\\cimv2";
-            System.Management.ManagementClass clsObject = new System.Management.ManagementClass(mgmtScope, pathObj, null);
+            ManagementClass clsObject = new ManagementClass(mgmtScope, pathObj, null);
             if ((enumOptions == null)) {
-                enumOptions = new System.Management.EnumerationOptions();
+                enumOptions = new EnumerationOptions();
                 enumOptions.EnsureLocatable = true;
             }
             return new ProcessCollection(clsObject.GetInstances(enumOptions));
         }
 
-        public static ProcessCollection GetInstances(System.Management.ManagementScope mgmtScope, string condition) {
+        public static ProcessCollection GetInstances(ManagementScope mgmtScope, string condition) {
             return GetInstances(mgmtScope, condition, null);
         }
 
-        public static ProcessCollection GetInstances(System.Management.ManagementScope mgmtScope, string[] selectedProperties) {
+        public static ProcessCollection GetInstances(ManagementScope mgmtScope, string[] selectedProperties) {
             return GetInstances(mgmtScope, null, selectedProperties);
         }
 
-        public static ProcessCollection GetInstances(System.Management.ManagementScope mgmtScope, string condition, string[] selectedProperties) {
+        public static ProcessCollection GetInstances(ManagementScope mgmtScope, string condition, string[] selectedProperties) {
             if ((mgmtScope == null)) {
                 if ((statMgmtScope == null)) {
-                    mgmtScope = new System.Management.ManagementScope();
+                    mgmtScope = new ManagementScope();
                     mgmtScope.Path.NamespacePath = "root\\cimv2";
                 }
                 else {
                     mgmtScope = statMgmtScope;
                 }
             }
-            System.Management.ManagementObjectSearcher ObjectSearcher = new System.Management.ManagementObjectSearcher(mgmtScope, new SelectQuery("Win32_Process", condition, selectedProperties));
-            System.Management.EnumerationOptions enumOptions = new System.Management.EnumerationOptions();
+            ManagementObjectSearcher ObjectSearcher = new ManagementObjectSearcher(mgmtScope, new SelectQuery("Win32_Process", condition, selectedProperties));
+            EnumerationOptions enumOptions = new EnumerationOptions();
             enumOptions.EnsureLocatable = true;
             ObjectSearcher.Options = enumOptions;
             return new ProcessCollection(ObjectSearcher.Get());
@@ -1658,16 +1659,16 @@ namespace RetroLauncher.DesktopClient.Service {
 
         [Browsable(true)]
         public static WIN32_Process CreateInstance() {
-            System.Management.ManagementScope mgmtScope = null;
+            ManagementScope mgmtScope = null;
             if ((statMgmtScope == null)) {
-                mgmtScope = new System.Management.ManagementScope();
+                mgmtScope = new ManagementScope();
                 mgmtScope.Path.NamespacePath = CreatedWmiNamespace;
             }
             else {
                 mgmtScope = statMgmtScope;
             }
-            System.Management.ManagementPath mgmtPath = new System.Management.ManagementPath(CreatedClassName);
-            System.Management.ManagementClass tmpMgmtClass = new System.Management.ManagementClass(mgmtScope, mgmtPath, null);
+            ManagementPath mgmtPath = new ManagementPath(CreatedClassName);
+            ManagementClass tmpMgmtClass = new ManagementClass(mgmtScope, mgmtPath, null);
             return new WIN32_Process(tmpMgmtClass.CreateInstance());
         }
 
@@ -1678,8 +1679,8 @@ namespace RetroLauncher.DesktopClient.Service {
 
         public uint AttachDebugger() {
             if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("AttachDebugger", inParams, null);
+                ManagementBaseObject inParams = null;
+                ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("AttachDebugger", inParams, null);
                 return System.Convert.ToUInt32(outParams.Properties["ReturnValue"].Value);
             }
             else {
@@ -1687,19 +1688,19 @@ namespace RetroLauncher.DesktopClient.Service {
             }
         }
 
-        public static uint Create(string CommandLine, string CurrentDirectory, System.Management.ManagementBaseObject ProcessStartupInformation, out uint ProcessId) {
+        public static uint Create(string CommandLine, string CurrentDirectory, ManagementBaseObject ProcessStartupInformation, out uint ProcessId) {
             bool IsMethodStatic = true;
             if ((IsMethodStatic == true)) {
-                System.Management.ManagementBaseObject inParams = null;
-                System.Management.ManagementPath mgmtPath = new System.Management.ManagementPath(CreatedClassName);
-                System.Management.ManagementClass classObj = new System.Management.ManagementClass(statMgmtScope, mgmtPath, null);
+                ManagementBaseObject inParams = null;
+                ManagementPath mgmtPath = new ManagementPath(CreatedClassName);
+                ManagementClass classObj = new ManagementClass(statMgmtScope, mgmtPath, null);
                 bool EnablePrivileges = classObj.Scope.Options.EnablePrivileges;
                 classObj.Scope.Options.EnablePrivileges = true;
                 inParams = classObj.GetMethodParameters("Create");
                 inParams["CommandLine"] = ((string)(CommandLine));
                 inParams["CurrentDirectory"] = ((string)(CurrentDirectory));
-                inParams["ProcessStartupInformation"] = ((System.Management.ManagementBaseObject )(ProcessStartupInformation));
-                System.Management.ManagementBaseObject outParams = classObj.InvokeMethod("Create", inParams, null);
+                inParams["ProcessStartupInformation"] = ((ManagementBaseObject )(ProcessStartupInformation));
+                ManagementBaseObject outParams = classObj.InvokeMethod("Create", inParams, null);
                 ProcessId = System.Convert.ToUInt32(outParams.Properties["ProcessId"].Value);
                 classObj.Scope.Options.EnablePrivileges = EnablePrivileges;
                 return System.Convert.ToUInt32(outParams.Properties["ReturnValue"].Value);
@@ -1712,10 +1713,10 @@ namespace RetroLauncher.DesktopClient.Service {
 
         public uint GetAvailableVirtualSize(out ulong AvailableVirtualSize) {
             if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
+                ManagementBaseObject inParams = null;
                 bool EnablePrivileges = PrivateLateBoundObject.Scope.Options.EnablePrivileges;
                 PrivateLateBoundObject.Scope.Options.EnablePrivileges = true;
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("GetAvailableVirtualSize", inParams, null);
+                ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("GetAvailableVirtualSize", inParams, null);
                 AvailableVirtualSize = System.Convert.ToUInt64(outParams.Properties["AvailableVirtualSize"].Value);
                 PrivateLateBoundObject.Scope.Options.EnablePrivileges = EnablePrivileges;
                 return System.Convert.ToUInt32(outParams.Properties["ReturnValue"].Value);
@@ -1728,10 +1729,10 @@ namespace RetroLauncher.DesktopClient.Service {
 
         public uint GetOwner(out string Domain, out string User) {
             if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
+                ManagementBaseObject inParams = null;
                 bool EnablePrivileges = PrivateLateBoundObject.Scope.Options.EnablePrivileges;
                 PrivateLateBoundObject.Scope.Options.EnablePrivileges = true;
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("GetOwner", inParams, null);
+                ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("GetOwner", inParams, null);
                 Domain = System.Convert.ToString(outParams.Properties["Domain"].Value);
                 User = System.Convert.ToString(outParams.Properties["User"].Value);
                 PrivateLateBoundObject.Scope.Options.EnablePrivileges = EnablePrivileges;
@@ -1746,10 +1747,10 @@ namespace RetroLauncher.DesktopClient.Service {
 
         public uint GetOwnerSid(out string Sid) {
             if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
+                ManagementBaseObject inParams = null;
                 bool EnablePrivileges = PrivateLateBoundObject.Scope.Options.EnablePrivileges;
                 PrivateLateBoundObject.Scope.Options.EnablePrivileges = true;
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("GetOwnerSid", inParams, null);
+                ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("GetOwnerSid", inParams, null);
                 Sid = System.Convert.ToString(outParams.Properties["Sid"].Value);
                 PrivateLateBoundObject.Scope.Options.EnablePrivileges = EnablePrivileges;
                 return System.Convert.ToUInt32(outParams.Properties["ReturnValue"].Value);
@@ -1762,12 +1763,12 @@ namespace RetroLauncher.DesktopClient.Service {
 
         public uint SetPriority(int Priority) {
             if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
+                ManagementBaseObject inParams = null;
                 bool EnablePrivileges = PrivateLateBoundObject.Scope.Options.EnablePrivileges;
                 PrivateLateBoundObject.Scope.Options.EnablePrivileges = true;
                 inParams = PrivateLateBoundObject.GetMethodParameters("SetPriority");
                 inParams["Priority"] = ((int)(Priority));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetPriority", inParams, null);
+                ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("SetPriority", inParams, null);
                 PrivateLateBoundObject.Scope.Options.EnablePrivileges = EnablePrivileges;
                 return System.Convert.ToUInt32(outParams.Properties["ReturnValue"].Value);
             }
@@ -1778,12 +1779,12 @@ namespace RetroLauncher.DesktopClient.Service {
 
         public uint Terminate(uint Reason) {
             if ((isEmbedded == false)) {
-                System.Management.ManagementBaseObject inParams = null;
+                ManagementBaseObject inParams = null;
                 bool EnablePrivileges = PrivateLateBoundObject.Scope.Options.EnablePrivileges;
                 PrivateLateBoundObject.Scope.Options.EnablePrivileges = true;
                 inParams = PrivateLateBoundObject.GetMethodParameters("Terminate");
                 inParams["Reason"] = ((uint)(Reason));
-                System.Management.ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("Terminate", inParams, null);
+                ManagementBaseObject outParams = PrivateLateBoundObject.InvokeMethod("Terminate", inParams, null);
                 PrivateLateBoundObject.Scope.Options.EnablePrivileges = EnablePrivileges;
                 return System.Convert.ToUInt32(outParams.Properties["ReturnValue"].Value);
             }
@@ -1848,15 +1849,15 @@ namespace RetroLauncher.DesktopClient.Service {
                 privColObj.CopyTo(array, index);
                 int nCtr;
                 for (nCtr = 0; (nCtr < array.Length); nCtr = (nCtr + 1)) {
-                    array.SetValue(new WIN32_Process(((System.Management.ManagementObject)(array.GetValue(nCtr)))), nCtr);
+                    array.SetValue(new WIN32_Process(((ManagementObject)(array.GetValue(nCtr)))), nCtr);
                 }
             }
 
-            public virtual System.Collections.IEnumerator GetEnumerator() {
+            public virtual IEnumerator GetEnumerator() {
                 return new ProcessEnumerator(privColObj.GetEnumerator());
             }
 
-            public class ProcessEnumerator : object, System.Collections.IEnumerator {
+            public class ProcessEnumerator : object, IEnumerator {
 
                 private ManagementObjectCollection.ManagementObjectEnumerator privObjEnum;
 
@@ -1866,7 +1867,7 @@ namespace RetroLauncher.DesktopClient.Service {
 
                 public virtual object Current {
                     get {
-                        return new WIN32_Process(((System.Management.ManagementObject)(privObjEnum.Current)));
+                        return new WIN32_Process(((ManagementObject)(privObjEnum.Current)));
                     }
                 }
 
@@ -1892,47 +1893,47 @@ namespace RetroLauncher.DesktopClient.Service {
                 baseType = inBaseType;
             }
 
-            public override bool CanConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Type srcType) {
+            public override bool CanConvertFrom(ITypeDescriptorContext context, System.Type srcType) {
                 return baseConverter.CanConvertFrom(context, srcType);
             }
 
-            public override bool CanConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Type destinationType) {
+            public override bool CanConvertTo(ITypeDescriptorContext context, System.Type destinationType) {
                 return baseConverter.CanConvertTo(context, destinationType);
             }
 
-            public override object ConvertFrom(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value) {
+            public override object ConvertFrom(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value) {
                 return baseConverter.ConvertFrom(context, culture, value);
             }
 
-            public override object CreateInstance(System.ComponentModel.ITypeDescriptorContext context, System.Collections.IDictionary dictionary) {
+            public override object CreateInstance(ITypeDescriptorContext context, IDictionary dictionary) {
                 return baseConverter.CreateInstance(context, dictionary);
             }
 
-            public override bool GetCreateInstanceSupported(System.ComponentModel.ITypeDescriptorContext context) {
+            public override bool GetCreateInstanceSupported(ITypeDescriptorContext context) {
                 return baseConverter.GetCreateInstanceSupported(context);
             }
 
-            public override PropertyDescriptorCollection GetProperties(System.ComponentModel.ITypeDescriptorContext context, object value, System.Attribute[] attributeVar) {
+            public override PropertyDescriptorCollection GetProperties(ITypeDescriptorContext context, object value, System.Attribute[] attributeVar) {
                 return baseConverter.GetProperties(context, value, attributeVar);
             }
 
-            public override bool GetPropertiesSupported(System.ComponentModel.ITypeDescriptorContext context) {
+            public override bool GetPropertiesSupported(ITypeDescriptorContext context) {
                 return baseConverter.GetPropertiesSupported(context);
             }
 
-            public override System.ComponentModel.TypeConverter.StandardValuesCollection GetStandardValues(System.ComponentModel.ITypeDescriptorContext context) {
+            public override StandardValuesCollection GetStandardValues(ITypeDescriptorContext context) {
                 return baseConverter.GetStandardValues(context);
             }
 
-            public override bool GetStandardValuesExclusive(System.ComponentModel.ITypeDescriptorContext context) {
+            public override bool GetStandardValuesExclusive(ITypeDescriptorContext context) {
                 return baseConverter.GetStandardValuesExclusive(context);
             }
 
-            public override bool GetStandardValuesSupported(System.ComponentModel.ITypeDescriptorContext context) {
+            public override bool GetStandardValuesSupported(ITypeDescriptorContext context) {
                 return baseConverter.GetStandardValuesSupported(context);
             }
 
-            public override object ConvertTo(System.ComponentModel.ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, System.Type destinationType) {
+            public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, System.Type destinationType) {
                 if ((baseType.BaseType == typeof(System.Enum))) {
                     if ((value.GetType() == destinationType)) {
                         return value;
@@ -1962,12 +1963,12 @@ namespace RetroLauncher.DesktopClient.Service {
         }
 
         // Встроенный класс, отражающий свойства системы WMI.
-        [TypeConverter(typeof(System.ComponentModel.ExpandableObjectConverter))]
+        [TypeConverter(typeof(ExpandableObjectConverter))]
         public class ManagementSystemProperties {
 
-            private System.Management.ManagementBaseObject PrivateLateBoundObject;
+            private ManagementBaseObject PrivateLateBoundObject;
 
-            public ManagementSystemProperties(System.Management.ManagementBaseObject ManagedObject) {
+            public ManagementSystemProperties(ManagementBaseObject ManagedObject) {
                 PrivateLateBoundObject = ManagedObject;
             }
 

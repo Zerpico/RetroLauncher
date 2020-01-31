@@ -1,3 +1,4 @@
+using RetroLauncher.DAL.Service;
 using RetroLauncher.DesktopClient.Helpers;
 using RetroLauncher.DesktopClient.ViewModel.Base;
 

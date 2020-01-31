@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Runtime.CompilerServices;
+using RetroLauncher.Common;
 using RetroLauncher.DAL.Model;
 
 namespace RetroLauncher.DesktopClient.Service

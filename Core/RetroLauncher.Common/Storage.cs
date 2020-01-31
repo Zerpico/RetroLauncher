@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
-using RetroLauncher.Common;
 
-namespace RetroLauncher.DesktopClient.Service
+namespace RetroLauncher.Common
 {
     public class Storage
     {
@@ -22,7 +21,7 @@ namespace RetroLauncher.DesktopClient.Service
         private Storage()
         {
             //инициализация путей
-            AppDataPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.ApplicationData);
+            AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             PathApp = Path.Combine(AppDataPath, WorkFolder);
             PathSettingsApp = Path.Combine(PathApp, "settings.xml");
             PathEmulator = Path.Combine(PathApp, "emulator");
@@ -58,7 +57,7 @@ namespace RetroLauncher.DesktopClient.Service
         }
 
         //словарь параметров
-        Dictionary<string, (Type type, System.Object value)> items;
+        Dictionary<string, (Type type, Object value)> items;
 
         /// <summary>
         ///Получить значение параметра по имени
@@ -121,7 +120,7 @@ namespace RetroLauncher.DesktopClient.Service
         {
             if (!File.Exists(PathSettingsApp))
                 if (!Create())
-                    throw new System.IO.IOException("Не удалось создать файл: " + PathSettingsApp);
+                    throw new IOException("Не удалось создать файл: " + PathSettingsApp);
 
 
             //загружаем элементы
@@ -131,7 +130,7 @@ namespace RetroLauncher.DesktopClient.Service
             // получим корневой элемент
             XmlElement xRoot = xmlDoc.DocumentElement;
 
-            items = new Dictionary<string, (Type type, System.Object value)>();
+            items = new Dictionary<string, (Type type, Object value)>();
             foreach (XmlNode item in xRoot.ChildNodes)
             {
                 double tryDouble;
@@ -176,7 +175,7 @@ namespace RetroLauncher.DesktopClient.Service
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.Load(PathSettingsApp);
 
-                items = new Dictionary<string, (Type type, System.Object value)>();
+                items = new Dictionary<string, (Type type, Object value)>();
                 items.Add("ProxyType", (typeof(TypeProxy), TypeProxy.Default));
                 items.Add("ProxyHost", (typeof(string), ""));
                 items.Add("ProxyPort", (typeof(int), 0));
@@ -220,7 +219,6 @@ namespace RetroLauncher.DesktopClient.Service
                 textWritter.WriteEndElement();
                 textWritter.Close();
 
-
                 //Создаем элементы
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.Load(PathSettingsApp);
@@ -241,9 +239,10 @@ namespace RetroLauncher.DesktopClient.Service
             }
             catch (Exception)
             {
-                System.Windows.MessageBox.Show(
-                    "Не удалось сохранить настройки приложения.\nНо вы не расстраивайтесь, это не критично!", "Ошибка!",
-                    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                //TODO Return massage
+                //System.Windows.MessageBox.Show(
+                //    "Не удалось сохранить настройки приложения.\nНо вы не расстраивайтесь, это не критично!", "Ошибка!",
+                //    System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
 
         }

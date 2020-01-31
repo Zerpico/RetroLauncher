@@ -4,15 +4,13 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using RetroLauncher.Common;
 using RetroLauncher.DAL.Model;
+using RetroLauncher.DAL.Service;
 
-namespace RetroLauncher.DesktopClient.Service
+namespace RetroLauncher.DAL.Repository
 {
-    public enum TypeProxy
-    {
-        Default,
-        Http
-    }
     public class WebRestRepository : IRepository
     {
         const string url = "https://www.zerpico.ru/api";//"https://localhost:5001/api";//"https://www.zerpico.ru/api";
@@ -32,7 +30,7 @@ namespace RetroLauncher.DesktopClient.Service
 
             HttpClientHandler  httpClientHandler;
             //сначала определем тип прокси
-            TypeProxy typeProxy = Service.Storage.Source.GetValue<TypeProxy>("ProxyType");
+            TypeProxy typeProxy = Storage.Source.GetValue<TypeProxy>("ProxyType");
 
 
             if (typeProxy != TypeProxy.Default)
@@ -40,8 +38,8 @@ namespace RetroLauncher.DesktopClient.Service
                 //определим настройки для прокси
                 WebProxy proxy = new WebProxy();
 
-                string proxyHost = Service.Storage.Source.GetValue("ProxyHost").ToString();
-                int proxyPort = Service.Storage.Source.GetValue<int>("ProxyPort");
+                string proxyHost = Storage.Source.GetValue("ProxyHost").ToString();
+                int proxyPort = Storage.Source.GetValue<int>("ProxyPort");
                 proxy.Address = new Uri($"http://{proxyHost.Trim()}:{proxyPort.ToString()}");
                 proxy.BypassProxyOnLocal = false;
                 proxy.UseDefaultCredentials = false;
