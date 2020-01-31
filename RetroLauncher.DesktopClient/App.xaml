@@ -1,0 +1,17 @@
+﻿<Application x:Class="RetroLauncher.DesktopClient.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:RetroLauncher"
+             xmlns:viewModel="clr-namespace:RetroLauncher.DesktopClient.ViewModel"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <!--Global View Model Locator-->
+        <ResourceDictionary>
+            <viewModel:ViewModelLocator x:Key="Locator" />
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes\FlatDarkControlStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

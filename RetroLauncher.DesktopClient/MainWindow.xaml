@@ -1,0 +1,53 @@
+﻿<Window x:Class="RetroLauncher.DesktopClient.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:RetroLauncher"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:command="http://www.galasoft.ch/mvvmlight"
+        xmlns:controls="clr-namespace:RetroLauncher.DesktopClient.Controls"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource MainGradient}"
+        Title="MainWindow" Height="900" Width="1200"
+        DataContext="{Binding Main, Source={StaticResource Locator}}">
+   <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding LoadedCommand, Mode=OneWay}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" MinWidth="100" MaxWidth="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+
+
+        <Grid Grid.Column="0" Background="#4C31213D">
+            <StackPanel Margin="5,10">
+                <TextBlock FontSize="20" Text="Игры" Foreground="{StaticResource AditionalTitleBrush}"/>
+                <Separator Background="{StaticResource AditionalTitleBrush}" Margin="0,0,0,10" />
+
+                <TextBlock FontSize="20" Text="Недавние" Foreground="{StaticResource MainTitle}"/>
+                <TextBlock FontSize="20" Text="Все игры" Foreground="{StaticResource MainTitle}"/>
+                <TextBlock FontSize="20" Text="Скачанные" Foreground="{StaticResource MainTitle}"/>
+
+                <TextBlock FontSize="20" Margin="0,20,0,0" Text="Настройки" Foreground="{StaticResource AditionalTitleBrush}"/>
+                <Separator Background="{StaticResource AditionalTitleBrush}" Margin="0,0,0,10" />
+
+                <TextBlock FontSize="20" Text="Управление" Foreground="{StaticResource MainTitle}"/>
+
+
+            </StackPanel>
+        </Grid>
+
+
+        <controls:FaderFrame x:Name="MainFrame" Grid.Column="1" Margin="10,0,10,10"
+                        NavigationUIVisibility="Hidden"
+                        VerticalAlignment="Stretch"
+                        HorizontalAlignment="Stretch"/>
+
+
+    </Grid>
+</Window>

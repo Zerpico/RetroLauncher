@@ -7,9 +7,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetroLauncher", "RetroLaunc
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetroLauncher.Data", "RetroLauncher.Data\RetroLauncher.Data.csproj", "{F9115301-C4AA-446C-A12C-7BD867304A2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroLauncher.WebApi", "RetroLauncher.WebApi\RetroLauncher.WebApi.csproj", "{0AD17735-E803-42BD-BFB0-459B797C1C36}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetroLauncher.WebApi", "RetroLauncher.WebApi\RetroLauncher.WebApi.csproj", "{0AD17735-E803-42BD-BFB0-459B797C1C36}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SevenZipExtractor", "SevenZipExtractor\SevenZipExtractor.csproj", "{B64B990F-18DE-48A2-854D-D4860E95A7BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SevenZipExtractor", "SevenZipExtractor\SevenZipExtractor.csproj", "{B64B990F-18DE-48A2-854D-D4860E95A7BF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{2DFF8283-2D64-4DA5-8FC6-6390EC592F17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroLauncher.DAL", "Core\RetroLauncher.DAL\RetroLauncher.DAL.csproj", "{B352B655-0A40-4F8A-B3ED-AB7A8D274187}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroLauncher.DesktopClient", "RetroLauncher.DesktopClient\RetroLauncher.DesktopClient.csproj", "{FDDFD40B-C15D-4879-980E-953BE7D9F9EA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -69,9 +75,36 @@ Global
 		{B64B990F-18DE-48A2-854D-D4860E95A7BF}.Release|x64.Build.0 = Release|Any CPU
 		{B64B990F-18DE-48A2-854D-D4860E95A7BF}.Release|x86.ActiveCfg = Release|Any CPU
 		{B64B990F-18DE-48A2-854D-D4860E95A7BF}.Release|x86.Build.0 = Release|Any CPU
+		{B352B655-0A40-4F8A-B3ED-AB7A8D274187}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B352B655-0A40-4F8A-B3ED-AB7A8D274187}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B352B655-0A40-4F8A-B3ED-AB7A8D274187}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{B352B655-0A40-4F8A-B3ED-AB7A8D274187}.Debug|x64.Build.0 = Debug|Any CPU
+		{B352B655-0A40-4F8A-B3ED-AB7A8D274187}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{B352B655-0A40-4F8A-B3ED-AB7A8D274187}.Debug|x86.Build.0 = Debug|Any CPU
+		{B352B655-0A40-4F8A-B3ED-AB7A8D274187}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B352B655-0A40-4F8A-B3ED-AB7A8D274187}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B352B655-0A40-4F8A-B3ED-AB7A8D274187}.Release|x64.ActiveCfg = Release|Any CPU
+		{B352B655-0A40-4F8A-B3ED-AB7A8D274187}.Release|x64.Build.0 = Release|Any CPU
+		{B352B655-0A40-4F8A-B3ED-AB7A8D274187}.Release|x86.ActiveCfg = Release|Any CPU
+		{B352B655-0A40-4F8A-B3ED-AB7A8D274187}.Release|x86.Build.0 = Release|Any CPU
+		{FDDFD40B-C15D-4879-980E-953BE7D9F9EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDDFD40B-C15D-4879-980E-953BE7D9F9EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDDFD40B-C15D-4879-980E-953BE7D9F9EA}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FDDFD40B-C15D-4879-980E-953BE7D9F9EA}.Debug|x64.Build.0 = Debug|Any CPU
+		{FDDFD40B-C15D-4879-980E-953BE7D9F9EA}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FDDFD40B-C15D-4879-980E-953BE7D9F9EA}.Debug|x86.Build.0 = Debug|Any CPU
+		{FDDFD40B-C15D-4879-980E-953BE7D9F9EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDDFD40B-C15D-4879-980E-953BE7D9F9EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDDFD40B-C15D-4879-980E-953BE7D9F9EA}.Release|x64.ActiveCfg = Release|Any CPU
+		{FDDFD40B-C15D-4879-980E-953BE7D9F9EA}.Release|x64.Build.0 = Release|Any CPU
+		{FDDFD40B-C15D-4879-980E-953BE7D9F9EA}.Release|x86.ActiveCfg = Release|Any CPU
+		{FDDFD40B-C15D-4879-980E-953BE7D9F9EA}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B352B655-0A40-4F8A-B3ED-AB7A8D274187} = {2DFF8283-2D64-4DA5-8FC6-6390EC592F17}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {662D845B-A282-4228-A4A3-30A97E1AFD86}
