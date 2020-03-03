@@ -21,11 +21,10 @@ namespace RetroLauncher.WebApi.Controllers
         [HttpGet]
         public IActionResult Get()
         {
+
             var query = from db in repository.Platforms
                         select new RetroLauncher.DAL.Model.Platform(db.PlatformId, db.PlatformName, db.Alias);
-
-
-            return Ok(query);
+                        return Ok(query);
         }
     }
 }

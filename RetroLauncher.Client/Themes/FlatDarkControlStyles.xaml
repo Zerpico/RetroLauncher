@@ -7,10 +7,16 @@
     <SolidColorBrush x:Key="AditionalTitleBrush" Color="#6F6F6F" />
     <SolidColorBrush x:Key="MainTitle" Color="#D3D3D3" />
     <SolidColorBrush x:Key="MainTitleNotFocus" Color="#B2B2B2" />
+    <SolidColorBrush x:Key="WindowBrush" Color="#FF444444" />
+    <SolidColorBrush x:Key="TextBrush" Color="#FFC8C8C8" />
 
     <SolidColorBrush x:Key="ContentTextBrush" Color="#E8E8E8" />
     <SolidColorBrush x:Key="SelectionBrush" Color="DarkGray" />
     <SolidColorBrush x:Key="MainBorderBrush" Color="#2b2a2a" />
+    <SolidColorBrush x:Key="BorderBrush" Color="#FF292929" />
+    <SolidColorBrush x:Key="ActiveHoverBrush1" Color="#FF68839E" />
+    <SolidColorBrush x:Key="ActiveHoverBrush2" Color="#FF66798A" />
+    <SolidColorBrush x:Key="TextDisabledBrush" Color="#FF808080" />
 
     <LinearGradientBrush x:Key="MainGradient">
         <GradientStopCollection>
@@ -19,6 +25,22 @@
         </GradientStopCollection>
     </LinearGradientBrush>
 
+    <LinearGradientBrush x:Key="ButtonDarkBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#555" Offset="0.0" />
+        <GradientStop Color="#444" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ButtonPressedBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FF595959" Offset="0.0" />
+        <GradientStop Color="#FF5B5B5B" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ButtonDisabledBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource buttonDisabledGradientStartColor}" Offset="0.0" />
+        <GradientStop Color="{StaticResource buttonDisabledGradientStopColor}" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <!-- Кнопки переключения навигации главного контейнера -->
     <Style x:Key="MenuToggleButton" TargetType="ToggleButton">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="Height" Value="Auto" />
@@ -31,7 +53,7 @@
                     <Grid>
                         <Rectangle Name="rct_selected" Width="4" Margin="0,2" HorizontalAlignment="Left" Fill="Transparent"/>
                         <ContentPresenter Margin="10,0,0,0"
-                                HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+                                HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                                 VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
 
                     </Grid>
@@ -58,9 +80,9 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Grid>                        
+                    <Grid>
                         <ContentPresenter Margin="10,0,0,0"
-                                HorizontalAlignment="{TemplateBinding HorizontalAlignment}" 
+                                HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
                                 VerticalAlignment="{TemplateBinding VerticalAlignment}"/>
 
                     </Grid>
@@ -68,12 +90,144 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="Transparent"/>
                             <Setter Property="Foreground" Value="{StaticResource MainTitle}" />
-                        </Trigger>                        
+                        </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
 
-    
+    <!-- Стили кнопок -->
+    <ControlTemplate x:Key="ButtonTemplate" TargetType="{x:Type Button}">
+        <Grid x:Name="Grid">
+            <Border x:Name="BorderAndBackground" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="3"  />
+            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" RecognizesAccessKey="True" Margin="{TemplateBinding Padding}" />
+            <Grid x:Name="MouseOverGrid" Opacity="0">
+                <Border BorderThickness="0,1,0,1" Margin="1" BorderBrush="{DynamicResource ActiveHoverBrush1}" CornerRadius="3" />
+                <Border BorderThickness="0,1,0,1" Margin="2" BorderBrush="{DynamicResource ActiveHoverBrush2}" CornerRadius="3" />
+            </Grid>
+        </Grid>
+        <ControlTemplate.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="MouseOverGrid" Property="Opacity" Value="1" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Background" Value="{DynamicResource ButtonPressedBrush}" />
+                <Setter Property="Padding" Value="7,1,5,-1" />
+                <Setter TargetName="MouseOverGrid" Property="Opacity" Value="0" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{DynamicResource ButtonDisabledBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource TextDisabledBrush}" />
+                <Setter TargetName="MouseOverGrid" Property="Opacity" Value="0" />
+            </Trigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style TargetType="Control" x:Key="CommonStyle">
+        <Setter Property="Background" Value="{DynamicResource WindowBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+        <Setter Property="FontFamily" Value="Tahoma" />
+        <Setter Property="FontWeight" Value="Light" />
+        <Setter Property="FontStretch" Value="Expanded" />
+        <Setter Property="FontStyle" Value="Normal" />
+    </Style>
+
+    <Style x:Key="ButtonFilterStyle" TargetType="{x:Type Button}" BasedOn="{StaticResource CommonStyle}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="Template" Value="{DynamicResource ButtonTemplate}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonDarkBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="5" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="ContextMenuService.Placement" Value="Bottom" />
+        <Setter Property="ContextMenuService.VerticalOffset" Value="5" />
+    </Style>
+
+    <!-- TEXTBOX для ПОИСКА -->
+    <Style x:Key="FilterTextBox" TargetType="TextBox">
+        <Setter Property="Background" Value="{DynamicResource ButtonDarkBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource MainTitle}" />
+        <Setter Property="Padding" Value="5,4,5,4" />
+        <Setter Property="SelectionBrush" Value="{StaticResource SelectionBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+
+                    <Grid x:Name="RootElement">
+                        <VisualStateManager.VisualStateGroups>
+                            <VisualStateGroup x:Name="CommonStates">
+                                <VisualState x:Name="Normal" />
+                                <VisualState x:Name="MouseOver" />
+                                <VisualState x:Name="Disabled">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" To="0.55" Storyboard.TargetProperty="Opacity"
+                                    Storyboard.TargetName="DisabledVisualElement" />
+                                        <DoubleAnimation Duration="0" To="0.5" Storyboard.TargetProperty="(UIElement.Opacity)"
+                                    Storyboard.TargetName="PART_ContentHost" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="ReadOnly">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" To="0.55" Storyboard.TargetProperty="Opacity"
+                                    Storyboard.TargetName="ReadOnlyVisualElement" />
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="FocusStates">
+                                <VisualState x:Name="Focused">
+                                    <Storyboard>
+                                        <DoubleAnimation Duration="0" Storyboard.TargetName="FocusVisualElement"
+                                    Storyboard.TargetProperty="(FrameworkElement.Opacity)" To="1" />
+                                    </Storyboard>
+                                </VisualState>
+                                <VisualState x:Name="Unfocused" />
+                            </VisualStateGroup>
+                            <VisualStateGroup x:Name="ValidationStates">
+                                <VisualState x:Name="Valid" />
+                                <VisualState x:Name="InvalidUnfocused">
+                                    <Storyboard>
+                                        <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility"
+                                    Storyboard.TargetName="ValidationErrorElement">
+                                            <DiscreteObjectKeyFrame KeyTime="0" Value="{x:Static Visibility.Visible}" />
+                                        </ObjectAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </VisualState>
+                            </VisualStateGroup>
+                        </VisualStateManager.VisualStateGroups>
+                        <Border x:Name="Border" Background="{TemplateBinding Background}"
+                        BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                        CornerRadius="5" Opacity="1">
+                            <Grid>
+
+                                <ScrollViewer x:Name="PART_ContentHost" Foreground="{TemplateBinding Foreground}"
+                              BorderThickness="0" IsTabStop="False" Margin="1" Padding="{TemplateBinding Padding}" />
+                            </Grid>
+                        </Border>
+
+
+                        <Border x:Name="DisabledVisualElement" Background="Black"
+                        IsHitTestVisible="False" Margin="1" Opacity="0" CornerRadius="20" />
+                        <Rectangle x:Name="FocusVisualElement" IsHitTestVisible="False" Margin="2" Opacity="0" RadiusX="20"
+                        RadiusY="20"
+                        StrokeThickness="1,1,1,1"/>
+                        <Border x:Name="ValidationErrorElement"
+                        CornerRadius="30" Visibility="Collapsed">
+                            <Grid Background="Transparent" HorizontalAlignment="Right" Height="12" Margin="1,-4,-4,0"
+                           VerticalAlignment="Top" Width="12">
+                                <Path Data="M 1,0 L6,0 A 2,2 90 0 1 8,2 L8,7 z" Fill="Crimson"
+                              Margin="1,3,0,0" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
 </ResourceDictionary>

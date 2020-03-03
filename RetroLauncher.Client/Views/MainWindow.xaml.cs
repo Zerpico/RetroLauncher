@@ -26,22 +26,21 @@ namespace RetroLauncher.Client.Views
     /// </summary>
     public partial class FlatWindow1 : FlatWindow
     {
-        bool isMouseButtonDown = false;
         public FlatWindow1()
         {
             InitializeComponent();
             this.Loaded += MainWindow_Loaded;
         }
-        
+
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             string[] sources = System.IO.Directory.GetFiles(System.IO.Directory.GetCurrentDirectory()+@"\icons\");
-           
+
             Random rnd = new Random();
             System.Timers.Timer timer = new System.Timers.Timer(1500);
             timer.Elapsed += new ElapsedEventHandler(delegate (Object o, ElapsedEventArgs a)
-            {              
+            {
                 icon_retro.Dispatcher.BeginInvoke(new Action(() =>
                     icon_retro.Source = new BitmapImage(new Uri(sources[rnd.Next(0, sources.Length - 1)]))));
             });
@@ -57,13 +56,9 @@ namespace RetroLauncher.Client.Views
             if (Mouse.LeftButton == MouseButtonState.Pressed)
             {
                 DragMove();
-                isMouseButtonDown = true;
             }
         }
-        private void HeaderBar_PreviewMouseUp(object sender, MouseButtonEventArgs e)
-        {
-            isMouseButtonDown = false;
-        }
+
         protected void MinimizeClick(object sender, RoutedEventArgs e)
         {
             WindowState = WindowState.Minimized;

@@ -4,8 +4,5 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Dapper" Version="2.0.30" />
-  </ItemGroup>
 
 </Project>

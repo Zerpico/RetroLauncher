@@ -14,7 +14,7 @@ namespace RetroLauncher.Repository
     public class WebRepository : IRepository
     {
         private HttpClient client;
-        private string APP_URL = "http://localhost:5000/api/";
+        private string APP_URL = "https://localhost:5001/api/";
 
         public WebRepository()
         {
@@ -29,18 +29,23 @@ namespace RetroLauncher.Repository
                // Address = new Uri($"http://{proxyHost}:{proxyPort}"),
                 BypassProxyOnLocal = false,
                 UseDefaultCredentials = false
-                
+
                /* Credentials = new NetworkCredential(
                     userName: proxyUserName,
                     password: proxyPassword)*/
             };
 
             // Теперь клиентский обработчик, который использует этот прокси
-            var httpClientHandler = new HttpClientHandler
+           /* var httpClientHandler = new HttpClientHandler
             {
                 Proxy = proxy,
-            };
+                UseProxy = false
+            };*/
 
+            HttpClientHandler httpClientHandler = new HttpClientHandler();
+            httpClientHandler.DefaultProxyCredentials = CredentialCache.DefaultCredentials;
+            httpClientHandler.UseProxy = false;
+            httpClientHandler.AllowAutoRedirect = true;
             // если нужно проходить аутентификацию на веб-сервере:
             /* if (needServerAuthentication)
              {
@@ -54,7 +59,7 @@ namespace RetroLauncher.Repository
              }*/
 
             // создаем объект клиента HTTP
-            return new HttpClient(handler: httpClientHandler, disposeHandler: true);
+            return new HttpClient(handler: httpClientHandler, disposeHandler: true) ;
         }
 
         public async Task<Game> GetGameById(int gameId)
@@ -89,7 +94,7 @@ namespace RetroLauncher.Repository
         {
             var response = await client.GetAsync(System.IO.Path.Combine(APP_URL, $"games?limit={count}&offset={skip}"));
             if (response.StatusCode == HttpStatusCode.OK)
-            {              
+            {
                 return await response.Content.ReadAsAsync<PagingGames> ();
             }
             return new PagingGames() { Total= 0, Limit=0, Offset= 0, Items = null};
@@ -100,6 +105,7 @@ namespace RetroLauncher.Repository
             var response = await client.GetAsync(System.IO.Path.Combine(APP_URL, "genres"));
             if (response.StatusCode == HttpStatusCode.OK)
             {
+                var ss =  await response.Content.ReadAsStringAsync();
                 return await response.Content.ReadAsAsync<IEnumerable<Genre>>();
             }
             return null;
@@ -107,9 +113,11 @@ namespace RetroLauncher.Repository
 
         public async Task<IEnumerable<Platform>> GetPlatforms()
         {
+
             var response = await client.GetAsync(System.IO.Path.Combine(APP_URL, "platforms"));
             if (response.StatusCode == HttpStatusCode.OK)
             {
+                var ss =  await response.Content.ReadAsStringAsync();
                 return await response.Content.ReadAsAsync<IEnumerable<Platform>>();
             }
             return null;

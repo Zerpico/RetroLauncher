@@ -3,7 +3,6 @@ using RetroLauncher.DAL.Service;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Dapper;
 using System.Linq;
 
 namespace RetroLauncher.DAL
@@ -73,7 +72,7 @@ namespace RetroLauncher.DAL
                 (sql, (game, platform, genre) =>
                 {
                     game.Genre = genre;
-                    game.Platform = platform;     
+                    game.Platform = platform;
                     return game;
                 }, splitOn: "GenreId,PlatformId");
 

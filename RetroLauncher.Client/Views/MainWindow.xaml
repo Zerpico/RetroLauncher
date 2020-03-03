@@ -4,15 +4,15 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RetroLauncher.Client"
-        xmlns:ctrl="clr-namespace:RetroLauncher.Client.Controls"       
-        xmlns:prism="http://prismlibrary.com/"        
+        xmlns:ctrl="clr-namespace:RetroLauncher.Client.Controls"
+        xmlns:prism="http://prismlibrary.com/"
         xmlns:regions="http://www.codeplex.com/prism"
-        mc:Ignorable="d"  
+        mc:Ignorable="d"
                  Style="{StaticResource flatStyle}"
-        prism:ViewModelLocator.AutoWireViewModel="True"        
+        prism:ViewModelLocator.AutoWireViewModel="True"
         Background="{StaticResource MainGradient}"
         WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="900" Width="1200" >
+        Title="MainWindow" Height="700" Width="1100" >
 
 
 
@@ -24,7 +24,7 @@
 
         <!-- ЛЕВАЯ ПАНЕЛЬ -->
         <Grid Grid.Column="0" Background="#4C403449">
-            
+
             <StackPanel Margin="10,10">
                 <StackPanel Height="50">
 
@@ -83,61 +83,62 @@
                             <Path Data="M14.4,3.8l-1.4,1.4c-0.2,0.2-0.5,0.2-0.7,0l-1.4-1.4c-0.2-0.2-0.2-0.5,0-0.7l1.4-1.4c0.2-0.2,0.5-0.2,0.7,0l1.4,1.4	C14.6,3.2,14.6,3.6,14.4,3.8z" Fill="{Binding Foreground, ElementName=Btn_control}"/>
                             <Path Data="M5.2,12.9l-1.4,1.4c-0.2,0.2-0.5,0.2-0.7,0l-1.4-1.4c-0.2-0.2-0.2-0.5,0-0.7l1.4-1.4c0.2-0.2,0.5-0.2,0.7,0l1.4,1.4	C5.4,12.4,5.4,12.8,5.2,12.9z" Fill="{Binding Foreground, ElementName=Btn_control}"/>
                         </Grid>
-                        <TextBlock Margin="10,0" Text="Управление"/>
+                        <TextBlock Margin="10,0" Text="Управление"/>                        
                     </StackPanel>
                 </Button>
+                <ctrl:RatingStar Fill="Yellow"  />
             </StackPanel>
-            
+
             <Image Stretch="None" Margin="10,10" Opacity="0.7"
-                   VerticalAlignment="Bottom" 
+                   VerticalAlignment="Bottom"
                    HorizontalAlignment="Left"
                    x:Name="icon_retro"/>
         </Grid>
 
-        
-        
-       
 
-        
+
+
+
+
         <!--  <ctrl:FaderFrame x:Name="MainFrame" Grid.Column="1" Margin="10,0,10,10"
                         NavigationUIVisibility="Hidden"
                         VerticalAlignment="Stretch"
-                        HorizontalAlignment="Stretch">            
+                        HorizontalAlignment="Stretch">
         </ctrl:FaderFrame>
      -->
 
 
-        <Grid Height="50" Background="Transparent"  x:Name="HeaderBar"
-                   VerticalAlignment="Top"   Grid.ColumnSpan="2"     
+ <Grid Height="50" Background="Transparent"  x:Name="HeaderBar"
+                   VerticalAlignment="Top"   Grid.ColumnSpan="2"
                    UIElement.PreviewMouseDown="HeaderBar_PreviewMouseDown"
-                   UIElement.PreviewMouseUp="HeaderBar_PreviewMouseUp"
                    />
 
         <!-- ГЛАВНАЯ ПАНЕЛЬ -->
-        <ContentControl Grid.Column="1" Margin="10,0,10,10" Foreground="Transparent" 
+        <ContentControl Grid.Column="1" Margin="10,0,10,10" Foreground="Transparent"
                         regions:RegionManager.RegionName="CatalogRegion" />
 
 
-        
-        
-        <Grid Grid.Column="1" 
-              VerticalAlignment="Top" 
-              HorizontalAlignment="Right" 
+
+
+
+        <Grid Grid.Column="1"
+              VerticalAlignment="Top"
+              HorizontalAlignment="Right"
               Margin="10"
               >
             <StackPanel Orientation="Horizontal">
                 <Button x:Name="minimizeButton" Click="MinimizeClick"
-                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" 
-                        FontFamily="Webdings" FontSize="20" Margin="3,0"                        
+                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                        FontFamily="Webdings" FontSize="20" Margin="3,0"
                         Foreground="{StaticResource MainTitle}"
                         Content="0"/>
                 <Button x:Name="restoreButton" Click="RestoreClick"
-                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" 
+                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                         FontFamily="Webdings" FontSize="20" Margin="3,0"
                         Foreground="{StaticResource MainTitle}"
                         Content="1"/>
                 <Button x:Name="closeButton" Click="CloseClick"
-                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" 
+                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                         FontFamily="Webdings" FontSize="20" Margin="3,0"
                         Foreground="{StaticResource MainTitle}"
                         Content="r"/>
