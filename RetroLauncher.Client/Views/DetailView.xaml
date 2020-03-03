@@ -1,0 +1,14 @@
+﻿<UserControl x:Class="RetroLauncher.Client.Views.DetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:RetroLauncher.Client.Views"
+            xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             mc:Ignorable="d">
+    <Grid>
+        <TextBlock FontSize="36" Text="{Binding ViewText}"/>
+        <Button Margin="0,20" Height="50" Width="250" Content="To CatalogView" FontSize="36" Command="{Binding ButtonCommand}"/>
+    </Grid>
+</UserControl>
