@@ -1,77 +1,122 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RetroLauncher.Data;
-using RetroLauncher.Data.Model;
-using RetroLauncher.Data.Service;
-using RetroLauncher.WebApi.Service;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using RetroLauncher.WebApi.Model;
 
 namespace RetroLauncher.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GamesController : ControllerBase
+    public class GamesController : Controller
     {
-        private readonly IRepository _gbLibrary = new DbBaseRepository();
+       // public static IConfigurationRoot Configuration;
+        private DbLibraryGamesContext repository;
 
-        // GET: api/Games
+        public GamesController(DbLibraryGamesContext repository)
+        {
+            this.repository = repository;            
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult Get(string name, [FromQuery] int[] genres, [FromQuery] int[] platforms, int limit = 50, int offset = 0)
         {
-            return new string[] { "error", "not yet available" };
+            var query = repository.Games
+                        .Include(x => x.Genre)
+                        .Include(d => d.Platform)
+                        .Where(n => string.IsNullOrEmpty(name) ? true : n.GameName.Contains(name) || n.NameSecond.Contains(name) || n.NameOther.Contains(name))
+                        .Where(g => genres.Count() == 0 ? true : genres.Contains(g.GenreId))
+                        .Where(p => platforms.Count() == 0 ? true : platforms.Contains(p.PlatformId))
+                        .Select(g => new RetroLauncher.DAL.Model.Game()
+                        {
+                            GameId = g.GameId,
+                            Name = g.GameName,
+                            NameSecond = g.NameSecond,
+                            NameOther = g.NameOther,
+                            Year = g.Year,
+                            Developer = g.Developer,
+                           /* GenreId = g.GenreId,
+                            PlatformId = g.PlatformId,*/
+                            Genre = new DAL.Model.Genre(g.Genre.GenreId, g.Genre.GenreName),
+                            Platform = new DAL.Model.Platform() { PlatformId = g.Platform.PlatformId, PlatformName = g.Platform.PlatformName, Alias = g.Platform.Alias },
+                            GameLinks = new List<DAL.Model.GameLink>()
+                            { new DAL.Model.GameLink()
+                            {
+                                LinkId = g.GameLinks.Where(d => d.TypeUrl == 2).FirstOrDefault().LinkId,
+                                Url = "https://www.zerpico.ru/retrolauncher/"+g.GameLinks.Where(d => d.TypeUrl == 2).FirstOrDefault().Url.Replace('\\','/'),
+                                TypeUrl = (DAL.Model.TypeUrl)g.GameLinks.Where(d => d.TypeUrl == 2).FirstOrDefault().TypeUrl
+                            }
+                            },
+                            Rating = g.Ratings.Count() == 0 ? null : new Nullable<double>(Math.Round(g.Ratings.Average(d => d.RatingValue), 2)),
+                            Downloads = g.Downloads.Count() == 0 ? null : new Nullable<int>(g.Downloads.Count)
+
+                        });
+            //.Skip(offset)
+            //.Take(limit);
+            int count = query.Count();
+
+
+
+
+            return Ok(
+                new RetroLauncher.DAL.Model.PagingGames()
+                {
+                    Total = count,
+                    Offset = offset,
+                    Limit = limit,
+                    Items = query.Skip(offset).Take(limit).ToList()
+                });
         }
 
-        // GET: api/Games/GetGenres
-        [HttpGet("GetGenres")]
-        public async Task<IEnumerable<Genre>> GetGenres()
-        {
-            return await _gbLibrary.GetGenres();
-        }
 
-        // GET: api/Games/GetPlatforms
-        [HttpGet("GetPlatforms")]
-        public async Task<IEnumerable<Platform>> GetPlatforms()
-        {
-            return await _gbLibrary.GetPlatforms();
-        }
-
-        // GET: api/Games/5
         [HttpGet("{id}", Name = "Get")]
-        public async Task<IGame> Get(int id)
+        public IActionResult Get(int key)
         {
-            return await _gbLibrary.GetGameById(id);
+            //ищем игру по id
+            var selGame = repository.Games
+                            .Include(x => x.Genre)      
+                            .Include(d => d.Platform)
+                            .Include(l => l.GameLinks)    
+                            .Include(r => r.Ratings)
+                            .Include(dd => dd.Downloads)
+                            .Where(g => g.GameId == key).FirstOrDefault();
+
+            if (selGame == null) return new NoContentResult();
+
+            //создаем список ссылок
+            var links = new List<DAL.Model.GameLink>();
+            foreach (var lnk in selGame.GameLinks)
+                links.Add(new DAL.Model.GameLink()
+                {
+                    LinkId = lnk.LinkId,
+                    Url = "https://www.zerpico.ru/retrolauncher/"+lnk.Url.Replace('\\', '/'),
+                    TypeUrl = (DAL.Model.TypeUrl)lnk.TypeUrl
+                });            
+
+            //составляем результат
+            var result = new DAL.Model.Game()
+                        {
+                            GameId = selGame.GameId,
+                            Name = selGame.GameName,
+                            NameSecond = selGame.NameSecond,
+                            NameOther = selGame.NameOther,
+                            Year = selGame.Year,
+                            Developer = selGame.Developer,
+                            Annotation = selGame.Annotation,
+                          /*  GenreId = selGame.GenreId,
+                            PlatformId = selGame.PlatformId,*/
+                            Genre = new DAL.Model.Genre(selGame.Genre.GenreId, selGame.Genre.GenreName),
+                            Platform = new DAL.Model.Platform() { PlatformId = selGame.Platform.PlatformId, PlatformName = selGame.Platform.PlatformName, Alias = selGame.Platform.Alias },
+                            GameLinks = links,
+                            Rating = selGame.Ratings.Count() == 0 ? null : new Nullable<double>(Math.Round(selGame.Ratings.Average(d => d.RatingValue), 2)),
+                            Downloads = selGame.Downloads.Count() == 0 ? null : new Nullable<int>(selGame.Downloads.Count)
+                        };
+
+            return Ok(result);
         }
-
-        // GET: api/Games/GetFilter?name=NAME&genre=1,2,3&platform=1,2,3&count=100&skip=100
-        [HttpGet("GetFilter")]
-        public async Task<(int, IEnumerable<IGame>)> GetFilter([FromQuery]FilterGame filter)
-        {    
-            return await _gbLibrary.GetBaseFilter(filter);
-        }
-
-        
-
-        /*
-
-        // POST: api/Games
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/Games/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }*/
     }
 }
