@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
@@ -17,12 +17,12 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.3" />
     <PackageReference Include="Autofac" Version="4.9.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.0" />
+    <PackageReference Include="SevenZipExtractor" Version="1.0.15" />
     <PackageReference Include="System.Management" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RetroLauncher.Data\RetroLauncher.Data.csproj" />
-    <ProjectReference Include="..\SevenZipExtractor\SevenZipExtractor.csproj" />
+    <ProjectReference Include="..\RetroLauncher.Repository\RetroLauncher.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>

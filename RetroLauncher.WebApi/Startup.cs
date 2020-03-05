@@ -8,11 +8,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using RetroLauncher.WebApi.Model;
 
 namespace RetroLauncher.WebApi
 {
@@ -28,6 +30,10 @@ namespace RetroLauncher.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var constring = Configuration["ConnectionStrings:GamesLibraryConnection"];
+            var opt = new DbContextOptionsBuilder<DbLibraryGamesContext>().UseSqlServer(constring).Options;
+
+            services.AddSingleton<Model.DbLibraryGamesContext>(rep => new Model.DbLibraryGamesContext(opt));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

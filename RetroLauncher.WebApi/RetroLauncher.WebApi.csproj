@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="wwwroot\retrolauncher1\**" />
+    <Content Remove="wwwroot\retrolauncher1\**" />
+    <EmbeddedResource Remove="wwwroot\retrolauncher1\**" />
+    <None Remove="wwwroot\retrolauncher1\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
@@ -13,11 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RetroLauncher.Data\RetroLauncher.Data.csproj" />
+    <Folder Include="wwwroot\retrolauncher\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\retrolauncher\" />
+    <ProjectReference Include="..\RetroLauncher.DAL\RetroLauncher.DAL.csproj" />
   </ItemGroup>
 
 </Project>

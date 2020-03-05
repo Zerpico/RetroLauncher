@@ -65,8 +65,14 @@
                 <TextBlock MaxWidth="700" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="26"
                            Text="{Binding SelectedGame.NameSecond}" VerticalAlignment="Center" />
 
-                <TextBlock Grid.Row="0" MaxWidth="500" Margin="0,10,0,0" HorizontalAlignment="Left" Foreground="#FFFBFBCC" FontSize="20"
+                <StackPanel Orientation="Horizontal">
+                    <Polygon VerticalAlignment="Center" x:Name="StarFour" Points="16,6 11,6 8,0 5,6 0,6 4,10 3,16 8,13 13,16 12,10 " Fill="#A5A581" />
+                    <TextBlock Grid.Row="0" MaxWidth="500" Margin="0,10,0,0" HorizontalAlignment="Left" Foreground="#FFFBFBCC" FontSize="20"
                            Text="{Binding SelectedGame.Rating}" VerticalAlignment="Center" />
+                  <!--  <TextBlock Margin="3,0,0,0" MaxWidth="500"  HorizontalAlignment="Left" Foreground="#A5A581" FontSize="16" Text="{Binding Path=Rating}" VerticalAlignment="Center" />
+                    <TextBlock MaxWidth="500"  HorizontalAlignment="Left" Foreground="#A5A581" FontSize="16" Text="/5" VerticalAlignment="Center" />-->
+                </StackPanel>
+                
 
 
             <StackPanel Grid.Row="0" Margin="0,15,0,20" VerticalAlignment="Bottom" Orientation="Horizontal">

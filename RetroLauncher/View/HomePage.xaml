@@ -368,8 +368,9 @@
                                             <TextBlock MaxWidth="500"  HorizontalAlignment="Left" Foreground="{StaticResource MainTitle}" FontSize="20" Text="{Binding Path=Name}" VerticalAlignment="Center" />
                                             <TextBlock MaxWidth="500"  HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="16" Text="{Binding Path=Year}" VerticalAlignment="Center" />
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock MaxWidth="500"  HorizontalAlignment="Left" Foreground="#A3A38D" FontSize="16" Text="Рейтинг: " VerticalAlignment="Center" />
-                                                <TextBlock MaxWidth="500"  HorizontalAlignment="Left" Foreground="#A5A581" FontSize="16" Text="{Binding Path=Rating}" VerticalAlignment="Center" />
+                                                <Polygon VerticalAlignment="Center" x:Name="StarFour" Points="16,6 11,6 8,0 5,6 0,6 4,10 3,16 8,13 13,16 12,10 " Fill="#A5A581" />
+                                                <TextBlock Margin="3,0,0,0" MaxWidth="500"  HorizontalAlignment="Left" Foreground="#A5A581" FontSize="16" Text="{Binding Path=Rating}" VerticalAlignment="Center" />
+                                                <!--<TextBlock MaxWidth="500"  HorizontalAlignment="Left" Foreground="#A5A581" FontSize="16" Text="/5" VerticalAlignment="Center" />-->
                                             </StackPanel>
                                         </StackPanel>
                                         <TextBlock MaxWidth="500" Grid.Column="1" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20" Text="{Binding Path=Genre.GenreName}" VerticalAlignment="Center" />

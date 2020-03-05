@@ -5,9 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using RetroLauncher.Helpers;
 using System.Collections.ObjectModel;
-using RetroLauncher.Data.Model;
-using RetroLauncher.Data.Service;
 using RetroLauncher.ViewModel.Base;
+using RetroLauncher.Repository;
 
 namespace RetroLauncher.ViewModel
 {

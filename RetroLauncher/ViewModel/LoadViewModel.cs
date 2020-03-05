@@ -1,5 +1,3 @@
-using RetroLauncher.Data.Model;
-using RetroLauncher.Data.Service;
 using RetroLauncher.Helpers;
 using RetroLauncher.Model;
 using System;

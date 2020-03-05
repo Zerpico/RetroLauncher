@@ -244,4 +244,11 @@ namespace RetroLauncher.Service
 
         }
     }
+
+    public enum TypeProxy
+    {
+        Default,
+        Http
+    }
+
 }

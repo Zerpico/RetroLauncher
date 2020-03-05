@@ -1,6 +1,4 @@
-﻿using RetroLauncher.Data.Model;
-using RetroLauncher.Data.Service;
-using RetroLauncher.Helpers;
+﻿using RetroLauncher.Helpers;
 using RetroLauncher.Model;
 using System;
 using System.Collections.Generic;
@@ -8,8 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RetroLauncher.ViewModel.Base;
-using Game = RetroLauncher.Model.Game;
 using RetroLauncher.Service;
+using RetroLauncher.Repository;
 
 namespace RetroLauncher.ViewModel
 {
@@ -19,8 +17,8 @@ namespace RetroLauncher.ViewModel
         private readonly IRepository _repository;
         FileDownloader fileDownloader;
 
-        private Game selectedGame;
-        public Game SelectedGame { get { return selectedGame; } set { selectedGame = value; } }
+        private GameDTO selectedGame;
+        public GameDTO SelectedGame { get { return selectedGame; } set { selectedGame = value; } }
 
         string downloadPath;
 
@@ -29,9 +27,9 @@ namespace RetroLauncher.ViewModel
             //инициализируем всякие репы и прочии службы
             _repository = repository;
             _navigationService = navigationService;
-            MessengerInstance.Register<Game>(this, RefreshGame);
+            MessengerInstance.Register<GameDTO>(this, RefreshGame);
             //получаем инфу об игре которую выбрали
-            RefreshGame((Game)_navigationService.Parameter);
+            RefreshGame((GameDTO)_navigationService.Parameter);
 
             //Тут использую кортеж так как хотим видеть 2 значения а в контсруктор можно только один. Можно заменить например на клас.
             var progress = new Progress<(int progress, string bytes)>(
@@ -60,11 +58,11 @@ namespace RetroLauncher.ViewModel
         /// </summary>
         /// <param name="recGame"></param>
         /// <returns></returns>
-        private async void RefreshGame(Game recGame)
+        private async void RefreshGame(GameDTO recGame)
         {
-            selectedGame =  (Game)(await _repository.GetGameById(recGame.GameId));
+            selectedGame = new GameDTO(await _repository.GetGameById(recGame.GameId));
             FileService serv = new FileService();
-            selectedGame = await serv.GetGame(selectedGame);
+           // selectedGame = await serv.GetGame(selectedGame); //todo: переделать этот бред
 
             RaisePropertyChanged(nameof(SelectedGame));
         }
@@ -99,7 +97,7 @@ namespace RetroLauncher.ViewModel
                         RunOrDownloadGame();
 
 
-                    }, () => Progress == 0)); //заблокируем нах кнопку если уже что-то скачиваем
+                    }, () => Progress == 0 || SelectedGame != null)); //заблокируем нах кнопку если уже что-то скачиваем
             }
         }
 
@@ -127,7 +125,7 @@ namespace RetroLauncher.ViewModel
                 FileService serv = new FileService();
 
                 SelectedGame.LocalPath = new GamePath() { GameId = SelectedGame.GameId, LocalPath = System.IO.Path.GetDirectoryName(downloadPath) };
-                serv.UpdateGame(SelectedGame);
+               // serv.UpdateGame(SelectedGame); //todo: переделать
             }
         }
 

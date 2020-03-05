@@ -1,77 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using RetroLauncher.Data;
-using RetroLauncher.Data.Model;
-using RetroLauncher.Data.Service;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using RetroLauncher.WebApi.Model;
 using RetroLauncher.WebApi.Service;
 
 namespace RetroLauncher.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GamesController : ControllerBase
+    public class GamesController : Controller
     {
-        private readonly IRepository _gbLibrary = new DbBaseRepository();
+        private IDataRepository repository;
 
-        // GET: api/Games
+        public GamesController(DbLibraryGamesContext context)
+        {            
+            repository = new SQLRepository(context);
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IActionResult> Get(string name, [FromQuery] int[] genres , [FromQuery] int[] platforms, [Range(1, 100)]int limit = 50, int offset = 0)
         {
-            return new string[] { "error", "not yet available" };
+            return Ok(repository.GetGames(name, genres, platforms, limit, offset));
         }
 
-        // GET: api/Games/GetGenres
-        [HttpGet("GetGenres")]
-        public async Task<IEnumerable<Genre>> GetGenres()
-        {
-            return await _gbLibrary.GetGenres();
-        }
 
-        // GET: api/Games/GetPlatforms
-        [HttpGet("GetPlatforms")]
-        public async Task<IEnumerable<Platform>> GetPlatforms()
-        {
-            return await _gbLibrary.GetPlatforms();
-        }
-
-        // GET: api/Games/5
         [HttpGet("{id}", Name = "Get")]
-        public async Task<IGame> Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            return await _gbLibrary.GetGameById(id);
+            return Ok(repository.GetGameById(id));
         }
-
-        // GET: api/Games/GetFilter?name=NAME&genre=1,2,3&platform=1,2,3&count=100&skip=100
-        [HttpGet("GetFilter")]
-        public async Task<(int, IEnumerable<IGame>)> GetFilter([FromQuery]FilterGame filter)
-        {    
-            return await _gbLibrary.GetBaseFilter(filter);
-        }
-
-        
-
-        /*
-
-        // POST: api/Games
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT: api/Games/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }*/
     }
 }

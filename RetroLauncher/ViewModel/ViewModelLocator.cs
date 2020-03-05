@@ -5,10 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using RetroLauncher.Data.Service;
 using RetroLauncher.Service;
 using Autofac;
 using Autofac.Extras.CommonServiceLocator;
+using RetroLauncher.Repository;
 
 namespace RetroLauncher.ViewModel
 {
@@ -41,7 +41,7 @@ namespace RetroLauncher.ViewModel
             builder.RegisterInstance<DisplayRootRegistry>(rootRegistry);
 
             builder.RegisterInstance<IFrameNavigationService>(navigation);
-            builder.RegisterType<WebRestRepository>().As<IRepository>().SingleInstance();
+            builder.RegisterType<WebRepository>().As<IRepository>().SingleInstance();
 
             var container = builder.Build();
 

@@ -1,5 +1,3 @@
-
-
 using System;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -18,7 +16,7 @@ namespace RetroLauncher.Service
         /// Выбранная игра для скачивания
         /// </summary>
         /// <value></value>
-        public Game CurrentDownloadGame { get; set; }
+        public GameDTO CurrentDownloadGame { get; set; }
 
         public delegate void CompleteProgressAgrs ();
         public event  CompleteProgressAgrs DownloadComplete;
@@ -29,7 +27,7 @@ namespace RetroLauncher.Service
         //таймер для измерения скорости скачивания (возможно не нужен вовсе)
         public Stopwatch stopWatch = new Stopwatch();
 
-        internal string DownloadGame(Game gameToDownload)
+        internal string DownloadGame(GameDTO gameToDownload)
         {
             //ProgressChanged?.Invoke(5, 0, string.Empty); //имитация бурной деятельности
             progress.Report((5, string.Empty));

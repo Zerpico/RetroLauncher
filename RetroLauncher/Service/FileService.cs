@@ -1,5 +1,3 @@
-using RetroLauncher.Data.Model;
-using RetroLauncher.Data.Service;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,11 +17,11 @@ namespace RetroLauncher.Service
 
         }
 
-        public async void UpdateGame(Game game)
+        public async void UpdateGame(GameDTO game)
         {
             using (var db = new LocalGameContext())
             {
-                if(db.Set<Game>().Any( a => a.GameId == game.GameId))
+                if(db.Set<GameDTO>().Any( a => a.GameId == game.GameId))
                 {
                     db.Games.Update(game);
                 }
@@ -31,11 +29,11 @@ namespace RetroLauncher.Service
                 {
                     db.Games.Add(game);
                 }
-                await db.SaveChangesAsync();
+                await db.SaveChangesAsync(); 
             }
         }
 
-        public async Task<Game> GetGame(Game game)
+        public async Task<GameDTO> GetGame(GameDTO game)
         {
             using (var db = new LocalGameContext())
             {
@@ -54,7 +52,7 @@ namespace RetroLauncher.Service
 
     public class LocalGameContext : DbContext
     {
-        public DbSet<Game> Games { get; set; }
+        public DbSet<GameDTO> Games { get; set; }
         public DbSet<GamePath> GamePaths { get; set; }
         public LocalGameContext()
         {
@@ -64,11 +62,16 @@ namespace RetroLauncher.Service
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
             builder.UseSqlite($"DataSource={Storage.Source.PathLocalDb}");
+            if (!File.Exists($"{Storage.Source.PathLocalDb}"))
+            {
+                CreateFile(Storage.Source.PathLocalDb);
+            }
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Game>().ToTable("Games");
+            modelBuilder.Entity<GameDTO>().ToTable("Games");
             modelBuilder.Entity<GamePath>().ToTable("GamePaths");
         }
 
@@ -80,6 +83,13 @@ namespace RetroLauncher.Service
                 return base.SaveChanges();
             }
         }
+
+        private void CreateFile(string databaseFileName)
+        {
+            var fs = File.Create(databaseFileName);
+            fs.Close();
+        }
+
 
     }
 }

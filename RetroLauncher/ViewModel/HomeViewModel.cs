@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using RetroLauncher.Helpers;
 using System.Collections.ObjectModel;
-using RetroLauncher.Data.Model;
-using RetroLauncher.Data.Service;
 using RetroLauncher.Model;
 using RetroLauncher.Controls;
 using RetroLauncher.ViewModel.Base;
-using Game = RetroLauncher.Model.Game;
+//using Game = RetroLauncher.Model.Game;
+using RetroLauncher.Repository;
+using RetroLauncher.DAL.Model;
 
 namespace RetroLauncher.ViewModel
 {
@@ -24,8 +24,7 @@ namespace RetroLauncher.ViewModel
             _navigationService = navigationService;
             _gameDb = gameDb;
             currentPage = 1;
-            filter = new FilterGame();
-            maxShowGames = 50;
+            maxShowGames = 40;
             _navigationService.ShowWaitPage();
             GetGenres();
             GetPlatforms();
@@ -40,11 +39,11 @@ namespace RetroLauncher.ViewModel
         public bool PlatformCheckVisible { get { return PlatformCheckCount > 0; } }
         public ObservableCollection<CheckedListItem<Platform>> Platforms { get; set; }
         //коллекция игр
-        public ObservableCollection<IGame> Games { get; set; }
+        public ObservableCollection<GameDTO> Games { get; set; }
 
         //выбранная текущая игра
-        private Game selectedGame;
-        public Game SelectedGame
+        private GameDTO selectedGame;
+        public GameDTO SelectedGame
         {
             get { return selectedGame; }
             set
@@ -104,7 +103,7 @@ namespace RetroLauncher.ViewModel
             }
         }
 
-        FilterGame filter { get; set; }
+      
 
         /// <summary>
         /// Получить список игр, включая фильтры и номер страниц
@@ -113,28 +112,31 @@ namespace RetroLauncher.ViewModel
         {
 
             //наши фильтры
-            filter.Count = 100;
-            filter.Skip = (currentPage-1)*100;
+            int count = maxShowGames;
+            int skip = (currentPage-1)*maxShowGames;
+            string filterName = null;
+            int[] filterGenre;
+            int[] filterPlatform;
 
             if (!string.IsNullOrEmpty(searchText))
-                filter.Name = searchText;
+                filterName = searchText;
 
             if (Genres != null && Genres.Any(g => g.IsChecked))
-                filter.Genre = Genres.Where(g => g.IsChecked).Select(g => g.Item.GenreId).ToArray();
-            else filter.Genre = null;
+                filterGenre = Genres.Where(g => g.IsChecked).Select(g => g.Item.GenreId).ToArray();
+            else filterGenre = null;
 
             if (Platforms != null && Platforms.Any(p => p.IsChecked))
-                filter.Platform = Platforms.Where(p => p.IsChecked).Select(p => p.Item.PlatformId).ToArray();
-            else filter.Platform = null;
+                filterPlatform = Platforms.Where(p => p.IsChecked).Select(p => p.Item.PlatformId).ToArray();
+            else filterPlatform = null;
 
             //получение списка
-            var db = await _gameDb.GetBaseFilter(filter);
-            Games = new ObservableCollection<IGame>(db.Item2);
+            var db = await _gameDb.GetGameFilter(filterName, filterGenre, filterPlatform, count, skip);           
+            Games = new ObservableCollection<GameDTO>(db.Items.Select(db => new GameDTO(db)));
 
             //найдем макс кол-во страниц
             //и учтём остаток от деления, на последней странице может быть даже всего 1 игра
             //или выводить 1 стр. из 1 а не из 0
-            MaxPage = (db.Item1 / maxShowGames) + ((db.Item1 % maxShowGames) > 0 ? 1 : 0);
+            MaxPage = (db.Total / maxShowGames) + ((db.Total % maxShowGames) > 0 ? 1 : 0);
 
             RaisePropertyChanged(nameof(MaxPage));
             RaisePropertyChanged(nameof(Games));
