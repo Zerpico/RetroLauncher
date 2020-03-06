@@ -8,6 +8,7 @@ namespace RetroLauncher.Client.Models
     {
         public GameUI (Game game )
         {
+            this.GameId = game.GameId;
             this.Name = game.Name;
             this.NameOther = game.NameOther;
             this.NameSecond = game.NameSecond;

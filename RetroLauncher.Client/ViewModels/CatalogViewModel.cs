@@ -24,11 +24,12 @@ namespace RetroLauncher.Client.ViewModels
         {
             _regionManager = regionMananger;
             _repository = repository;
-            ButtonCommand = new DelegateCommand(ShowDetailView);
+            GameSelectCommand = new DelegateCommand(SelectGame);
             ViewText = "Hello From CatalogViewModel";
 
-          //  GetGenres();
-          //  GetPlatforms();
+
+            //GetGenres();
+            //GetPlatforms();
             GetGames();
         }
 
@@ -55,6 +56,14 @@ namespace RetroLauncher.Client.ViewModels
         {
             get => games;
             set => SetProperty(ref games, value);
+        }
+
+        GameUI selectedGame;
+
+        public GameUI SelectedGame
+        {
+            get => selectedGame;
+            set { SetProperty(ref selectedGame, value); SelectGame(); }
         }
 
         //значение поиска имени игры по названию
@@ -89,21 +98,30 @@ namespace RetroLauncher.Client.ViewModels
         async void GetGames()
         {
             var db = await _repository.GetGameFilter(searchText, null, null, 50,0);
-            Games = new ObservableCollection<GameUI>(db.Items.Select(d => new GameUI(d)));  
+            Games = new ObservableCollection<GameUI>(db.Items.Select(d => new GameUI(d)));
+
+
+
         }
 
 
 
         #region Commands
-        public DelegateCommand ButtonCommand { get; private set; }
+        public DelegateCommand GameSelectCommand { get; private set; }
 
         #endregion
 
         #region Private Methods
-        private void ShowDetailView()
+        private void SelectGame()
         {
             var gr = _regionManager.Regions;
-            _regionManager.RequestNavigate("CatalogRegion", "DetailView");
+            //_regionManager.RequestNavigate("CatalogRegion", "DetailView");
+
+            var query = new NavigationParameters();
+            query.Add("GameID", SelectedGame.GameId);
+            _regionManager.RequestNavigate("CatalogRegion",
+                new Uri("DetailView" + query.ToString(), UriKind.Relative));
+
         }
 
         #endregion

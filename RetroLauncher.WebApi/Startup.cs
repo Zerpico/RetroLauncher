@@ -34,16 +34,16 @@ namespace RetroLauncher.WebApi
         {
             var constring = Configuration["ConnectionStrings:GamesLibraryConnection"];
             var opt = new DbContextOptionsBuilder<Model.DbLibraryGamesContext>().UseSqlServer(constring).Options;
-           
-            services.AddSingleton<Model.DbLibraryGamesContext>(rep => new Model.DbLibraryGamesContext(opt));        
+
+            services.AddSingleton<Model.DbLibraryGamesContext>(rep => new Model.DbLibraryGamesContext(opt));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-          
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -66,11 +66,11 @@ namespace RetroLauncher.WebApi
                 ContentTypeProvider = provider
             });
 
-            app.UseHttpsRedirection();
+           // app.UseHttpsRedirection();
             app.UseMvc();
 
         }
 
-        
+
     }
 }

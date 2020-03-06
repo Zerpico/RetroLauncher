@@ -14,7 +14,7 @@ namespace RetroLauncher.Repository
     public class WebRepository : IRepository
     {
         private HttpClient client;
-        private string APP_URL = "https://localhost:5001/api/";
+        private string APP_URL = "https://www.zerpico.ru/api/";
 
         public WebRepository()
         {
@@ -44,7 +44,7 @@ namespace RetroLauncher.Repository
 
             HttpClientHandler httpClientHandler = new HttpClientHandler();
             httpClientHandler.DefaultProxyCredentials = CredentialCache.DefaultCredentials;
-            httpClientHandler.UseProxy = false;
+            httpClientHandler.UseProxy = true;
             httpClientHandler.AllowAutoRedirect = true;
             // если нужно проходить аутентификацию на веб-сервере:
             /* if (needServerAuthentication)

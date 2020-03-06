@@ -1,6 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace RetroLauncher.Client.View.Region
+namespace RetroLauncher.Client.Views
 {
     /// <summary>
-    /// Логика взаимодействия для SecondView.xaml
+    /// Логика взаимодействия для HomePage.xaml
     /// </summary>
-    public partial class SecondView : UserControl
+    public partial class WaitView : UserControl
     {
-        public SecondView()
+        public WaitView()
         {
             InitializeComponent();
         }

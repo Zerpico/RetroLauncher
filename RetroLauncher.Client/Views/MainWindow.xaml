@@ -83,10 +83,10 @@
                             <Path Data="M14.4,3.8l-1.4,1.4c-0.2,0.2-0.5,0.2-0.7,0l-1.4-1.4c-0.2-0.2-0.2-0.5,0-0.7l1.4-1.4c0.2-0.2,0.5-0.2,0.7,0l1.4,1.4	C14.6,3.2,14.6,3.6,14.4,3.8z" Fill="{Binding Foreground, ElementName=Btn_control}"/>
                             <Path Data="M5.2,12.9l-1.4,1.4c-0.2,0.2-0.5,0.2-0.7,0l-1.4-1.4c-0.2-0.2-0.2-0.5,0-0.7l1.4-1.4c0.2-0.2,0.5-0.2,0.7,0l1.4,1.4	C5.4,12.4,5.4,12.8,5.2,12.9z" Fill="{Binding Foreground, ElementName=Btn_control}"/>
                         </Grid>
-                        <TextBlock Margin="10,0" Text="Управление"/>                        
+                        <TextBlock Margin="10,0" Text="Управление"/>
                     </StackPanel>
                 </Button>
-                <ctrl:RatingStar Fill="Yellow"  />
+
             </StackPanel>
 
             <Image Stretch="None" Margin="10,10" Opacity="0.7"
@@ -113,11 +113,12 @@
                    UIElement.PreviewMouseDown="HeaderBar_PreviewMouseDown"
                    />
 
-        <!-- ГЛАВНАЯ ПАНЕЛЬ -->
+        <!-- ГЛАВНАЯ ПАНЕЛЬ
         <ContentControl Grid.Column="1" Margin="10,0,10,10" Foreground="Transparent"
                         regions:RegionManager.RegionName="CatalogRegion" />
-
-
+-->
+<ctrl:TransitioningContentControl Grid.Column="1" Margin="10,0,10,10" Foreground="Transparent"
+                        regions:RegionManager.RegionName="CatalogRegion" Transition="Fade" />
 
 
 
