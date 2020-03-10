@@ -46,9 +46,9 @@
         <!--Главная область-->
         <Grid Grid.Row="1" Margin="7">
             <Grid.RowDefinitions>
-                <RowDefinition Height="2*"/>
-                <RowDefinition Height="3*"/>
-                <RowDefinition Height="3*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition MaxWidth="700" Width="4*"/>
@@ -65,10 +65,36 @@
                 <TextBlock MaxWidth="700" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="26"
                            Text="{Binding SelectedGame.NameSecond}" VerticalAlignment="Center" />
 
-                <TextBlock Grid.Row="0" MaxWidth="500" Margin="0,10,0,0" HorizontalAlignment="Left" Foreground="#FFFBFBCC" FontSize="20"
-                           Text="{Binding SelectedGame.Rating}" VerticalAlignment="Center" />
+                <StackPanel Orientation="Horizontal">
+                    <Polygon VerticalAlignment="Center" x:Name="StarFour" Points="16,6 11,6 8,0 5,6 0,6 4,10 3,16 8,13 13,16 12,10 " Fill="#A5A581" />
+                    <TextBlock Margin="3,0,0,0" HorizontalAlignment="Left" Foreground="#A5A581" FontSize="18" Text="{Binding SelectedGame.Rating}" VerticalAlignment="Center" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,20">
 
 
+            </StackPanel>
+
+            <ListView ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                      ScrollViewer.HorizontalScrollBarVisibility="Auto" x:Name="lv"
+
+                      Margin="10,10,10,20"  Background="Transparent" BorderThickness="0"
+                      Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedGame.Screens, UpdateSourceTrigger=PropertyChanged}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <UniformGrid  VerticalAlignment="Top" HorizontalAlignment="Left" Columns="10" ></UniformGrid>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Image MaxWidth="150" Source="{Binding Url}"/> <!-- Source="{Binding Url, UpdateSourceTrigger=PropertyChanged}"/>-->
+                    </DataTemplate>
+
+                </ListView.ItemTemplate>
+
+            </ListView>
+<!--
             <StackPanel Grid.Row="0" Margin="0,15,0,20" VerticalAlignment="Bottom" Orientation="Horizontal">
                 <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20"
                            Text="{Binding SelectedGame.Platform.PlatformName}" VerticalAlignment="Center" />
@@ -81,38 +107,30 @@
                 <TextBlock MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="20"
                            Text="{Binding SelectedGame.Year}" VerticalAlignment="Center" />
             </StackPanel>
-            </StackPanel>
+-->
+            <Grid Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
 
-            <StackPanel Grid.Row="0" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="0,0,0,20">
+                <Grid Grid.Column="0" Margin="0,0,5,0">
+                    <TextBlock  MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="28"
+                            Text="Описание" VerticalAlignment="Top" />
+                    <Separator Margin="0,20,0,0" Width="250" HorizontalAlignment="Left" Foreground="#6F6F6F"  VerticalAlignment="Top" />
+                    <TextBlock Margin="0,40,0,0" TextWrapping="Wrap"   VerticalAlignment="Top" Text="{Binding SelectedGame.Annotation}" Foreground="{StaticResource MainTitle}" FontSize="20" />
+                </Grid>
+
+                <Grid Grid.Column="1" Margin="5,0,0,0">
+                    <TextBlock  MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="28"
+                            Text="Описание" VerticalAlignment="Center" />
+                    <Separator Width="250" HorizontalAlignment="Left" Foreground="#6F6F6F"  />
+                    <TextBlock  TextWrapping="Wrap" Margin="0,10,0,0" Text="{Binding SelectedGame.Annotation}" Foreground="{StaticResource MainTitle}" FontSize="20" />
+                </Grid>
+
+            </Grid>
 
 
-            </StackPanel>
-
-            <ListView ScrollViewer.VerticalScrollBarVisibility="Hidden"
-                      ScrollViewer.HorizontalScrollBarVisibility="Auto" x:Name="lv"
-                      Margin="10,10,10,20"  Background="Transparent" BorderThickness="0"
-                      Grid.Row="1" Grid.ColumnSpan="2" ItemsSource="{Binding SelectedGame.Screens, UpdateSourceTrigger=PropertyChanged}">
-                <ListView.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <UniformGrid  VerticalAlignment="Top" HorizontalAlignment="Left" Columns="10" ></UniformGrid>
-                    </ItemsPanelTemplate>
-                </ListView.ItemsPanel>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
-                        <Image MaxWidth="200" Source="{Binding Url}"/> <!-- Source="{Binding Url, UpdateSourceTrigger=PropertyChanged}"/>-->
-                    </DataTemplate>
-
-                </ListView.ItemTemplate>
-
-            </ListView>
-
-            <StackPanel Grid.Row="2" Grid.ColumnSpan="2" VerticalAlignment="Top">
-                <TextBlock  MaxWidth="500" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="28"
-                           Text="Описание" VerticalAlignment="Center" />
-                <Separator Width="250" HorizontalAlignment="Left" Foreground="#6F6F6F"  />
-
-                <TextBlock  TextWrapping="Wrap" Margin="0,10,0,0" Text="{Binding SelectedGame.Annotation}" Foreground="{StaticResource MainTitle}" FontSize="20" />
-            </StackPanel>
 
         </Grid>
     </Grid>

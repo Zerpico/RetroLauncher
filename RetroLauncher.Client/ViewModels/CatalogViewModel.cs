@@ -13,10 +13,8 @@ using System.Text;
 
 namespace RetroLauncher.Client.ViewModels
 {
-    public class CatalogViewModel : BindableBase
+    public class CatalogViewModel : BindableBase, INavigationAware
     {
-        public string ViewText { get; set; }
-
         private readonly IRegionManager _regionManager;
         private readonly IRepository _repository;
 
@@ -25,45 +23,49 @@ namespace RetroLauncher.Client.ViewModels
             _regionManager = regionMananger;
             _repository = repository;
             GameSelectCommand = new DelegateCommand(SelectGame);
-            ViewText = "Hello From CatalogViewModel";
+            NextPageCommand = new DelegateCommand(NextPage);
+            PrevPageCommand = new DelegateCommand(PrevPage);
+            CurrentPage = 1;
+            maxListShow=50;
 
-
-            //GetGenres();
-            //GetPlatforms();
+            GetGenres();
+            GetPlatforms();
             GetGames();
         }
 
+        int maxListShow;
+
+        #region Properties
 
         public int GenreCheckCount { get { return Genres.Where(d => d.IsChecked).Count(); } }
         public bool GenreCheckVisible { get { return GenreCheckCount > 0; } }
 
-        ObservableCollection<CheckedListItem<Genre>> genres;
+        private ObservableCollection<CheckedListItem<Genre>> genres;
         public ObservableCollection<CheckedListItem<Genre>> Genres
         {
             get => genres;
             set => SetProperty(ref genres, value);
         }
 
-        ObservableCollection<PlatformUI> platforms;
+        private ObservableCollection<PlatformUI> platforms;
         public ObservableCollection<PlatformUI> Platforms
         {
             get => platforms;
             set => SetProperty(ref platforms, value);
         }
 
-        ObservableCollection<GameUI> games;
+        private ObservableCollection<GameUI> games;
         public ObservableCollection<GameUI> Games
         {
             get => games;
             set => SetProperty(ref games, value);
         }
 
-        GameUI selectedGame;
-
+        private GameUI selectedGame;
         public GameUI SelectedGame
         {
             get => selectedGame;
-            set { SetProperty(ref selectedGame, value); SelectGame(); }
+            set { SetProperty(ref selectedGame, value); if (selectedGame != null) SelectGame(); }
         }
 
         //значение поиска имени игры по названию
@@ -74,8 +76,42 @@ namespace RetroLauncher.Client.ViewModels
             set
             {
                 SetProperty(ref searchText, value);
-                GetGames();
+                GetGames(true);
             }
+        }
+
+        private int currentPage;
+        public int CurrentPage
+        {
+            get => currentPage;
+            set => SetProperty(ref currentPage, value);
+        }
+
+        private int maxPage;
+        public int MaxPage
+        {
+            get => maxPage;
+            set => SetProperty(ref maxPage, value);
+        }
+
+        #endregion
+
+        #region Commands
+        public DelegateCommand GameSelectCommand { get; private set; }
+        public DelegateCommand NextPageCommand { get; private set; }
+        public DelegateCommand PrevPageCommand { get; private set; }
+
+        #endregion
+
+        #region Private Methods
+        private void SelectGame()
+        {
+
+            var query = new NavigationParameters();
+            query.Add("GameID", SelectedGame.GameId);
+            _regionManager.RequestNavigate("CatalogRegion",
+                new Uri("DetailView" + query.ToString(), UriKind.Relative));
+
         }
 
         async void GetGenres()
@@ -95,33 +131,42 @@ namespace RetroLauncher.Client.ViewModels
             Platforms = new ObservableCollection<PlatformUI>(db.Select(db => new PlatformUI(db)));
         }
 
-        async void GetGames()
+        async void GetGames(bool resetPages = false)
         {
-            var db = await _repository.GetGameFilter(searchText, null, null, 50,0);
+            int skip = resetPages ? 0 : (currentPage-1) * maxListShow;
+            var db = await _repository.GetGameFilter(searchText, null, null, maxListShow,skip);
             Games = new ObservableCollection<GameUI>(db.Items.Select(d => new GameUI(d)));
+            MaxPage = (db.Total / maxListShow) + ((db.Total % maxListShow) > 0 ? 1 : 0);
+            if (resetPages) CurrentPage = 1;
+        }
 
+        private void NextPage()
+        {
+            CurrentPage++;
+            GetGames();
+        }
 
+        private void PrevPage()
+        {
+
+            CurrentPage--;
+            GetGames();
 
         }
 
-
-
-        #region Commands
-        public DelegateCommand GameSelectCommand { get; private set; }
-
-        #endregion
-
-        #region Private Methods
-        private void SelectGame()
+        public void OnNavigatedTo(NavigationContext navigationContext)
         {
-            var gr = _regionManager.Regions;
-            //_regionManager.RequestNavigate("CatalogRegion", "DetailView");
+            SelectedGame = null;
+        }
 
-            var query = new NavigationParameters();
-            query.Add("GameID", SelectedGame.GameId);
-            _regionManager.RequestNavigate("CatalogRegion",
-                new Uri("DetailView" + query.ToString(), UriKind.Relative));
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;//throw new NotImplementedException();
+        }
 
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+            //throw new NotImplementedException();
         }
 
         #endregion

@@ -172,6 +172,24 @@
         </StackPanel>
 
         <!--Главная область-->
+
+<!--
+        <ListView Name="lstw"  Margin="7" ItemsSource="{Binding Games}" Background="Transparent"
+        BorderThickness="0" SelectionMode="Single" Foreground="{StaticResource MainTitle}"
+        Grid.Row="1" FontSize="18" SelectedItem="{Binding SelectedGame}" >
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn Header="Имя"  DisplayMemberBinding="{Binding Path=Name}"></GridViewColumn>
+                        <GridViewColumn Header="Год"  DisplayMemberBinding="{Binding Path=Year}"></GridViewColumn>
+                        <GridViewColumn Header="Жанр"  DisplayMemberBinding="{Binding Path=Genre.GenreName}"></GridViewColumn>
+                        <GridViewColumn Header="Платформа"  DisplayMemberBinding="{Binding Path=Platform.Alias}"></GridViewColumn>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
+-->
+
         <DataGrid  x:Name="gameList" HorizontalAlignment="Stretch"  HorizontalContentAlignment="Stretch"
                   Margin="7" ItemsSource="{Binding Games}"
                   SelectedItem="{Binding SelectedGame, UpdateSourceTrigger=PropertyChanged}"
@@ -223,7 +241,6 @@
                                         <StackPanel Orientation="Horizontal">
                                             <Polygon VerticalAlignment="Center" x:Name="StarFour" Points="16,6 11,6 8,0 5,6 0,6 4,10 3,16 8,13 13,16 12,10 " Fill="#A5A581" />
                                             <TextBlock Margin="3,0,0,0" MaxWidth="500"  HorizontalAlignment="Left" Foreground="#A5A581" FontSize="16" Text="{Binding Path=Rating}" VerticalAlignment="Center" />
-                                            <!--<TextBlock MaxWidth="500"  HorizontalAlignment="Left" Foreground="#A5A581" FontSize="16" Text="/5" VerticalAlignment="Center" />-->
                                         </StackPanel>
                                     </StackPanel>
                                     <TextBlock MaxWidth="500" Grid.Column="1" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="18" Text="{Binding Path=Genre.GenreName}" VerticalAlignment="Center" />
@@ -250,5 +267,16 @@
                 </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
+
+        <!--область навигации-->
+        <Grid  Grid.Row="2">
+            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal" >
+                <Button FontSize="16" Command="{Binding PrevPageCommand}" Margin="10,0" Style="{StaticResource ButtonStyle}" Content=" &lt; " />
+                <TextBlock  VerticalAlignment="Center" Foreground="{StaticResource MainTitle}" Margin="10,0" Text="{Binding CurrentPage}" FontSize="16"  />
+                <TextBlock  VerticalAlignment="Center" Foreground="{StaticResource MainTitle}" Margin="10,0" Text="из" FontSize="16"  />
+                <TextBlock  VerticalAlignment="Center" Foreground="{StaticResource MainTitle}" Margin="10,0" Text="{Binding MaxPage}" FontSize="16"  />
+                <Button FontSize="16" Margin="10,0" Command="{Binding NextPageCommand}" Style="{StaticResource ButtonStyle}" Content=" &gt; " />
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

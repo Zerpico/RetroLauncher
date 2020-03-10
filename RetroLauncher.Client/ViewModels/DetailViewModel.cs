@@ -34,7 +34,6 @@ namespace RetroLauncher.Client.ViewModels
 
         #endregion
 
-        #region Private Methods
         private void ShowCatalogView()
         {
             _regionManager.RequestNavigate("CatalogRegion", "CatalogView");
@@ -55,7 +54,7 @@ namespace RetroLauncher.Client.ViewModels
 
         public bool IsNavigationTarget(NavigationContext navigationContext)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public void OnNavigatedFrom(NavigationContext navigationContext)
@@ -63,6 +62,6 @@ namespace RetroLauncher.Client.ViewModels
             //throw new NotImplementedException();
         }
 
-        #endregion
+
     }
 }
