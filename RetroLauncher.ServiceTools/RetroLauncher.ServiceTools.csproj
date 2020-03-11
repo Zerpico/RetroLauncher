@@ -4,5 +4,8 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="SevenZipExtractor" Version="1.0.15" />
+  </ItemGroup>
 
 </Project>

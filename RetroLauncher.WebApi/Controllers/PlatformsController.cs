@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RetroLauncher.WebApi.Model;
-using RetroLauncher.WebApi.Service;
 
 namespace RetroLauncher.WebApi.Controllers
 {
@@ -13,17 +11,20 @@ namespace RetroLauncher.WebApi.Controllers
     [ApiController]
     public class PlatformsController : Controller
     {
-        private IDataRepository repository;
+        private DbLibraryGamesContext repository;
 
-        public PlatformsController(DbLibraryGamesContext context)
+        public PlatformsController(DbLibraryGamesContext repository)
         {
-            repository = new SQLRepository(context);
+            this.repository = repository;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public IActionResult Get()
         {
-            return Ok(repository.GetPlatforms());
+
+            var query = from db in repository.Platforms
+                        select new RetroLauncher.DAL.Model.Platform(db.PlatformId, db.PlatformName, db.Alias);
+                        return Ok(query);
         }
     }
 }

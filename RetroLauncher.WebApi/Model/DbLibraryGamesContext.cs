@@ -13,7 +13,7 @@ namespace RetroLauncher.WebApi.Model
         public DbLibraryGamesContext(DbContextOptions<DbLibraryGamesContext> options)
             : base(options)
         {
-            
+
         }
 
         public virtual DbSet<Game> Games { get; set; }
@@ -27,7 +27,7 @@ namespace RetroLauncher.WebApi.Model
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-            {                       
+            {
                 //optionsBuilder.UseSqlServer("Data Source=localhost; Database=retro_library; Integrated Security=True");
             }
         }
