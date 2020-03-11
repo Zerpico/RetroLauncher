@@ -117,6 +117,7 @@ namespace RetroLauncher.Client.ViewModels
         async void GetGenres()
         {
             var db = await _repository.GetGenres();
+            if (db == null) return;
             Genres = new ObservableCollection<CheckedListItem<Genre>>();
             foreach (var g in db.OrderBy(d=>d.GenreName))
             {
@@ -126,8 +127,8 @@ namespace RetroLauncher.Client.ViewModels
 
         async void GetPlatforms()
         {
-
             var db = await _repository.GetPlatforms();
+            if (db == null) return;
             Platforms = new ObservableCollection<PlatformUI>(db.Select(db => new PlatformUI(db)));
         }
 
@@ -135,6 +136,7 @@ namespace RetroLauncher.Client.ViewModels
         {
             int skip = resetPages ? 0 : (currentPage-1) * maxListShow;
             var db = await _repository.GetGameFilter(searchText, null, null, maxListShow,skip);
+            if (db == null) { Games = new ObservableCollection<GameUI>(); return;}
             Games = new ObservableCollection<GameUI>(db.Items.Select(d => new GameUI(d)));
             MaxPage = (db.Total / maxListShow) + ((db.Total % maxListShow) > 0 ? 1 : 0);
             if (resetPages) CurrentPage = 1;

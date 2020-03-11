@@ -10,8 +10,7 @@ namespace RetroLauncher.Client.Models
         {
             this.GameId = game.GameId;
             this.Name = game.Name;
-            this.NameOther = game.NameOther;
-            this.NameSecond = game.NameSecond;
+            this.NameSecond = string.IsNullOrEmpty(game.NameSecond) ? game.NameOther : game.NameSecond ;
             this.Year = game.Year;
             this.Developer = game.Developer;
             this.Annotation = game.Annotation;

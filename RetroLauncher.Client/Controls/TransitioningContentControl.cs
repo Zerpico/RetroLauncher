@@ -1,358 +1,392 @@
-using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Windows.Media.Animation;
+using System.Windows.Media;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
+using System;
+using System.Collections.ObjectModel;
 
-// This control is gratefully borrowed from http://blog.landdolphin.net/?p=17
-// Thanks guys!
 namespace RetroLauncher.Client.Controls
 {
     /// <summary>
-    /// A ContentControl that animates the transition when its content is changed.
+    /// enumeration for the different transition types
     /// </summary>
-    [TemplatePart(Name = "PART_Container", Type = typeof(FrameworkElement))]
-    [TemplatePart(Name = "PART_PreviousContentPresentationSite", Type = typeof(ContentPresenter))]
-    [TemplatePart(Name = "PART_CurrentContentPresentationSite", Type = typeof(ContentPresenter))]
-    [TemplateVisualState(Name = NormalState, GroupName = PresentationGroup)]
-    public class TransitioningContentControl : ContentControl
+    public enum TransitionType
     {
         /// <summary>
-        /// <see cref="DependencyProperty"/> for the <see cref="Transition"/> property.
+        /// Use the VisualState DefaultTransition
         /// </summary>
-        public static readonly DependencyProperty TransitionProperty = DependencyProperty.RegisterAttached(
-            "Transition",
-            typeof(TransitionType),
-            typeof(TransitioningContentControl),
-            new PropertyMetadata(TransitionType.Fade, OnTransitionChanged));
-
+        Default,
         /// <summary>
-        /// <see cref="DependencyProperty"/> for the <see cref="TransitionPart"/> property.
+        /// Use the VisualState Normal
         /// </summary>
-        public static readonly DependencyProperty TransitionPartProperty =
-            DependencyProperty.RegisterAttached(
-                "TransitionPart",
-                typeof(TransitionPartType),
-                typeof(TransitioningContentControl),
-                new PropertyMetadata(TransitionPartType.OutIn, OnTransitionPartChanged));
-
-        private const string PresentationGroup = "PresentationStates";
-        private const string NormalState = "Normal";
-        private bool _isTransitioning;
-        private bool _canSplitTransition;
-        private Storyboard _startingTransition;
-        private Storyboard _completingTransition;
-        private Grid _container;
-        private ContentPresenter _previousContentPresentationSite;
-        private ContentPresenter _currentContentPresentationSite;
-
+        Normal,
         /// <summary>
-        /// Initializes a new instance of the <see cref="TransitioningContentControl"/> class.
+        /// Use the VisualState UpTransition
         /// </summary>
-        public TransitioningContentControl()
-        {
-            DefaultStyleKey = typeof(TransitioningContentControl);
-        }
-
+        Up,
         /// <summary>
-        /// Occurs when a transition has completed.
+        /// Use the VisualState DownTransition
         /// </summary>
+        Down,
+        /// <summary>
+        /// Use the VisualState RightTransition
+        /// </summary>
+        Right,
+        /// <summary>
+        /// Use the VisualState RightReplaceTransition
+        /// </summary>
+        RightReplace,
+        /// <summary>
+        /// Use the VisualState LeftTransition
+        /// </summary>
+        Left,
+        /// <summary>
+        /// Use the VisualState LeftReplaceTransition
+        /// </summary>
+        LeftReplace,
+        /// <summary>
+        /// Use a custom VisualState, the name must be set using CustomVisualStatesName property
+        /// </summary>
+        Custom
+    }
+
+    /// <summary>
+    /// A ContentControl that animates content as it loads and unloads.
+    /// </summary>
+    public class TransitioningContentControl : ContentControl
+    {
+        internal const string PresentationGroup = "PresentationStates";
+        internal const string HiddenState = "Hidden";
+        internal const string PreviousContentPresentationSitePartName = "PreviousContentPresentationSite";
+        internal const string CurrentContentPresentationSitePartName = "CurrentContentPresentationSite";
+
+        private ContentPresenter currentContentPresentationSite;
+        private ContentPresenter previousContentPresentationSite;
+        private bool allowIsTransitioningPropertyWrite;
+        private Storyboard currentTransition;
+
         public event RoutedEventHandler TransitionCompleted;
 
-        /// <summary>
-        /// Occurs when a transition has started.
-        /// </summary>
-        public event RoutedEventHandler TransitionStarted;
+        public const TransitionType DefaultTransitionState = TransitionType.Default;
 
-        /// <summary>
-        /// Represents the type of transition that a TransitioningContentControl will perform.
-        /// </summary>
-        public enum TransitionType
+        public static readonly DependencyProperty IsTransitioningProperty = DependencyProperty.Register("IsTransitioning", typeof(bool), typeof(TransitioningContentControl), new PropertyMetadata(OnIsTransitioningPropertyChanged));
+        public static readonly DependencyProperty TransitionProperty = DependencyProperty.Register("Transition", typeof(TransitionType), typeof(TransitioningContentControl), new FrameworkPropertyMetadata(TransitionType.Default, FrameworkPropertyMetadataOptions.AffectsArrange | FrameworkPropertyMetadataOptions.Inherits, OnTransitionPropertyChanged));
+        public static readonly DependencyProperty RestartTransitionOnContentChangeProperty = DependencyProperty.Register("RestartTransitionOnContentChange", typeof(bool), typeof(TransitioningContentControl), new PropertyMetadata(false, OnRestartTransitionOnContentChangePropertyChanged));
+        public static readonly DependencyProperty CustomVisualStatesProperty = DependencyProperty.Register("CustomVisualStates", typeof(ObservableCollection<VisualState>), typeof(TransitioningContentControl), new PropertyMetadata(null));
+        public static readonly DependencyProperty CustomVisualStatesNameProperty = DependencyProperty.Register("CustomVisualStatesName", typeof(string), typeof(TransitioningContentControl), new PropertyMetadata("CustomTransition"));
+
+        public ObservableCollection<VisualState> CustomVisualStates
         {
-            /// <summary>
-            /// A simple fading transition.
-            /// </summary>
-            Fade,
-
-            /// <summary>
-            /// A transition that fades the new element in from the top.
-            /// </summary>
-            FadeDown,
-
-            /// <summary>
-            /// A transition that slides old content left and out of view, then slides new content back in from the same direction.
-            /// </summary>
-            SlideLeft
+            get { return (ObservableCollection<VisualState>)this.GetValue(CustomVisualStatesProperty); }
+            set { this.SetValue(CustomVisualStatesProperty, value); }
         }
 
         /// <summary>
-        /// Represents the part of the transition that the developer would like the TransitioningContentControl to perform.
+        /// Gets or sets the name of the custom transition visual state.
         /// </summary>
-        /// <remarks>This only applies to certain TransitionTypes. An InvalidOperationException will be thrown if the TransitionType does not support the TransitionPartType. Default is OutIn.</remarks>
-        public enum TransitionPartType
+        public string CustomVisualStatesName
         {
-            /// <summary>
-            /// Transitions out only.
-            /// </summary>
-            Out,
-
-            /// <summary>
-            /// Transitions in only.
-            /// </summary>
-            In,
-
-            /// <summary>
-            /// Transitions in and out.
-            /// </summary>
-            OutIn
+            get { return (string)this.GetValue(CustomVisualStatesNameProperty); }
+            set { this.SetValue(CustomVisualStatesNameProperty, value); }
         }
 
         /// <summary>
-        /// Gets or sets the transition.
+        /// Gets/sets if the content is transitioning.
         /// </summary>
-        /// <value>The transition.</value>
-        public TransitionType Transition { get => (TransitionType)GetValue(TransitionProperty); set => SetValue(TransitionProperty, value); }
-
-        /// <summary>
-        /// Gets or sets the transition part.
-        /// </summary>
-        /// <value>The transition part.</value>
-        public TransitionPartType TransitionPart { get => (TransitionPartType)GetValue(TransitionPartProperty); set => SetValue(TransitionPartProperty, value); }
-
-        private Storyboard StartingTransition
+        public bool IsTransitioning
         {
-            get => _startingTransition;
+            get { return (bool)this.GetValue(IsTransitioningProperty); }
+            private set
+            {
+                this.allowIsTransitioningPropertyWrite = true;
+                this.SetValue(IsTransitioningProperty, value);
+                this.allowIsTransitioningPropertyWrite = false;
+            }
+        }
+
+        public TransitionType Transition
+        {
+            get { return (TransitionType)this.GetValue(TransitionProperty); }
+            set { this.SetValue(TransitionProperty, value); }
+        }
+
+        public bool RestartTransitionOnContentChange
+        {
+            get { return (bool)this.GetValue(RestartTransitionOnContentChangeProperty); }
+            set { this.SetValue(RestartTransitionOnContentChangeProperty, value); }
+        }
+
+        private static void OnIsTransitioningPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            var source = (TransitioningContentControl)d;
+
+            if (!source.allowIsTransitioningPropertyWrite)
+            {
+                source.IsTransitioning = (bool)e.OldValue;
+                throw new InvalidOperationException();
+            }
+        }
+
+        private Storyboard CurrentTransition
+        {
+            get { return this.currentTransition; }
             set
             {
-                _startingTransition = value;
-                if (_startingTransition != null)
+                // decouple event
+                if (this.currentTransition != null)
                 {
-                    SetTransitionDefaultValues();
+                    this.currentTransition.Completed -= this.OnTransitionCompleted;
+                }
+
+                this.currentTransition = value;
+
+                if (this.currentTransition != null)
+                {
+                    this.currentTransition.Completed += this.OnTransitionCompleted;
                 }
             }
         }
 
-        private Storyboard CompletingTransition
+        private static void OnTransitionPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            get => _completingTransition;
-            set
+            var source = (TransitioningContentControl)d;
+            var oldTransition = (TransitionType)e.OldValue;
+            var newTransition = (TransitionType)e.NewValue;
+
+            if (source.IsTransitioning)
             {
-                // Decouple transition.
-                if (_completingTransition != null)
-                {
-                    _completingTransition.Completed -= OnTransitionCompleted;
-                }
+                source.AbortTransition();
+            }
 
-                _completingTransition = value;
+            // find new transition
+            Storyboard newStoryboard = source.GetStoryboard(newTransition);
 
-                if (_completingTransition != null)
+            // unable to find the transition.
+            if (newStoryboard == null)
+            {
+                // could be during initialization of xaml that presentationgroups was not yet defined
+                if (TryGetVisualStateGroup(source, PresentationGroup) == null)
                 {
-                    _completingTransition.Completed += OnTransitionCompleted;
-                    SetTransitionDefaultValues();
+                    // will delay check
+                    source.CurrentTransition = null;
                 }
+                else
+                {
+                    // revert to old value
+                    source.SetValue(TransitionProperty, oldTransition);
+
+                    throw new ArgumentException(string.Format(CultureInfo.CurrentCulture, "Temporary removed exception message", newTransition));
+                }
+            }
+            else
+            {
+                source.CurrentTransition = newStoryboard;
             }
         }
 
-        /// <inheritdoc/>
+        private static void OnRestartTransitionOnContentChangePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            ((TransitioningContentControl)d).OnRestartTransitionOnContentChangeChanged((bool)e.OldValue, (bool)e.NewValue);
+        }
+
+        protected virtual void OnRestartTransitionOnContentChangeChanged(bool oldValue, bool newValue)
+        {
+        }
+
+        public TransitioningContentControl()
+        {
+            this.CustomVisualStates = new ObservableCollection<VisualState>();
+            this.DefaultStyleKey = typeof(TransitioningContentControl);
+        }
+
         public override void OnApplyTemplate()
         {
-            // Wire up all of the various control parts.
-            _container = (Grid)GetTemplateChild("PART_Container");
-            if (_container == null)
+            if (this.IsTransitioning)
             {
-                throw new ArgumentException("PART_Container not found.");
+                this.AbortTransition();
             }
 
-            _currentContentPresentationSite =
-                (ContentPresenter)GetTemplateChild("PART_CurrentContentPresentationSite");
-            if (_currentContentPresentationSite == null)
+            if (this.CustomVisualStates != null && this.CustomVisualStates.Any())
             {
-                throw new ArgumentException("PART_CurrentContentPresentationSite not found.");
+                var presentationGroup = TryGetVisualStateGroup(this, PresentationGroup);
+                if (presentationGroup != null)
+                {
+                    foreach (var state in this.CustomVisualStates)
+                    {
+                        presentationGroup.States.Add(state);
+                    }
+                }
             }
 
-            _previousContentPresentationSite =
-                (ContentPresenter)GetTemplateChild("PART_PreviousContentPresentationSite");
+            base.OnApplyTemplate();
 
-            // Set the current content site to the first piece of content.
-            _currentContentPresentationSite.Content = Content;
-            VisualStateManager.GoToState(this, NormalState, false);
+            this.previousContentPresentationSite = this.GetTemplateChild(PreviousContentPresentationSitePartName) as ContentPresenter;
+            this.currentContentPresentationSite = this.GetTemplateChild(CurrentContentPresentationSitePartName) as ContentPresenter;
+
+            // hookup currenttransition
+            Storyboard transition = this.GetStoryboard(this.Transition);
+            this.CurrentTransition = transition;
+            if (transition == null)
+            {
+                var invalidTransition = this.Transition;
+                // revert to default
+                this.Transition = DefaultTransitionState;
+
+                throw new Exception($"'{invalidTransition}' transition could not be found!");
+            }
+
+            VisualStateManager.GoToState(this, HiddenState, false);
         }
 
-        /// <summary>
-        /// Called when the value of the <see cref="ContentControl.Content"/> property changes.
-        /// </summary>
-        /// <param name="oldContent">The old value of the <see cref="ContentControl.Content"/> property.</param>
-        /// <param name="newContent">The new value of the <see cref="ContentControl.Content"/> property.</param>
         protected override void OnContentChanged(object oldContent, object newContent)
         {
-            QueueTransition(oldContent, newContent);
             base.OnContentChanged(oldContent, newContent);
-        }
 
-        private static void OnTransitionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var transitioningContentControl = (TransitioningContentControl)d;
-            var transition = (TransitionType)e.NewValue;
-
-            transitioningContentControl._canSplitTransition = VerifyCanSplitTransition(
-                transition,
-                transitioningContentControl.TransitionPart);
-        }
-
-        private static void OnTransitionPartChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-        {
-            var transitioningContentControl = (TransitioningContentControl)d;
-            var transitionPart = (TransitionPartType)e.NewValue;
-
-            transitioningContentControl._canSplitTransition =
-                VerifyCanSplitTransition(transitioningContentControl.Transition, transitionPart);
-        }
-
-        private static bool VerifyCanSplitTransition(TransitionType transition, TransitionPartType transitionPart)
-        {
-            // Check whether the TransitionPart is compatible with the current transition.
-            var canSplitTransition = true;
-            if (transition == TransitionType.Fade || transition == TransitionType.FadeDown)
+            if (oldContent != newContent)
             {
-                if (transitionPart != TransitionPartType.OutIn)
+                this.StartTransition(oldContent, newContent);
+
+            }
+        }
+
+        [SuppressMessage("Microsoft.Usage", "CA1801:ReviewUnusedParameters", MessageId = "newContent", Justification = "Should be used in the future.")]
+        private void StartTransition(object oldContent, object newContent)
+        {
+            // both presenters must be available, otherwise a transition is useless.
+            if (this.currentContentPresentationSite != null && this.previousContentPresentationSite != null)
+            {
+                if (this.RestartTransitionOnContentChange)
                 {
-                    throw new InvalidOperationException("Cannot split this transition.");
+                    this.CurrentTransition.Completed -= this.OnTransitionCompleted;
                 }
 
-                canSplitTransition = false;
-            }
+                this.currentContentPresentationSite.SetCurrentValue(ContentPresenter.ContentProperty, newContent);
+                this.previousContentPresentationSite.SetCurrentValue(ContentPresenter.ContentProperty, oldContent);
 
-            return canSplitTransition;
+                // and start a new transition
+                if (!this.IsTransitioning || this.RestartTransitionOnContentChange)
+                {
+                    if (this.RestartTransitionOnContentChange)
+                    {
+                        this.CurrentTransition.Completed += this.OnTransitionCompleted;
+                    }
+
+                    this.IsTransitioning = true;
+                    VisualStateManager.GoToState(this, HiddenState, false);
+                    VisualStateManager.GoToState(this, this.GetTransitionName(this.Transition), true);
+                }
+            }
         }
 
         /// <summary>
-        /// Aborts the transition.
+        /// Reload the current transition if the content is the same.
         /// </summary>
-        private void AbortTransition()
+        public void ReloadTransition()
         {
-            // Go to a normal state and release our hold on the old content.
-            VisualStateManager.GoToState(this, NormalState, false);
-            _isTransitioning = false;
-            if (_previousContentPresentationSite != null)
+            // both presenters must be available, otherwise a transition is useless.
+            if (this.currentContentPresentationSite != null && this.previousContentPresentationSite != null)
             {
-                _previousContentPresentationSite.Content = null;
+                if (this.RestartTransitionOnContentChange)
+                {
+                    this.CurrentTransition.Completed -= this.OnTransitionCompleted;
+                }
+
+                if (!this.IsTransitioning || this.RestartTransitionOnContentChange)
+                {
+                    if (this.RestartTransitionOnContentChange)
+                    {
+                        this.CurrentTransition.Completed += this.OnTransitionCompleted;
+                    }
+
+                    this.IsTransitioning = true;
+                    VisualStateManager.GoToState(this, HiddenState, false);
+                    VisualStateManager.GoToState(this, this.GetTransitionName(this.Transition), true);
+                }
             }
         }
 
         private void OnTransitionCompleted(object sender, EventArgs e)
         {
-            AbortTransition();
-
-            TransitionCompleted?.Invoke(this, new RoutedEventArgs());
-        }
-
-        private void RaiseTransitionStarted()
-        {
-            TransitionStarted?.Invoke(this, new RoutedEventArgs());
-        }
-
-        private void QueueTransition(object oldContent, object newContent)
-        {
-            // Both ContentPresenters must be available, otherwise a transition is useless.
-            if (_currentContentPresentationSite != null && _previousContentPresentationSite != null)
+            var clockGroup = sender as ClockGroup;
+            this.AbortTransition();
+            if (clockGroup == null || clockGroup.CurrentState == ClockState.Stopped)
             {
-                _currentContentPresentationSite.Content = newContent;
-                _previousContentPresentationSite.Content = oldContent;
-
-                if (!_isTransitioning)
-                {
-                    // Determine the TransitionPart that is associated with this transition and either set up a single part transition, or a queued transition.
-                    string startingTransitionName;
-                    if (TransitionPart == TransitionPartType.OutIn && _canSplitTransition)
-                    {
-                        // Wire up the completion transition.
-                        var transitionInName = Transition + "Transition_" + TransitionPartType.In;
-                        CompletingTransition = GetTransitionStoryboardByName(transitionInName);
-
-                        // Wire up the first transition to start the second transition when it's complete.
-                        startingTransitionName = Transition + "Transition_" + TransitionPartType.Out;
-                        var transitionOut = GetTransitionStoryboardByName(startingTransitionName);
-                        transitionOut.Completed += (sender, args) => VisualStateManager.GoToState(this, transitionInName, false);
-                        StartingTransition = transitionOut;
-                    }
-                    else
-                    {
-                        startingTransitionName = Transition + "Transition_" + TransitionPart;
-                        CompletingTransition = GetTransitionStoryboardByName(startingTransitionName);
-                    }
-
-                    // Start the transition.
-                    _isTransitioning = true;
-                    RaiseTransitionStarted();
-                    VisualStateManager.GoToState(this, startingTransitionName, false);
-                }
-            }
-            else
-            {
-                if (_currentContentPresentationSite != null)
-                {
-                    _currentContentPresentationSite.Content = newContent;
-                }
+                this.TransitionCompleted?.Invoke(this, new RoutedEventArgs());
             }
         }
 
-        private Storyboard GetTransitionStoryboardByName(string transitionName)
+        public void AbortTransition()
         {
-            // Hook up the CurrentTransition.
-            var presentationGroup =
-                ((IEnumerable<VisualStateGroup>)VisualStateManager.GetVisualStateGroups(_container)).FirstOrDefault(o => o.Name == PresentationGroup);
-            if (presentationGroup == null)
-            {
-                throw new ArgumentException("Invalid VisualStateGroup.");
-            }
-
-            var transition =
-                ((IEnumerable<VisualState>)presentationGroup.States).Where(o => o.Name == transitionName).Select(
-                    o => o.Storyboard).FirstOrDefault();
-            if (transition == null)
-            {
-                throw new ArgumentException("Invalid transition");
-            }
-
-            return transition;
+            // go to normal state and release our hold on the old content.
+            VisualStateManager.GoToState(this, HiddenState, false);
+            this.IsTransitioning = false;
+            this.previousContentPresentationSite?.SetCurrentValue(ContentPresenter.ContentProperty, null);
         }
 
-        /// <summary>
-        /// Sets default values for certain transition types.
-        /// </summary>
-        private void SetTransitionDefaultValues()
+        private Storyboard GetStoryboard(TransitionType newTransition)
         {
-            // Do some special handling of particular transitions so that we get nice smooth transitions that utilise the size of the content.
-            if (Transition == TransitionType.FadeDown)
+            VisualStateGroup presentationGroup = TryGetVisualStateGroup(this, PresentationGroup);
+            Storyboard newStoryboard = null;
+            if (presentationGroup != null)
             {
-                var completingDoubleAnimation = (DoubleAnimation)CompletingTransition.Children[0];
-                completingDoubleAnimation.From = -ActualHeight;
-
-                var startingDoubleAnimation = (DoubleAnimation)CompletingTransition.Children[1];
-                startingDoubleAnimation.To = ActualHeight;
-
-                return;
+                var transitionName = this.GetTransitionName(newTransition);
+                newStoryboard = presentationGroup.States
+                                                 .OfType<VisualState>()
+                                                 .Where(state => state.Name == transitionName)
+                                                 .Select(state => state.Storyboard)
+                                                 .FirstOrDefault();
             }
 
-            if (Transition == TransitionType.SlideLeft)
+            return newStoryboard;
+        }
+
+        private string GetTransitionName(TransitionType transition)
+        {
+            switch (transition)
             {
-                if (CompletingTransition != null)
-                {
-                    var completingDoubleAnimation =
-                        (DoubleAnimationUsingKeyFrames)CompletingTransition.Children[0];
-                    completingDoubleAnimation.KeyFrames[1].Value = -ActualWidth;
-                }
-
-                if (StartingTransition != null)
-                {
-                    var startingDoubleAnimation = (DoubleAnimation)StartingTransition.Children[0];
-                    startingDoubleAnimation.To = -ActualWidth;
-                }
-
-                return;
+                default:
+                case TransitionType.Default:
+                    return "DefaultTransition";
+                case TransitionType.Normal:
+                    return "Normal";
+                case TransitionType.Up:
+                    return "UpTransition";
+                case TransitionType.Down:
+                    return "DownTransition";
+                case TransitionType.Right:
+                    return "RightTransition";
+                case TransitionType.RightReplace:
+                    return "RightReplaceTransition";
+                case TransitionType.Left:
+                    return "LeftTransition";
+                case TransitionType.LeftReplace:
+                    return "LeftReplaceTransition";
+                case TransitionType.Custom:
+                    return this.CustomVisualStatesName;
             }
+        }
+
+        public static FrameworkElement GetImplementationRoot(DependencyObject dependencyObject)
+        {
+            System.Diagnostics.Debug.Assert(dependencyObject != null, "DependencyObject should not be null.");
+            return (VisualTreeHelper.GetChildrenCount(dependencyObject) == 1) ?
+                VisualTreeHelper.GetChild(dependencyObject, 0) as FrameworkElement :
+                null;
+        }
+
+        public static VisualStateGroup TryGetVisualStateGroup(DependencyObject dependencyObject, string groupName)
+        {
+            FrameworkElement root = GetImplementationRoot(dependencyObject);
+            if (root == null)
+            {
+                return null;
+            }
+
+            return VisualStateManager.GetVisualStateGroups(root)
+                .OfType<VisualStateGroup>().FirstOrDefault(group => string.CompareOrdinal(groupName, @group.Name) == 0);
         }
     }
 }

@@ -12,7 +12,7 @@
         prism:ViewModelLocator.AutoWireViewModel="True"
         Background="{StaticResource MainGradient}"
         WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="700" Width="1100" >
+        Title="MainWindow" Height="750" Width="1100" >
 
 
 
@@ -117,8 +117,8 @@
         <ContentControl Grid.Column="1" Margin="10,0,10,10" Foreground="Transparent"
                         regions:RegionManager.RegionName="CatalogRegion" />
 -->
-<ctrl:TransitioningContentControl Grid.Column="1" Margin="10,0,10,10" Foreground="Transparent"
-                        regions:RegionManager.RegionName="CatalogRegion" Transition="Fade" />
+<ctrl:TransitioningContentControl Grid.Column="1" Margin="10,0,10,10" Foreground="Transparent" Padding="0"
+                        regions:RegionManager.RegionName="CatalogRegion" Transition="Right" />
 
 
 
@@ -145,5 +145,6 @@
                         Content="r"/>
             </StackPanel>
         </Grid>
+
     </Grid>
 </ctrl:FlatWindow>
