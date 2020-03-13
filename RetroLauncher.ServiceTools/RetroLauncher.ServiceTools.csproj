@@ -8,4 +8,8 @@
     <PackageReference Include="SevenZipExtractor" Version="1.0.15" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\RetroLauncher.DAL\RetroLauncher.DAL.csproj" />
+  </ItemGroup>
+
 </Project>

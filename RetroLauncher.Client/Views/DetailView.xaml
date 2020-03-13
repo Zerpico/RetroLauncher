@@ -70,11 +70,37 @@
             </StackPanel>
 
             <StackPanel Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,10,20">
-             <Button Width="120" HorizontalAlignment="Center"
+                <Button x:Name="btn_download"  Width="120" HorizontalAlignment="Center"
                      FontSize="20" Height="40"
                      Command="{Binding DownloadCommand}"
                      Style="{StaticResource VioletButtonStyle}"
                      Content="Играть"/>
+
+
+
+
+
+                <Border Margin="0,5" VerticalAlignment="Bottom" HorizontalAlignment="Center" 
+                        BorderThickness="1" Grid.Row="0" Grid.ColumnSpan="2" 
+                        CornerRadius="3" BorderBrush="{StaticResource MainTitleNotFocus}" Height="8" Visibility="{Binding Visibility, ElementName=prgs}" >
+                    <ProgressBar x:Name="prgs"
+                            Width="120" 
+                            Value="{Binding Percent, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}" >
+                        <ProgressBar.Style>
+                            <!-- Мне пока лень делать нормальное сокрытие, временно пока такой костыль -->
+                            <Style TargetType="ProgressBar">
+                                <Style.Triggers>
+                                    <Trigger Property="Value" Value="0">
+                                        <Setter Property="Visibility"  Value="Hidden" />
+                                    </Trigger>
+                                    <Trigger Property="Value" Value="100">
+                                        <Setter Property="Visibility"  Value="Hidden" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ProgressBar.Style>
+                    </ProgressBar>
+                </Border>
             </StackPanel>
 
             <!--ЛИСТ СО СКРИНАМИ-->
@@ -146,7 +172,7 @@
                                 <StackPanel Grid.Column="1">
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock FontSize="20" Foreground="{StaticResource MainTitle}" Text="{Binding SelectedGame.Platform.PlatformName}"/>
-                                        <Image Margin="5,0,0,0" Source="{Binding SelectedGame.Platform.Icon}" Width="24" Height="24" Opacity="0.7"  />
+                                    <Image Margin="5,0,0,0" Source="{Binding SelectedGame.IconPlatform}" Width="24" Height="24" Opacity="0.7"  />
                                     </StackPanel>
                                     <TextBlock FontSize="20" Foreground="{StaticResource MainTitle}" Text="{Binding SelectedGame.Genre.GenreName}"/>
                                     <TextBlock FontSize="20" Foreground="{StaticResource MainTitle}" Text="{Binding SelectedGame.Year}"/>

@@ -47,8 +47,8 @@ namespace RetroLauncher.Client.ViewModels
             set => SetProperty(ref genres, value);
         }
 
-        private ObservableCollection<PlatformUI> platforms;
-        public ObservableCollection<PlatformUI> Platforms
+        private ObservableCollection<Platform> platforms;
+        public ObservableCollection<Platform> Platforms
         {
             get => platforms;
             set => SetProperty(ref platforms, value);
@@ -129,7 +129,7 @@ namespace RetroLauncher.Client.ViewModels
         {
             var db = await _repository.GetPlatforms();
             if (db == null) return;
-            Platforms = new ObservableCollection<PlatformUI>(db.Select(db => new PlatformUI(db)));
+            Platforms = new ObservableCollection<Platform>(db);
         }
 
         async void GetGames(bool resetPages = false)

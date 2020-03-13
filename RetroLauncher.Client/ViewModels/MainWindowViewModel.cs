@@ -15,6 +15,7 @@ namespace RetroLauncher.Client.ViewModels
         public MainWindowViewModel(IRegionManager manager)
         {
             _manager = manager;
+            //ServiceTools.Download.DownloadManager.Instance.
         }
 
         private DelegateCommand<string> navigateCommand;

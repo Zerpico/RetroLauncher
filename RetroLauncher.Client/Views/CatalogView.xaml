@@ -246,7 +246,7 @@
                                     <TextBlock MaxWidth="500" Grid.Column="1" HorizontalAlignment="Left" Foreground="{StaticResource AditionalTitleBrush}" FontSize="18" Text="{Binding Path=Genre.GenreName}" VerticalAlignment="Center" />
 
                                     <StackPanel Orientation="Horizontal" MaxWidth="500" Grid.Column="2" Margin="5,0,0,0">
-                                        <Image Source="{Binding Path=Platform.Icon}"
+                                        <Image Source="{Binding Path=IconPlatform}"
                                                Width="24" Height="24" Opacity="0.7"  />
                                         <TextBlock
                                                    HorizontalAlignment="Left"

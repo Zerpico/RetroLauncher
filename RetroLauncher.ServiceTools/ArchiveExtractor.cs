@@ -18,11 +18,11 @@ namespace RetroLauncher.ServiceTools
             using (var archive = new SevenZipExtractor.ArchiveFile(pathArchive))
             {
                 archive.Extract(pathToExtract, true);
-
-                //удаляем архив после распаковки, если надо
-                if (deleteArchive)
-                    File.Delete(pathArchive);
             }
+
+            //удаляем архив после распаковки, если надо
+            if (deleteArchive)
+                File.Delete(pathArchive);
         }
     }
 }

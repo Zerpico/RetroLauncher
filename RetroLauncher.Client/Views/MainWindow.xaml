@@ -89,6 +89,13 @@
 
             </StackPanel>
 
+            <ContentControl  VerticalAlignment="Bottom"
+                             Margin="10,10,10,50" 
+                             Foreground="Transparent" 
+                            regions:RegionManager.RegionName="DownloadRegion"  />
+            
+            
+            
             <Image Stretch="None" Margin="10,10" Opacity="0.7"
                    VerticalAlignment="Bottom"
                    HorizontalAlignment="Left"
@@ -118,7 +125,7 @@
                         regions:RegionManager.RegionName="CatalogRegion" />
 -->
 <ctrl:TransitioningContentControl Grid.Column="1" Margin="10,0,10,10" Foreground="Transparent" Padding="0"
-                        regions:RegionManager.RegionName="CatalogRegion" Transition="Right" />
+                        regions:RegionManager.RegionName="CatalogRegion" Transition="Up" />
 
 
 

@@ -26,6 +26,7 @@ namespace RetroLauncher.Client
         protected override void ConfigureModuleCatalog()
         {           
             ModuleCatalog.AddModule<СatalogModule>();
+            ModuleCatalog.AddModule<DownloadModule>();
         }
 
        

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RetroLauncher.DAL.Model;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
@@ -90,6 +91,19 @@ namespace RetroLauncher.ServiceTools
             return default(T); //TODO: изменить такой фатал
         }
 
+        public string GetGameFolder(Game game)
+        {            
+            //создаем директории для скачивания
+            if (!Directory.Exists(Path.Combine(Storage.Source.PathGames, game.Platform.Alias)))
+                Directory.CreateDirectory(Path.Combine(Storage.Source.PathGames, game.Platform.Alias));
+
+            if (!Directory.Exists(Path.Combine(Storage.Source.PathGames, game.Platform.Alias, game.GameId + "-" + game.Name)))
+                Directory.CreateDirectory(Path.Combine(Storage.Source.PathGames, game.Platform.Alias, game.GameId + "-" + game.Name));
+
+            //возвращаем путь куда сохранять
+            return Path.Combine(Storage.Source.PathGames, game.Platform.Alias, game.GameId + "-" + game.Name);
+        }
+
         /// <summary>
         /// Указать значение параметра, если отсутствует создатся новый
         /// </summary>
@@ -114,7 +128,7 @@ namespace RetroLauncher.ServiceTools
             if (isSaveForce) Save();
         }
         */
-        
+
         bool IsCreateSettings()
         {
             if (Directory.Exists(PathApp)) return true;
