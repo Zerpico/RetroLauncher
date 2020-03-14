@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:RetroLauncher.Client.Views"
-            xmlns:prism="http://prismlibrary.com/"
+             xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
              mc:Ignorable="d">
     <Grid>
@@ -66,6 +66,7 @@
                 <StackPanel Orientation="Horizontal">
                     <Polygon VerticalAlignment="Center" x:Name="StarFour" Points="16,6 11,6 8,0 5,6 0,6 4,10 3,16 8,13 13,16 12,10 " Fill="#A5A581" />
                     <TextBlock Margin="3,0,0,0" HorizontalAlignment="Left" Foreground="#A5A581" FontSize="18" Text="{Binding SelectedGame.Rating}" VerticalAlignment="Center" />
+                    <TextBlock Margin="3,0,0,0" HorizontalAlignment="Left" Foreground="#A5A581" FontSize="18" Text="/ 5" VerticalAlignment="Center" />
                 </StackPanel>
             </StackPanel>
 

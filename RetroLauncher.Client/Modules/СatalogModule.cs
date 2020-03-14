@@ -22,6 +22,8 @@ namespace RetroLauncher.Client.Modules
             containerRegistry.RegisterSingleton<IRepository, WebRepository>();
             containerRegistry.RegisterForNavigation<Views.CatalogView>();
             containerRegistry.RegisterForNavigation<Views.DetailView>();
+            containerRegistry.RegisterDialog<Views.SelectFileDialog, ViewModels.SelectFileDialogViewModel>();
+            containerRegistry.RegisterDialogWindow<Views.Dialogs.FlatDialogWindow>();
         }
 
 

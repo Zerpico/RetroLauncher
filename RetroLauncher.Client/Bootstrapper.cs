@@ -8,6 +8,7 @@ using System.Windows;
 
 namespace RetroLauncher.Client
 {
+    [Obsolete]
     public class Bootstrapper : UnityBootstrapper
     {
         protected override DependencyObject CreateShell()

@@ -21,6 +21,14 @@ namespace RetroLauncher.Client.Views
         public CatalogView()
         {
             InitializeComponent();
+            gameList.Items.CurrentChanged += Items_CurrentChanged;
         }
+
+        private void Items_CurrentChanged(object sender, EventArgs e)
+        {
+            gameList.ScrollIntoView(gameList.Items[0]);
+        }
+
+     
     }
 }

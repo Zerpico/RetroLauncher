@@ -2,6 +2,7 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:RetroLauncher.Client.Themes"
                     xmlns:Controls="clr-namespace:RetroLauncher.Client.Controls"
+                    xmlns:prism="http://prismlibrary.com/"
                     >
 
     <SolidColorBrush x:Key="ButtonBorderBrush" Color="#007ACC" />
@@ -38,10 +39,12 @@
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="ButtonDisabledBrush" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="{StaticResource buttonDisabledGradientStartColor}" Offset="0.0" />
-        <GradientStop Color="{StaticResource buttonDisabledGradientStopColor}" Offset="1.0" />
+        <GradientStop Color="#FF505050" Offset="0.0" />
+        <GradientStop Color="#FF4A4A4A" Offset="1.0" />
     </LinearGradientBrush>
 
+
+    
     <LinearGradientBrush x:Key="ButtonVioletBrush" StartPoint="0,0" EndPoint="0,1">
         <GradientStop Color="#8F64A3" Offset="0.0"/>
         <GradientStop Color="#50385B" Offset="1.0"/>
@@ -159,7 +162,7 @@
         <Setter Property="SnapsToDevicePixels" Value="True" />
         <Setter Property="OverridesDefaultStyle" Value="True" />
         <Setter Property="Template" Value="{DynamicResource ButtonTemplate}" />
-        <Setter Property="Background" Value="{DynamicResource ButtonBrush}" />
+        <Setter Property="Background" Value="{DynamicResource ButtonDarkBrush}" />
         <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="Padding" Value="5" />
@@ -179,7 +182,7 @@
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-        <Style.Triggers>
+     <!--   <Style.Triggers>
             <DataTrigger Binding="{Binding SelectedGame.IsInstall, UpdateSourceTrigger=PropertyChanged}" Value="True">
                 <Setter Property="Content" Value="Играть"/>
             </DataTrigger>
@@ -187,6 +190,7 @@
                 <Setter Property="Content" Value="Скачать"/>
             </DataTrigger>
         </Style.Triggers>
+    -->
     </Style>
 
     <!-- TEXTBOX для ПОИСКА -->
@@ -639,4 +643,13 @@
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
     </Style>
 
+    
+    <!--WINDOW DIALOG-->
+        <Style TargetType="prism:DialogWindow">
+            <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />
+            <Setter Property="ResizeMode" Value="NoResize"/>
+            <Setter Property="ShowInTaskbar" Value="False"/>
+            <Setter Property="SizeToContent" Value="WidthAndHeight"/>
+        </Style>
+   
 </ResourceDictionary>

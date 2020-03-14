@@ -14,14 +14,13 @@ using System.Windows.Shapes;
 namespace RetroLauncher.Client.Views
 {
     /// <summary>
-    /// Логика взаимодействия для DownloadListView.xaml
+    /// Логика взаимодействия для SelectFileDialog.xaml
     /// </summary>
-    public partial class DownloadListView : UserControl
+    public partial class SelectFileDialog : UserControl
     {
-        public DownloadListView()
+        public SelectFileDialog()
         {
             InitializeComponent();
         }
     }
-
 }
