@@ -1,4 +1,5 @@
 ﻿using RetroLauncher.DAL.Model;
+using RetroLauncher.DAL.Service;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace RetroLauncher.Repository
     public class WebRepository : IRepository
     {
         private HttpClient client;
-        private string APP_URL = "https://www.zerpico.ru/api/";  //todo: жестко привязно, исправить
+        private string APP_URL = "https://www.zerpico.ru/api/";
 
         public WebRepository()
         {
@@ -28,18 +29,23 @@ namespace RetroLauncher.Repository
                // Address = new Uri($"http://{proxyHost}:{proxyPort}"),
                 BypassProxyOnLocal = false,
                 UseDefaultCredentials = false
-                
+
                /* Credentials = new NetworkCredential(
                     userName: proxyUserName,
                     password: proxyPassword)*/
             };
 
             // Теперь клиентский обработчик, который использует этот прокси
-            var httpClientHandler = new HttpClientHandler
+           /* var httpClientHandler = new HttpClientHandler
             {
                 Proxy = proxy,
-            };
+                UseProxy = false
+            };*/
 
+            HttpClientHandler httpClientHandler = new HttpClientHandler();
+            httpClientHandler.DefaultProxyCredentials = CredentialCache.DefaultCredentials;
+            httpClientHandler.UseProxy = true;
+            httpClientHandler.AllowAutoRedirect = true;
             // если нужно проходить аутентификацию на веб-сервере:
             /* if (needServerAuthentication)
              {
@@ -53,7 +59,7 @@ namespace RetroLauncher.Repository
              }*/
 
             // создаем объект клиента HTTP
-            return new HttpClient(handler: httpClientHandler, disposeHandler: true);
+            return new HttpClient(handler: httpClientHandler, disposeHandler: true) ;
         }
 
         public async Task<Game> GetGameById(int gameId)
@@ -66,13 +72,10 @@ namespace RetroLauncher.Repository
             return null;
         }
 
-        public async Task<PagingGames> GetGameFilter(string name = null, int[] genres = null, int[] platforms = null, int count = 50, int skip = 0)
+        public async Task<PagingGames> GetGameFilter(string name, int[] genres, int[] platforms, int count=50, int skip=0)
         {
             //строка запроса к api
-            string requestString = $"games?limit={count}&offset={skip}";
-
-            //если выбрали имя для поиска
-            if (name != null) requestString += $"&name={name}";
+            string requestString = $"games?limit={count}&offset={skip}&name={name}";
 
             //если выбрали жанры или платформы, то дописывает в строку эти выборки
             if (genres != null) requestString += "&"+GetStringFormatRequest(genres, "genres");
@@ -91,7 +94,7 @@ namespace RetroLauncher.Repository
         {
             var response = await client.GetAsync(System.IO.Path.Combine(APP_URL, $"games?limit={count}&offset={skip}"));
             if (response.StatusCode == HttpStatusCode.OK)
-            {              
+            {
                 return await response.Content.ReadAsAsync<PagingGames> ();
             }
             return new PagingGames() { Total= 0, Limit=0, Offset= 0, Items = null};
@@ -100,8 +103,9 @@ namespace RetroLauncher.Repository
         public async Task<IEnumerable<Genre>> GetGenres()
         {
             var response = await client.GetAsync(System.IO.Path.Combine(APP_URL, "genres"));
-            if (response.StatusCode == HttpStatusCode.OK || response.StatusCode == HttpStatusCode.Moved)
+            if (response.StatusCode == HttpStatusCode.OK)
             {
+                var ss =  await response.Content.ReadAsStringAsync();
                 return await response.Content.ReadAsAsync<IEnumerable<Genre>>();
             }
             return null;
@@ -109,10 +113,15 @@ namespace RetroLauncher.Repository
 
         public async Task<IEnumerable<Platform>> GetPlatforms()
         {
+
             var response = await client.GetAsync(System.IO.Path.Combine(APP_URL, "platforms"));
             if (response.StatusCode == HttpStatusCode.OK)
-            {
+            {                
                 return await response.Content.ReadAsAsync<IEnumerable<Platform>>();
+            }
+            else
+            {
+                var ss = await response.Content.ReadAsStringAsync();
             }
             return null;
         }

@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using RetroLauncher.WebApi.Model;
-using RetroLauncher.WebApi.Service;
 
 namespace RetroLauncher.WebApi.Controllers
 {
@@ -13,17 +11,21 @@ namespace RetroLauncher.WebApi.Controllers
     [ApiController]
     public class GenresController : Controller
     {
-        private IDataRepository repository;
+        private DbLibraryGamesContext repository;
 
-        public GenresController(DbLibraryGamesContext context)
+        public GenresController(DbLibraryGamesContext repository)
         {
-            repository = new SQLRepository(context);
+            this.repository = repository;
         }
-       
+
         [HttpGet]
-        public async Task<IActionResult> Get()
-        {     
-            return Ok(repository.GetGenres());
+        public  IActionResult Get()
+        {
+            var query = from db in repository.Genres
+                        select new RetroLauncher.DAL.Model.Genre(db.GenreId, db.GenreName);
+
+
+            return Ok(query);
         }
     }
 }
