@@ -116,9 +116,12 @@ namespace RetroLauncher.Repository
 
             var response = await client.GetAsync(System.IO.Path.Combine(APP_URL, "platforms"));
             if (response.StatusCode == HttpStatusCode.OK)
-            {
-                var ss =  await response.Content.ReadAsStringAsync();
+            {                
                 return await response.Content.ReadAsAsync<IEnumerable<Platform>>();
+            }
+            else
+            {
+                var ss = await response.Content.ReadAsStringAsync();
             }
             return null;
         }

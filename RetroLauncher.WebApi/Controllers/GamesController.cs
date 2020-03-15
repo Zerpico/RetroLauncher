@@ -74,7 +74,7 @@ namespace RetroLauncher.WebApi.Controllers
 
 
         [HttpGet("{id}", Name = "Get")]
-        public IActionResult Get(int key)
+        public IActionResult Get(int id)
         {
             //ищем игру по id
             var selGame = repository.Games
@@ -83,7 +83,7 @@ namespace RetroLauncher.WebApi.Controllers
                             .Include(l => l.GameLinks)    
                             .Include(r => r.Ratings)
                             .Include(dd => dd.Downloads)
-                            .Where(g => g.GameId == key).FirstOrDefault();
+                            .Where(g => g.GameId == id).FirstOrDefault();
 
             if (selGame == null) return new NoContentResult();
 

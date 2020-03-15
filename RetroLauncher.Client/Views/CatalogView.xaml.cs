@@ -29,6 +29,17 @@ namespace RetroLauncher.Client.Views
             gameList.ScrollIntoView(gameList.Items[0]);
         }
 
-     
+        private void filtrBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+            Button image = sender as Button;
+            ContextMenu contextMenu = image.ContextMenu;
+            contextMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            contextMenu.PlacementTarget = image;
+            contextMenu.VerticalOffset = 5;
+            contextMenu.IsOpen = true;
+            e.Handled = true;
+
+        }
     }
 }

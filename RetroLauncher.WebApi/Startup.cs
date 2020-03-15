@@ -35,7 +35,7 @@ namespace RetroLauncher.WebApi
             var constring = Configuration["ConnectionStrings:GamesLibraryConnection"];
             var opt = new DbContextOptionsBuilder<Model.DbLibraryGamesContext>().UseSqlServer(constring).Options;
 
-            services.AddSingleton<Model.DbLibraryGamesContext>(rep => new Model.DbLibraryGamesContext(opt));
+            services.AddDbContext<Model.DbLibraryGamesContext>(option => option.UseSqlServer(constring));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
         }

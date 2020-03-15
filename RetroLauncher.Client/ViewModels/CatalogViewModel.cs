@@ -25,6 +25,7 @@ namespace RetroLauncher.Client.ViewModels
             GameSelectCommand = new DelegateCommand(SelectGame);
             NextPageCommand = new DelegateCommand(NextPage);
             PrevPageCommand = new DelegateCommand(PrevPage);
+            CheckGenreCommand = new DelegateCommand(() => { GetGames(true); });
             CurrentPage = 1;
             maxListShow=50;
 
@@ -37,21 +38,24 @@ namespace RetroLauncher.Client.ViewModels
 
         #region Properties
 
-        public int GenreCheckCount { get { return Genres.Where(d => d.IsChecked).Count(); } }
+        public int GenreCheckCount { get { return Genres == null ? 0 : Genres.Where(d => d.IsChecked).Count(); } }
         public bool GenreCheckVisible { get { return GenreCheckCount > 0; } }
+
+        public int PlatformCheckCount { get { return Platforms == null ? 0 : Platforms.Where(d => d.IsChecked).Count(); } }
+        public bool PlatformCheckVisible { get { return PlatformCheckCount > 0; } }
 
         private ObservableCollection<CheckedListItem<Genre>> genres;
         public ObservableCollection<CheckedListItem<Genre>> Genres
         {
             get => genres;
-            set => SetProperty(ref genres, value);
+            set { SetProperty(ref genres, value); RaisePropertyChanged("GenreCheckCount"); RaisePropertyChanged("GenreCheckVisible"); }
         }
 
-        private ObservableCollection<Platform> platforms;
-        public ObservableCollection<Platform> Platforms
+        private ObservableCollection<CheckedListItem<Platform>> platforms;
+        public ObservableCollection<CheckedListItem<Platform>> Platforms
         {
             get => platforms;
-            set => SetProperty(ref platforms, value);
+            set { SetProperty(ref platforms, value); RaisePropertyChanged("PlatformCheckCount"); RaisePropertyChanged("PlatformCheckVisible"); }
         }
 
         private ObservableCollection<GameUI> games;
@@ -98,6 +102,7 @@ namespace RetroLauncher.Client.ViewModels
 
         #region Commands
         public DelegateCommand GameSelectCommand { get; private set; }
+        public DelegateCommand CheckGenreCommand { get; private set; }
         public DelegateCommand NextPageCommand { get; private set; }
         public DelegateCommand PrevPageCommand { get; private set; }
 
@@ -129,17 +134,37 @@ namespace RetroLauncher.Client.ViewModels
         {
             var db = await _repository.GetPlatforms();
             if (db == null) return;
-            Platforms = new ObservableCollection<Platform>(db);
+            Platforms = new ObservableCollection<CheckedListItem<Platform>>();
+            foreach (var g in db.OrderBy(d => d.PlatformName))
+            {
+                Platforms.Add(new CheckedListItem<Platform>(g));
+            }           
         }
 
         async void GetGames(bool resetPages = false)
         {
+            int[] filterGenre;
+            int[] filterPlatform;
+
+            if (Genres != null && Genres.Any(g => g.IsChecked))
+                filterGenre = Genres.Where(g => g.IsChecked).Select(g => g.Item.GenreId).ToArray();
+            else filterGenre = null;
+
+            if (Platforms != null && Platforms.Any(p => p.IsChecked))
+                filterPlatform = Platforms.Where(p => p.IsChecked).Select(p => p.Item.PlatformId).ToArray();
+            else filterPlatform = null;
+
             int skip = resetPages ? 0 : (currentPage-1) * maxListShow;
-            var db = await _repository.GetGameFilter(searchText, null, null, maxListShow,skip);
+            var db = await _repository.GetGameFilter(searchText, filterGenre, filterPlatform, maxListShow,skip);
             if (db == null) { Games = new ObservableCollection<GameUI>(); return;}
             Games = new ObservableCollection<GameUI>(db.Items.Select(d => new GameUI(d)));
             MaxPage = (db.Total / maxListShow) + ((db.Total % maxListShow) > 0 ? 1 : 0);
             if (resetPages) CurrentPage = 1;
+
+            RaisePropertyChanged(nameof(GenreCheckCount));
+            RaisePropertyChanged(nameof(PlatformCheckCount));
+            RaisePropertyChanged(nameof(GenreCheckVisible));
+            RaisePropertyChanged(nameof(PlatformCheckVisible));
         }
 
         private void NextPage()
