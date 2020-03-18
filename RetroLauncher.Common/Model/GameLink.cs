@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RetroLauncher.DAL.Model
+namespace RetroLauncher.Common.Model
 {
     public class GameLink
     {

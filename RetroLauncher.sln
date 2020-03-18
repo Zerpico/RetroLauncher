@@ -7,13 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetroLauncher.WebApi", "Ret
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{02ACE6B9-B552-4811-85F9-0655AE8424CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetroLauncher.DAL", "RetroLauncher.DAL\RetroLauncher.DAL.csproj", "{2626AE6A-D496-46AD-B5F0-F96BECCA3489}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetroLauncher.Common", "RetroLauncher.Common\RetroLauncher.Common.csproj", "{2626AE6A-D496-46AD-B5F0-F96BECCA3489}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroLauncher.Repository", "RetroLauncher.Repository\RetroLauncher.Repository.csproj", "{2F2F3BFB-03CD-4CA7-8A21-042DFF160FB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetroLauncher.ServiceTools", "RetroLauncher.ServiceTools\RetroLauncher.ServiceTools.csproj", "{4DCFD354-D9B0-41BA-B3F4-264987A01F60}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroLauncher.ServiceTools", "RetroLauncher.ServiceTools\RetroLauncher.ServiceTools.csproj", "{4DCFD354-D9B0-41BA-B3F4-264987A01F60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetroLauncher.Client", "RetroLauncher.Client\RetroLauncher.Client.csproj", "{1F641798-D467-4480-9507-7CF13B1A1EF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroLauncher.Client", "RetroLauncher.Client\RetroLauncher.Client.csproj", "{1F641798-D467-4480-9507-7CF13B1A1EF2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RetroLauncher.WebApi.Client", "RetroLauncher.WebApi.Client\RetroLauncher.WebApi.Client.csproj", "{DCBCE025-0321-4485-A1F5-2CF786552D4B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,6 @@ Global
 		{2626AE6A-D496-46AD-B5F0-F96BECCA3489}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2626AE6A-D496-46AD-B5F0-F96BECCA3489}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2626AE6A-D496-46AD-B5F0-F96BECCA3489}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2F2F3BFB-03CD-4CA7-8A21-042DFF160FB5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F2F3BFB-03CD-4CA7-8A21-042DFF160FB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F2F3BFB-03CD-4CA7-8A21-042DFF160FB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F2F3BFB-03CD-4CA7-8A21-042DFF160FB5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4DCFD354-D9B0-41BA-B3F4-264987A01F60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4DCFD354-D9B0-41BA-B3F4-264987A01F60}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DCFD354-D9B0-41BA-B3F4-264987A01F60}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -41,13 +37,16 @@ Global
 		{1F641798-D467-4480-9507-7CF13B1A1EF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F641798-D467-4480-9507-7CF13B1A1EF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F641798-D467-4480-9507-7CF13B1A1EF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCBCE025-0321-4485-A1F5-2CF786552D4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCBCE025-0321-4485-A1F5-2CF786552D4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCBCE025-0321-4485-A1F5-2CF786552D4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCBCE025-0321-4485-A1F5-2CF786552D4B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2626AE6A-D496-46AD-B5F0-F96BECCA3489} = {02ACE6B9-B552-4811-85F9-0655AE8424CC}
-		{2F2F3BFB-03CD-4CA7-8A21-042DFF160FB5} = {02ACE6B9-B552-4811-85F9-0655AE8424CC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A93ACD34-06C7-4093-9EAC-D95D5D34B3FF}

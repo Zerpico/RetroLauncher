@@ -29,10 +29,18 @@
     <SolidColorBrush x:Key="buttonPressedGradientStartColorBrush" Color="#FF595959" />
     <SolidColorBrush x:Key="listboxItemSelectedBrush" Color="#FF678DB2" />
 
+    <SolidColorBrush x:Key="editBoxBorderBrush" Color="#FF363636" />
+    <SolidColorBrush x:Key="scrollbarStartColorBrush" Color="#FF6D6D6D" />
+
     <SolidColorBrush x:Key="checkBoxHoverTopLeft1Brush" Color="#FF657E96" />
     <SolidColorBrush x:Key="checkBoxHoverBottomRight1Brush" Color="#FF5C7288" />
     <SolidColorBrush x:Key="checkBoxHoverTopLeft2Brush" Color="#FF657584" />
     <SolidColorBrush x:Key="checkBoxHoverBottomRight2Brush" Color="#FF5C6A78" />
+    
+    <Color x:Key="buttonDisabledGradientStopColor">#FF4A4A4A</Color>
+
+
+    <SolidColorBrush x:Key="radioBoxBorder1Brush" Color="{StaticResource buttonDisabledGradientStopColor}" />
 
     <DropShadowBitmapEffect x:Key="DropDownShadow" Color="{StaticResource Base}" Direction="315" ShadowDepth="4" Softness="0.15" Opacity="0.35" />
 
@@ -68,6 +76,15 @@
         <GradientStop Color="#FF38424B" Offset="1.0" />
     </LinearGradientBrush>
 
+    <LinearGradientBrush x:Key="ScrollbarBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FF6D6D6D" Offset="0.0" />
+        <GradientStop Color="#FF5F5F5F" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="ScrollbarPressedBrush" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="#FF646464" Offset="0.0" />
+        <GradientStop Color="#FF5F5F5F" Offset="1.0" />
+    </LinearGradientBrush>
 
     <!-- Кнопки переключения навигации главного контейнера -->
     <Style x:Key="MenuToggleButton" TargetType="ToggleButton">
@@ -977,7 +994,335 @@
         <Setter Property="VerticalContentAlignment" Value="Stretch" />
     </Style>
 
-    
+    <!-- ScrollBars -->
+    <DrawingBrush x:Key="CheckerBackground" Viewport="0,0,2,2" ViewportUnits="Absolute" Stretch="None" TileMode="Tile">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{StaticResource BaseBrush}">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0,0,1,1" />
+                            <RectangleGeometry Rect="1,1,1,1" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="{StaticResource WindowBrush}">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="1,0,1,1" />
+                            <RectangleGeometry Rect="0,1,1,1" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <DrawingBrush x:Key="GripBackground" Viewport="0,0,4,4" ViewportUnits="Absolute" Stretch="None" TileMode="Tile">
+        <DrawingBrush.Drawing>
+            <DrawingGroup>
+                <GeometryDrawing Brush="{StaticResource editBoxBorderBrush}">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="0,0,1,2" />
+                            <RectangleGeometry Rect="1,0,1,1" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+                <GeometryDrawing Brush="{StaticResource scrollbarStartColorBrush}">
+                    <GeometryDrawing.Geometry>
+                        <GeometryGroup>
+                            <RectangleGeometry Rect="1,1,1,1" />
+                        </GeometryGroup>
+                    </GeometryDrawing.Geometry>
+                </GeometryDrawing>
+            </DrawingGroup>
+        </DrawingBrush.Drawing>
+    </DrawingBrush>
+    <Style x:Key="VerticalScrollBarThumbStyle" TargetType="{x:Type Thumb}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="BorderBrush" Value="{StaticResource DarkBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Grid SnapsToDevicePixels="True">
+                        <Rectangle x:Name="Ellipse" StrokeThickness="1" Stroke="{StaticResource DarkBrush}" Fill="{StaticResource ScrollbarBrush}" />
+                        <Border x:Name="Border1" Margin="1" BorderThickness="1,1,0,0" BorderBrush="{StaticResource scrollbarStartColorBrush}" Background="{x:Null}" />
+                        <Border x:Name="Border2" Margin="1" BorderThickness="0,0,1,1" BorderBrush="{StaticResource scrollbarStopColorBrush}" Background="{x:Null}" />
+                        <Border Margin="-8,-16,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="0,-16,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="7,-16,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="-8,-8,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="0,-8,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="7,-8,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="-8,0,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="0,0,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="7,0,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="-8,8,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="0,8,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="7,8,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="-8,16,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="0,16,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="7,16,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource ScrollbarPressedBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource WindowBrush}" />
+                            <Setter TargetName="Border1" Property="BorderBrush" Value="{StaticResource baseGradientStopColorBrush}" />
+                            <Setter TargetName="Border2" Property="BorderBrush" Value="{StaticResource radioBoxBorder1Brush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="HorizontalScrollBarThumbStyle" TargetType="{x:Type Thumb}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="BorderBrush" Value="{StaticResource DarkBrush}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Thumb}">
+                    <Grid SnapsToDevicePixels="True">
+                        <Rectangle x:Name="Ellipse" StrokeThickness="1" Stroke="{StaticResource DarkBrush}" Fill="{StaticResource ScrollbarBrush}" />
+                        <Border x:Name="Border1" Margin="1" BorderThickness="1,1,0,0" BorderBrush="{StaticResource scrollbarStartColorBrush}" Background="{x:Null}" />
+                        <Border x:Name="Border2" Margin="1" BorderThickness="0,0,1,1" BorderBrush="{StaticResource scrollbarStopColorBrush}" Background="{x:Null}" />
+                        <Border Margin="-16,-8,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="-16,0,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="-16,7,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="-8,-8,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="-8,0,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="-8,7,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="0,-8,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="0,0,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="0,7,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="8,-8,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="8,0,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="8,7,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="16,-8,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="16,0,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                        <Border Margin="16,7,0,0" Width="2" Height="2" BorderThickness="1,1,0,0" BorderBrush="{StaticResource editBoxBorderBrush}" Background="{StaticResource scrollbarStartColorBrush}" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsDragging" Value="True">
+                            <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource ScrollbarPressedBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Ellipse" Property="Fill" Value="{StaticResource WindowBrush}" />
+                            <Setter TargetName="Border1" Property="BorderBrush" Value="{StaticResource baseGradientStopColorBrush}" />
+                            <Setter TargetName="Border2" Property="BorderBrush" Value="{StaticResource radioBoxBorder1Brush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="LineButtonUpStyle" TargetType="{x:Type RepeatButton}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Grid Height="16" SnapsToDevicePixels="True">
+                        <Border x:Name="BorderAndBackground" BorderThickness="1" BorderBrush="{StaticResource DarkBrush}" Background="{StaticResource ScrollbarBrush}" CornerRadius="2" />
+                        <Border x:Name="Border1" Margin="1" BorderThickness="1,1,0,0" BorderBrush="{StaticResource scrollbarStartColorBrush}" Background="{x:Null}" CornerRadius="1" />
+                        <Border x:Name="Border2" Margin="1" BorderThickness="0,0,1,1" BorderBrush="{StaticResource scrollbarStopColorBrush}" Background="{x:Null}" CornerRadius="1" />
+                        <Path x:Name="Path" Stretch="None" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{StaticResource TextBrush}" Data="M 0 2 L 4 -2 L 8 2 Z" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="BorderAndBackground" Property="Background" Value="{StaticResource ScrollbarPressedBrush}" />
+                            <Setter TargetName="Path" Property="RenderTransform">
+                                <Setter.Value>
+                                    <TranslateTransform X="1" Y="1" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Path" Property="Fill" Value="{StaticResource TextDisabledBrush}" />
+                            <Setter TargetName="BorderAndBackground" Property="Background" Value="{StaticResource WindowBrush}" />
+                            <Setter TargetName="Border1" Property="BorderBrush" Value="{StaticResource baseGradientStopColorBrush}" />
+                            <Setter TargetName="Border2" Property="BorderBrush" Value="{StaticResource radioBoxBorder1Brush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="LineButtonDownStyle" TargetType="{x:Type RepeatButton}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Grid Height="16" SnapsToDevicePixels="True">
+                        <Border x:Name="BorderAndBackground" BorderThickness="1" BorderBrush="{StaticResource DarkBrush}" Background="{StaticResource ScrollbarBrush}" CornerRadius="2" />
+                        <Border x:Name="Border1" Margin="1" BorderThickness="1,1,0,0" BorderBrush="{StaticResource scrollbarStartColorBrush}" Background="{x:Null}" CornerRadius="1" />
+                        <Border x:Name="Border2" Margin="1" BorderThickness="0,0,1,1" BorderBrush="{StaticResource scrollbarStopColorBrush}" Background="{x:Null}" CornerRadius="1" />
+                        <Path x:Name="Path" Stretch="None" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{StaticResource TextBrush}" Data="M 0 -2 L 4 2 L 8 -2 Z" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="BorderAndBackground" Property="Background" Value="{StaticResource ScrollbarPressedBrush}" />
+                            <Setter TargetName="Path" Property="RenderTransform">
+                                <Setter.Value>
+                                    <TranslateTransform X="1" Y="1" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Path" Property="Fill" Value="{StaticResource TextDisabledBrush}" />
+                            <Setter TargetName="BorderAndBackground" Property="Background" Value="{StaticResource WindowBrush}" />
+                            <Setter TargetName="Border1" Property="BorderBrush" Value="{StaticResource baseGradientStopColorBrush}" />
+                            <Setter TargetName="Border2" Property="BorderBrush" Value="{StaticResource radioBoxBorder1Brush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="LineButtonLeftStyle" TargetType="{x:Type RepeatButton}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Grid Width="16" SnapsToDevicePixels="True">
+                        <Border x:Name="BorderAndBackground" BorderThickness="1" BorderBrush="{StaticResource DarkBrush}" Background="{StaticResource ScrollbarBrush}" CornerRadius="2" />
+                        <Border x:Name="Border1" Margin="1" BorderThickness="1,1,0,0" BorderBrush="{StaticResource scrollbarStartColorBrush}" Background="{x:Null}" CornerRadius="1" />
+                        <Border x:Name="Border2" Margin="1" BorderThickness="0,0,1,1" BorderBrush="{StaticResource scrollbarStopColorBrush}" Background="{x:Null}" CornerRadius="1" />
+                        <Path x:Name="Path" Stretch="None" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{StaticResource TextBrush}" Data="M 2 -1 L -2 2 L 2 6 Z" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="BorderAndBackground" Property="Background" Value="{StaticResource ScrollbarPressedBrush}" />
+                            <Setter TargetName="Path" Property="RenderTransform">
+                                <Setter.Value>
+                                    <TranslateTransform X="1" Y="1" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Path" Property="Fill" Value="{StaticResource TextDisabledBrush}" />
+                            <Setter TargetName="BorderAndBackground" Property="Background" Value="{StaticResource WindowBrush}" />
+                            <Setter TargetName="Border1" Property="BorderBrush" Value="{StaticResource baseGradientStopColorBrush}" />
+                            <Setter TargetName="Border2" Property="BorderBrush" Value="{StaticResource radioBoxBorder1Brush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="LineButtonRightStyle" TargetType="{x:Type RepeatButton}">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Grid Width="16" SnapsToDevicePixels="True">
+                        <Border x:Name="BorderAndBackground" BorderThickness="1" BorderBrush="{StaticResource DarkBrush}" Background="{StaticResource ScrollbarBrush}" CornerRadius="2" />
+                        <Border x:Name="Border1" Margin="1" BorderThickness="1,1,0,0" BorderBrush="{StaticResource scrollbarStartColorBrush}" Background="{x:Null}" CornerRadius="1" />
+                        <Border x:Name="Border2" Margin="1" BorderThickness="0,0,1,1" BorderBrush="{StaticResource scrollbarStopColorBrush}" Background="{x:Null}" CornerRadius="1" />
+                        <Path x:Name="Path" Stretch="None" RenderOptions.EdgeMode="Aliased" HorizontalAlignment="Center" VerticalAlignment="Center" Fill="{StaticResource TextBrush}" Data="M -2 -2 L 2 3 L -2 6 Z" />
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="BorderAndBackground" Property="Background" Value="{StaticResource ScrollbarPressedBrush}" />
+                            <Setter TargetName="Path" Property="RenderTransform">
+                                <Setter.Value>
+                                    <TranslateTransform X="1" Y="1" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Path" Property="Fill" Value="{StaticResource TextDisabledBrush}" />
+                            <Setter TargetName="BorderAndBackground" Property="Background" Value="{StaticResource WindowBrush}" />
+                            <Setter TargetName="Border1" Property="BorderBrush" Value="{StaticResource baseGradientStopColorBrush}" />
+                            <Setter TargetName="Border2" Property="BorderBrush" Value="{StaticResource radioBoxBorder1Brush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="ScrollBarPageButtonStyle" TargetType="{x:Type RepeatButton}">
+        <Setter Property="IsTabStop" Value="False" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type RepeatButton}">
+                    <Border Background="Transparent" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <ControlTemplate x:Key="VerticalScrollBar" TargetType="{x:Type ScrollBar}">
+        <Grid Background="{StaticResource CheckerBackground}">
+            <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="16" />
+                <RowDefinition Height="*" />
+                <RowDefinition MaxHeight="16" />
+                <RowDefinition MaxHeight="16" />
+            </Grid.RowDefinitions>
+            <RepeatButton Grid.Row="0" Style="{StaticResource LineButtonUpStyle}" Command="ScrollBar.LineUpCommand" />
+            <Track Name="PART_Track" Grid.Row="1" IsDirectionReversed="True" ViewportSize="NaN">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Command="ScrollBar.PageUpCommand" Style="{StaticResource ScrollBarPageButtonStyle}" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb MinHeight="26" Style="{StaticResource VerticalScrollBarThumbStyle}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Command="ScrollBar.PageDownCommand" Style="{StaticResource ScrollBarPageButtonStyle}" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+            <RepeatButton Grid.Row="2" Style="{StaticResource LineButtonUpStyle}" Command="ScrollBar.LineUpCommand" />
+            <RepeatButton Grid.Row="3" Style="{StaticResource LineButtonDownStyle}" Command="ScrollBar.LineDownCommand" />
+        </Grid>
+    </ControlTemplate>
+    <ControlTemplate x:Key="HorizontalScrollBar" TargetType="{x:Type ScrollBar}">
+        <Grid Background="{StaticResource CheckerBackground}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition MaxWidth="16"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition MaxWidth="16"></ColumnDefinition>
+                <ColumnDefinition MaxWidth="16"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <RepeatButton Grid.Column="0" Style="{StaticResource LineButtonLeftStyle}" Command="ScrollBar.LineLeftCommand" />
+            <Track Name="PART_Track" Grid.Column="1" IsDirectionReversed="False" ViewportSize="NaN">
+                <Track.DecreaseRepeatButton>
+                    <RepeatButton Command="ScrollBar.PageLeftCommand" Style="{StaticResource ScrollBarPageButtonStyle}" />
+                </Track.DecreaseRepeatButton>
+                <Track.Thumb>
+                    <Thumb MinWidth="26" Style="{StaticResource HorizontalScrollBarThumbStyle}" />
+                </Track.Thumb>
+                <Track.IncreaseRepeatButton>
+                    <RepeatButton Command="ScrollBar.PageRightCommand" Style="{StaticResource ScrollBarPageButtonStyle}" />
+                </Track.IncreaseRepeatButton>
+            </Track>
+            <RepeatButton Grid.Column="2" Style="{StaticResource LineButtonLeftStyle}" Command="ScrollBar.LineLeftCommand" />
+            <RepeatButton Grid.Column="3" Style="{StaticResource LineButtonRightStyle}" Command="ScrollBar.LineRightCommand" />
+        </Grid>
+    </ControlTemplate>
+    <Style TargetType="{x:Type ScrollBar}" BasedOn="{StaticResource CommonStyle}">
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Style.Triggers>
+            <Trigger Property="Orientation" Value="Vertical">
+                <Setter Property="Width" Value="16" />
+                <Setter Property="Height" Value="Auto" />
+                <Setter Property="Template" Value="{StaticResource VerticalScrollBar}" />
+            </Trigger>
+            <Trigger Property="Orientation" Value="Horizontal">
+                <Setter Property="Width" Value="Auto" />
+                <Setter Property="Height" Value="16" />
+                <Setter Property="Template" Value="{StaticResource HorizontalScrollBar}" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
     <!--WINDOW DIALOG-->
         <Style TargetType="prism:DialogWindow">
             <Setter Property="prism:Dialog.WindowStartupLocation" Value="CenterScreen" />

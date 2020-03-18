@@ -2,8 +2,8 @@
 using Prism.Mvvm;
 using Prism.Regions;
 using RetroLauncher.Client.Models;
-using RetroLauncher.DAL.Model;
-using RetroLauncher.DAL.Service;
+using RetroLauncher.Common.Model;
+using RetroLauncher.WebApi.Client;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

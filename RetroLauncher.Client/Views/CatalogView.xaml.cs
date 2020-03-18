@@ -26,7 +26,8 @@ namespace RetroLauncher.Client.Views
 
         private void Items_CurrentChanged(object sender, EventArgs e)
         {
-            gameList.ScrollIntoView(gameList.Items[0]);
+            if (gameList.Items.Count > 0)
+                gameList.ScrollIntoView(gameList.Items[0]);
         }
 
         private void filtrBtn_Click(object sender, RoutedEventArgs e)

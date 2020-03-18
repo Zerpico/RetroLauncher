@@ -1,9 +1,9 @@
-﻿using RetroLauncher.DAL.Model;
+﻿using RetroLauncher.Common.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace RetroLauncher.DAL.Service
+namespace RetroLauncher.WebApi.Client
 {
     /// <summary>
     /// База данных игр

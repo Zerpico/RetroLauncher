@@ -31,7 +31,7 @@ namespace RetroLauncher.WebApi.Controllers
                         .Where(n => string.IsNullOrEmpty(name) ? true : n.GameName.Contains(name) || n.NameSecond.Contains(name) || n.NameOther.Contains(name))
                         .Where(g => genres.Count() == 0 ? true : genres.Contains(g.GenreId))
                         .Where(p => platforms.Count() == 0 ? true : platforms.Contains(p.PlatformId))
-                        .Select(g => new RetroLauncher.DAL.Model.Game()
+                        .Select(g => new RetroLauncher.Common.Model.Game()
                         {
                             GameId = g.GameId,
                             Name = g.GameName,
@@ -41,14 +41,14 @@ namespace RetroLauncher.WebApi.Controllers
                             Developer = g.Developer,
                            /* GenreId = g.GenreId,
                             PlatformId = g.PlatformId,*/
-                            Genre = new DAL.Model.Genre(g.Genre.GenreId, g.Genre.GenreName),
-                            Platform = new DAL.Model.Platform() { PlatformId = g.Platform.PlatformId, PlatformName = g.Platform.PlatformName, Alias = g.Platform.Alias },
-                            GameLinks = new List<DAL.Model.GameLink>()
-                            { new DAL.Model.GameLink()
+                            Genre = new RetroLauncher.Common.Model.Genre(g.Genre.GenreId, g.Genre.GenreName),
+                            Platform = new RetroLauncher.Common.Model.Platform() { PlatformId = g.Platform.PlatformId, PlatformName = g.Platform.PlatformName, Alias = g.Platform.Alias },
+                            GameLinks = new List<RetroLauncher.Common.Model.GameLink>()
+                            { new RetroLauncher.Common.Model.GameLink()
                             {
                                 LinkId = g.GameLinks.Where(d => d.TypeUrl == 2).FirstOrDefault().LinkId,
                                 Url = "https://www.zerpico.ru/retrolauncher/"+g.GameLinks.Where(d => d.TypeUrl == 2).FirstOrDefault().Url.Replace('\\','/'),
-                                TypeUrl = (DAL.Model.TypeUrl)g.GameLinks.Where(d => d.TypeUrl == 2).FirstOrDefault().TypeUrl
+                                TypeUrl = (RetroLauncher.Common.Model.TypeUrl)g.GameLinks.Where(d => d.TypeUrl == 2).FirstOrDefault().TypeUrl
                             }
                             },
                             Rating = g.Ratings.Count() == 0 ? null : new Nullable<double>(Math.Round(g.Ratings.Average(d => d.RatingValue), 2)),
@@ -63,7 +63,7 @@ namespace RetroLauncher.WebApi.Controllers
 
 
             return Ok(
-                new RetroLauncher.DAL.Model.PagingGames()
+                new RetroLauncher.Common.Model.PagingGames()
                 {
                     Total = count,
                     Offset = offset,
@@ -88,17 +88,17 @@ namespace RetroLauncher.WebApi.Controllers
             if (selGame == null) return new NoContentResult();
 
             //создаем список ссылок
-            var links = new List<DAL.Model.GameLink>();
+            var links = new List<RetroLauncher.Common.Model.GameLink>();
             foreach (var lnk in selGame.GameLinks)
-                links.Add(new DAL.Model.GameLink()
+                links.Add(new RetroLauncher.Common.Model.GameLink()
                 {
                     LinkId = lnk.LinkId,
                     Url = "https://www.zerpico.ru/retrolauncher/"+lnk.Url.Replace('\\', '/'),
-                    TypeUrl = (DAL.Model.TypeUrl)lnk.TypeUrl
+                    TypeUrl = (RetroLauncher.Common.Model.TypeUrl)lnk.TypeUrl
                 });            
 
             //составляем результат
-            var result = new DAL.Model.Game()
+            var result = new RetroLauncher.Common.Model.Game()
                         {
                             GameId = selGame.GameId,
                             Name = selGame.GameName,
@@ -109,8 +109,8 @@ namespace RetroLauncher.WebApi.Controllers
                             Annotation = selGame.Annotation,
                           /*  GenreId = selGame.GenreId,
                             PlatformId = selGame.PlatformId,*/
-                            Genre = new DAL.Model.Genre(selGame.Genre.GenreId, selGame.Genre.GenreName),
-                            Platform = new DAL.Model.Platform() { PlatformId = selGame.Platform.PlatformId, PlatformName = selGame.Platform.PlatformName, Alias = selGame.Platform.Alias },
+                            Genre = new RetroLauncher.Common.Model.Genre(selGame.Genre.GenreId, selGame.Genre.GenreName),
+                            Platform = new RetroLauncher.Common.Model.Platform() { PlatformId = selGame.Platform.PlatformId, PlatformName = selGame.Platform.PlatformName, Alias = selGame.Platform.Alias },
                             GameLinks = links,
                             Rating = selGame.Ratings.Count() == 0 ? null : new Nullable<double>(Math.Round(selGame.Ratings.Average(d => d.RatingValue), 2)),
                             Downloads = selGame.Downloads.Count() == 0 ? null : new Nullable<int>(selGame.Downloads.Count)

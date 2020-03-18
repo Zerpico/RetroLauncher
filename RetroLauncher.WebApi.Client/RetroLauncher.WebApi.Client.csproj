@@ -9,7 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RetroLauncher.DAL\RetroLauncher.DAL.csproj" />
+    <ProjectReference Include="..\RetroLauncher.Common\RetroLauncher.Common.csproj" />
   </ItemGroup>
 
 </Project>

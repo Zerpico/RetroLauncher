@@ -1,8 +1,7 @@
 ﻿using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
-using RetroLauncher.DAL.Service;
-using RetroLauncher.Repository;
+using RetroLauncher.WebApi.Client;
 using System;
 using System.Collections.Generic;
 using System.Text;

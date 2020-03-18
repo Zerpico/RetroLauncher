@@ -22,7 +22,7 @@ namespace RetroLauncher.WebApi.Controllers
         public  IActionResult Get()
         {
             var query = from db in repository.Genres
-                        select new RetroLauncher.DAL.Model.Genre(db.GenreId, db.GenreName);
+                        select new RetroLauncher.Common.Model.Genre(db.GenreId, db.GenreName);
 
 
             return Ok(query);

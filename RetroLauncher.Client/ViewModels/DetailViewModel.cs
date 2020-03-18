@@ -2,7 +2,6 @@
 using Prism.Mvvm;
 using Prism.Regions;
 using RetroLauncher.Client.Models;
-using RetroLauncher.DAL.Service;
 using RetroLauncher.ServiceTools.Download;
 using System;
 using System.Linq;
@@ -13,6 +12,7 @@ using RetroLauncher.ServiceTools;
 using System.Windows.Threading;
 using System.Threading.Tasks;
 using Prism.Services.Dialogs;
+using RetroLauncher.WebApi.Client;
 
 namespace RetroLauncher.Client.ViewModels
 {

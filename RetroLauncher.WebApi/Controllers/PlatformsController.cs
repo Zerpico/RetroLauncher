@@ -23,7 +23,7 @@ namespace RetroLauncher.WebApi.Controllers
         {
 
             var query = from db in repository.Platforms
-                        select new RetroLauncher.DAL.Model.Platform(db.PlatformId, db.PlatformName, db.Alias);
+                        select new RetroLauncher.Common.Model.Platform(db.PlatformId, db.PlatformName, db.Alias);
                         return Ok(query);
         }
     }

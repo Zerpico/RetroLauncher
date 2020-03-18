@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using RetroLauncher.DAL.Model;
+using RetroLauncher.Common.Model;
 
 namespace RetroLauncher.Client.Models
 {

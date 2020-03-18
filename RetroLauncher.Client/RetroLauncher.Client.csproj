@@ -23,8 +23,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\RetroLauncher.Repository\RetroLauncher.Repository.csproj" />
+    <ProjectReference Include="..\RetroLauncher.Common\RetroLauncher.Common.csproj" />
     <ProjectReference Include="..\RetroLauncher.ServiceTools\RetroLauncher.ServiceTools.csproj" />
+    <ProjectReference Include="..\RetroLauncher.WebApi.Client\RetroLauncher.WebApi.Client.csproj" />
   </ItemGroup>
 
   <ItemGroup>
