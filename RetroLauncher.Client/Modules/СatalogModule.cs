@@ -24,7 +24,7 @@ namespace RetroLauncher.Client.Modules
             containerRegistry.RegisterForNavigation<Views.RecentView>();
             containerRegistry.RegisterForNavigation<Views.DownloadedView>();
             containerRegistry.RegisterDialog<Views.SelectFileDialog, ViewModels.SelectFileDialogViewModel>();
-            containerRegistry.RegisterDialogWindow<Views.Dialogs.FlatDialogWindow>();
+            containerRegistry.RegisterDialogWindow<Views.FlatDialogWindow>();
         }
 
 

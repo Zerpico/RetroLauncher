@@ -401,12 +401,15 @@ namespace RetroLauncher.Client.Views
             }
 
             config.Save();
+
+            var parent = this.Parent;
+            if (parent is FlatDialogWindow)
+            {
+                (parent as FlatDialogWindow).Close();
+            }
         }
 
-        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
-        {
-           // this.Close();
-        }
+       
 
 
     }

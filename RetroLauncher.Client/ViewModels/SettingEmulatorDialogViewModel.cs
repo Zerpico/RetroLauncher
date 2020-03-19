@@ -23,12 +23,16 @@ namespace RetroLauncher.Client.ViewModels
 
         public event Action<IDialogResult> RequestClose;
 
+
+
         protected virtual void CloseDialog(string parameter)
         {
             ButtonResult result = ButtonResult.OK;
 
             RaiseRequestClose(new DialogResult(result));
         }
+
+
 
         public virtual void RaiseRequestClose(IDialogResult dialogResult)
         {

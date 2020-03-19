@@ -13,7 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace RetroLauncher.Client.Views.Dialogs
+namespace RetroLauncher.Client.Views
 {
     /// <summary>
     /// Логика взаимодействия для FlatDialogWindow.xaml

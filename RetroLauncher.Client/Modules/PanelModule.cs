@@ -19,7 +19,7 @@ namespace RetroLauncher.Client.Modules
         {           
             containerRegistry.RegisterForNavigation<Views.PanelView>();
             containerRegistry.RegisterDialog<Views.SettingEmulatorDialog, ViewModels.SettingEmulatorDialogViewModel>();
-            containerRegistry.RegisterDialogWindow<Views.Dialogs.FlatDialogWindow>();
+            containerRegistry.RegisterDialogWindow<Views.FlatDialogWindow>();
         }
     }
 }
