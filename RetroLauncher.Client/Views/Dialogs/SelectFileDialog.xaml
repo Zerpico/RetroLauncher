@@ -6,8 +6,8 @@
              xmlns:local="clr-namespace:RetroLauncher.Client.Views"
              mc:Ignorable="d" 
              xmlns:prism="http://prismlibrary.com/"
-             prism:ViewModelLocator.AutoWireViewModel="True"
-             MinHeight="250"
+             prism:ViewModelLocator.AutoWireViewModel="True"             
+             MinHeight="250" MinWidth="250" MaxHeight="700"
             >
     <UserControl.Resources>
 
@@ -61,7 +61,11 @@
 
         <StackPanel Margin="0,10,0,0" Grid.Row="1" >
             <Separator Height="5"/>
-            <CheckBox VerticalContentAlignment="Center" FontSize="16" Margin="3" Foreground="{StaticResource MainTitle}">Показывать хак-версии</CheckBox>
+            <CheckBox VerticalContentAlignment="Center" 
+                      FontSize="16" Margin="3" 
+                      Foreground="{StaticResource MainTitle}"
+                      IsChecked="{Binding IsHackShowChecked}">
+                      Показывать хак-версии</CheckBox>
         </StackPanel>
         
     </Grid>

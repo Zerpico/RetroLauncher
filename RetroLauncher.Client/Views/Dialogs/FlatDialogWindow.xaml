@@ -7,8 +7,12 @@
         mc:Ignorable="d" 
         Background="{StaticResource MainGradient}"
         ShowInTaskbar="False"
-        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"   MinWidth="300" MinHeight="300"
-        Title="{Binding Title}"  >
+        WindowStyle="ToolWindow"
+        ResizeMode="CanResizeWithGrip" WindowStartupLocation="CenterScreen"  MinWidth="300" MinHeight="300"
+        Title="{Binding Title}" BorderBrush="#B2736F78" BorderThickness="1" >
+    <Window.Effect>
+        <DropShadowEffect Color="#FFF4EFF5" ShadowDepth="7" BlurRadius="7" Direction="309" Opacity="0.5"/>
+    </Window.Effect>
     <Window.Style>
         <Style TargetType="{x:Type Window}" >
             <Setter Property="SizeToContent" Value="WidthAndHeight" />

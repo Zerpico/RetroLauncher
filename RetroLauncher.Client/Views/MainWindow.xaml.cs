@@ -24,9 +24,9 @@ namespace RetroLauncher.Client.Views
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class FlatWindow1 : FlatWindow
+    public partial class MainWindow : FlatWindow
     {
-        public FlatWindow1()
+        public MainWindow()
         {
             InitializeComponent();
             this.Loaded += MainWindow_Loaded;

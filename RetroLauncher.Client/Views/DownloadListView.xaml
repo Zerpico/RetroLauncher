@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:RetroLauncher.Client.Views"
              xmlns:prism="http://prismlibrary.com/"
              prism:ViewModelLocator.AutoWireViewModel="True"
+             
              mc:Ignorable="d" >
     <UserControl.Resources>
         <Style x:Key="gameGridCellStyle" TargetType="{x:Type DataGridCell}">

@@ -11,17 +11,19 @@ using RetroLauncher.ServiceTools.Download;
 
 namespace RetroLauncher.Client.ViewModels
 {
-    public class FlatWindow1ViewModel : BindableBase
+    public class MainWindowViewModel : BindableBase
     {
         IRegionManager _manager;
 
-        public FlatWindow1ViewModel(IRegionManager manager)
+        public MainWindowViewModel(IRegionManager manager)
         {
             _manager = manager;
             DownloadEmulator();
 
+
         }
 
+        
         private DelegateCommand<string> navigateCommand;
         public DelegateCommand<string> NavigateCommand
         {

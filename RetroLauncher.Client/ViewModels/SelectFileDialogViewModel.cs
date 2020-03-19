@@ -4,6 +4,7 @@ using Prism.Services.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace RetroLauncher.Client.ViewModels
@@ -17,8 +18,28 @@ namespace RetroLauncher.Client.ViewModels
         private FileInfo[] _files;
         public FileInfo[] Files
         {
-            get { return _files; }
-            set { SetProperty(ref _files, value); }
+            get 
+            { 
+                return isHackShowChecked ? _files : ShowHackedList(); 
+            }
+        }
+
+        private bool isHackShowChecked;
+        public bool IsHackShowChecked
+        {
+            get { return isHackShowChecked; }
+            set { SetProperty(ref isHackShowChecked, value); RaisePropertyChanged(nameof(Files)); }
+        }
+
+        private FileInfo[] ShowHackedList()
+        {
+            if (_files == null) return null;
+            
+            var r = new System.Text.RegularExpressions.Regex(@"(\([\w\s]*hack[\w\s]*\))",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase |
+                System.Text.RegularExpressions.RegexOptions.Multiline);
+
+            return _files.Where(g => !r.IsMatch(g.Name)).ToArray();
         }
 
         private FileInfo _selectedFile;
@@ -69,7 +90,8 @@ namespace RetroLauncher.Client.ViewModels
         {
             var path = parameters.GetValue<string>("path");
             System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(path);
-            Files = dir.GetFiles();
+            _files = dir.GetFiles();
+            RaisePropertyChanged(nameof(Files));
         }
     }
    

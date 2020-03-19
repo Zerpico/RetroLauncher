@@ -13,7 +13,7 @@ namespace RetroLauncher.Client
     {
         protected override DependencyObject CreateShell()
         {
-            return Container.TryResolve<Views.FlatWindow1>();
+            return Container.TryResolve<Views.MainWindow>();
         }
 
         protected override void InitializeShell()
@@ -25,7 +25,8 @@ namespace RetroLauncher.Client
 
 
         protected override void ConfigureModuleCatalog()
-        {           
+        {
+            ModuleCatalog.AddModule<PanelModule>();
             ModuleCatalog.AddModule<СatalogModule>();
             ModuleCatalog.AddModule<DownloadModule>();
         }

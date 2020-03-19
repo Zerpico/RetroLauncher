@@ -1,8 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -16,11 +14,11 @@ using System.Windows.Shapes;
 namespace RetroLauncher.Client.Views
 {
     /// <summary>
-    /// Логика взаимодействия для HomePage.xaml
+    /// Логика взаимодействия для DownloadedView.xaml
     /// </summary>
-    public partial class WaitView : UserControl
+    public partial class DownloadedView : UserControl
     {
-        public WaitView()
+        public DownloadedView()
         {
             InitializeComponent();
         }
