@@ -2,7 +2,7 @@
 
 простой и доступный запуск ретро-игр
 
-![alt text](http://www.zerpico.ru/RetroLauncher/screen0.png)
+![alt text](http://khudaev.ru/screen0.png)
 
 ## Зачем?
 
