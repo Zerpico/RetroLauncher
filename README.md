@@ -2,7 +2,7 @@
 
 простой и доступный запуск ретро-игр
 
-![alt text](http://khudaev.ru/screen0.png)
+![screen0](https://user-images.githubusercontent.com/6038354/121315339-b0aa8100-c921-11eb-859d-919ede041a18.png)
 
 ## Зачем?
 
