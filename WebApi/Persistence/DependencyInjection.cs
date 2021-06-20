@@ -15,23 +15,6 @@ namespace Persistence
     {
         public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
         {
-            try
-            {
-               /* var cons = configuration.GetConnectionString("DbConnection");
-                Npgsql.NpgsqlConnection con = new Npgsql.NpgsqlConnection(cons);
-               
-                con.Open();
-                var com = con.CreateCommand();
-                
-                com.CommandText = "create table sample ( id int )";
-                com.ExecuteNonQuery();
-                con.Close();*/
-            }
-            catch(Exception ex)
-            {
-                Console.WriteLine(ex.ToString());
-            }
-
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseNpgsql(
                     configuration.GetConnectionString("DbConnection"),

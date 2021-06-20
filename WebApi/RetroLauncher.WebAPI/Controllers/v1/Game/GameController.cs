@@ -11,10 +11,11 @@ using RetroLauncher.WebAPI.Controllers.v1.Game.Get;
 
 namespace RetroLauncher.WebAPI.Controllers.v1
 {
-    [ApiVersion("1.0")]
+    [ApiVersion("1")]
     public class GameController : BaseApiController
     {
         private readonly ILogger<GameController> _logger;
+
         public GameController(ILogger<GameController> logger)
         {
             _logger = logger;
@@ -25,18 +26,19 @@ namespace RetroLauncher.WebAPI.Controllers.v1
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Route("getList")]
         [ProducesResponseType(typeof(GamesGetResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ErrorGetResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Get(GamesGetRequest request)
+        [ProducesResponseType(typeof(ErrorGetResponse),StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetList(GamesGetRequest request)
         {
-            var games = await Mediator.Send(new GetAllGamesQuery { limit = request.Limit, offset = request.Offset } );
-            if (games == null)
+            var resultQuery = await Mediator.Send(new GetAllGamesQuery { Name = request.Name, Genres = request.Genres, Platforms = request.Platforms, Limit = request.Limit > 100 ? 100 : request.Limit, Offset = request.Offset } );
+            if (resultQuery.Items == null)
             {
                 _logger.LogError("Not found items");
                 return BadRequest(new ErrorGetResponse() { ErrorMessage = "Not found items" });
             }
 
-            var result = games.Select(g => new Models.Game()
+            var result = resultQuery.Items.Select(g => new Models.Game()
             {
                 Id = g.Id,
                 Name = g.Name,
@@ -46,7 +48,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1
                 Developer = g.Developer,
                 Genre = g.Genre?.GenreName,
                 Platform = g.Platform?.PlatformName,
-                GameLinks = g.GameLinks != null ? new List<Models.GameLink>()
+                GameLinks = (g.GameLinks != null && g.GameLinks.Count != 0 )? new List<Models.GameLink>()
                       { new Models.GameLink()
                             {
                                 Url = g.GameLinks?.Where(d => d.TypeUrl == Domain.Enums.TypeUrl.Cover).FirstOrDefault().Url.Replace('\\','/'),
@@ -58,7 +60,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1
                 Downloads = g.Downloads != null ? (g.Downloads.Count() == 0 ? 0 : g.Downloads.Count) : 0
             });
 
-            return Ok(new GamesGetResponse() { Items = result, Limit = 50, Offset = 0, Total = 1 });
+            return Ok(new GamesGetResponse() { Items = result, Limit = resultQuery.Limit, Offset = resultQuery.Offset, Total = resultQuery.Total });
         }
 
         /// <summary>
@@ -66,17 +68,18 @@ namespace RetroLauncher.WebAPI.Controllers.v1
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
+        [HttpGet]
+        [Route("getbyid")]
         [ProducesResponseType(typeof(GameGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorGetResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(GameGetRequest request)
         {
-            var ans = await Mediator.Send(new GetGameByIdQuery { Id = id });
+            var ans = await Mediator.Send(new GetGameByIdQuery { Id = request.Id });
 
             if (ans == null)
             {
-                _logger.LogError($"Not found item by id {id}");
-                return BadRequest(new ErrorGetResponse() { ErrorMessage = $"Not found item by id {id}" });
+                _logger.LogError($"Not found item by id {request.Id}");
+                return BadRequest(new ErrorGetResponse() { ErrorMessage = $"Not found item by id {request.Id}" });
             }
 
             var result = new Models.Game()

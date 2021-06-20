@@ -15,7 +15,12 @@ namespace RetroLauncher.WebAPI.Controllers.v1.Game
         [Range(1,100)]
         public int Limit { get; set; } = 50;
 
-        [RegularExpression(@"^[1-9]$")]
+      //  [RegularExpression(@"^[1-9]$")]
         public int Offset { get; set; } = 0;
+    }
+
+    public class GameGetRequest
+    {
+        public int Id { get; set; }
     }
 }

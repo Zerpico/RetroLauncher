@@ -12,7 +12,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Application;
-using Persistence; 
+using Persistence;
+using RetroLauncher.WebAPI.Filters;
 
 namespace RetroLauncher.WebAPI
 {
@@ -42,9 +43,16 @@ namespace RetroLauncher.WebAPI
 
                 c.CustomSchemaIds(x => x.FullName);
 
+                // This call remove version from parameter, without it we will have version as parameter 
+                // for all endpoints in swagger UI
+                //c.OperationFilter<RemoveVersionFromParameter>();
+
+                // This make replacement of v{version:apiVersion} to real version of corresponding swagger doc.
+                //c.DocumentFilter<ReplaceVersionWithExactValueInPath>();
+
             });
             #endregion
-
+            
             #region Api Versioning
             // Add API Versioning to the Project
             services.AddApiVersioning(config =>
@@ -54,9 +62,10 @@ namespace RetroLauncher.WebAPI
                 // If the client hasn't specified the API version in the request, use the default API version number 
                 config.AssumeDefaultVersionWhenUnspecified = true;
                 // Advertise the API versions supported for the particular endpoint
-                config.ReportApiVersions = true;
+                //config.ReportApiVersions = true;
             });
             #endregion
+            
 
             services.AddApplication();
             services.AddPersistence(Configuration);            
@@ -73,7 +82,7 @@ namespace RetroLauncher.WebAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
             app.UseSwagger();
