@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "WebApi\Appli
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetroLauncher.WebAPI", "WebApi\RetroLauncher.WebAPI\RetroLauncher.WebAPI.csproj", "{884D4B4D-2E2B-43FC-B726-95CFEC15663D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiTest", "WebApiTest\WebApiTest.csproj", "{05B08CBA-1B0F-4CDF-A5E7-4F48CE2B2B72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiTest", "WebApi\WebApiTest\WebApiTest.csproj", "{05B08CBA-1B0F-4CDF-A5E7-4F48CE2B2B72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
