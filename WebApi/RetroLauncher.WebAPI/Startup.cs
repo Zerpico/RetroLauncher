@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 using Application;
 using Persistence;
 using RetroLauncher.WebAPI.Filters;
+using Microsoft.AspNetCore.StaticFiles;
+using System.IO;
+using Microsoft.Extensions.FileProviders;
 
 namespace RetroLauncher.WebAPI
 {
@@ -90,6 +93,23 @@ namespace RetroLauncher.WebAPI
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "RetroLauncher Api");
             });
+
+            // Set up custom content types - associating file extension to MIME type
+            var provider = new FileExtensionContentTypeProvider();
+            // Add new mappings
+            provider.Mappings[".7z"] = "application/x-7z-compressed";
+
+            string filesDirectory = Environment.GetEnvironmentVariable("ROMS_DIRECTORY");
+            if (!Directory.Exists(Path.Combine(filesDirectory, "files")))
+                Directory.CreateDirectory(Path.Combine(filesDirectory, "files"));
+
+            app.UseDefaultFiles();
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(filesDirectory),
+                ContentTypeProvider = provider
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();

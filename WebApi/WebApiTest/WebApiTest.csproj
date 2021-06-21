@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebApi\RetroLauncher.WebAPI\RetroLauncher.WebAPI.csproj" />
+    <ProjectReference Include="..\RetroLauncher.WebAPI\RetroLauncher.WebAPI.csproj" />
   </ItemGroup>
 
 </Project>

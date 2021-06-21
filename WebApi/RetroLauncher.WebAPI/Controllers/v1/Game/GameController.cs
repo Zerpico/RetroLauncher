@@ -22,7 +22,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1
         {
             _logger = logger;
             _baseUrl = Environment.GetEnvironmentVariable("BASEURL");
-            _directoryRoms = Environment.GetEnvironmentVariable("ROMS");
+            _directoryRoms = Environment.GetEnvironmentVariable("ROMS_DIRECTORY");
         }
 
         /// <summary>
