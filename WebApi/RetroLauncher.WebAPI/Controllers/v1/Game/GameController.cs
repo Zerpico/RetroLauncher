@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Features.Queries;
@@ -21,8 +22,8 @@ namespace RetroLauncher.WebAPI.Controllers.v1
         public GameController(ILogger<GameController> logger)
         {
             _logger = logger;
-            _baseUrl = Environment.GetEnvironmentVariable("BASEURL");
-            _directoryRoms = Environment.GetEnvironmentVariable("ROMS_DIRECTORY");
+            _baseUrl = Path.Combine(Environment.GetEnvironmentVariable("BASEURL"), "files");
+            _directoryRoms = Path.Combine(Environment.GetEnvironmentVariable("ROMS_DIRECTORY"), "files");
         }
 
         /// <summary>
