@@ -1,16 +1,19 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
-COPY ["RetroLauncher.WebAPI/RetroLauncher.WebAPI.csproj", "RetroLauncher.WebAPI/"]
-RUN dotnet restore "RetroLauncher.WebAPI/RetroLauncher.WebAPI.csproj"
+COPY ["WebApi/RetroLauncher.WebAPI/RetroLauncher.WebAPI.csproj", "WebApi/RetroLauncher.WebAPI/"]
+COPY ["WebApi/Application/Application.csproj", "WebApi/Application/"]
+COPY ["WebApi/Domain/Domain.csproj", "WebApi/Domain/"]
+COPY ["WebApi/Persistence/Persistence.csproj", "WebApi/Persistence/"]
+RUN dotnet restore "WebApi/RetroLauncher.WebAPI/RetroLauncher.WebAPI.csproj"
 COPY . .
-WORKDIR "/src/RetroLauncher.WebAPI"
+WORKDIR "/src/WebApi/RetroLauncher.WebAPI"
 RUN dotnet build "RetroLauncher.WebAPI.csproj" -c Release -o /app/build
 
 FROM build AS publish

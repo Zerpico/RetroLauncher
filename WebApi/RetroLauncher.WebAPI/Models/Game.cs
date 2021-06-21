@@ -16,7 +16,7 @@ namespace RetroLauncher.WebAPI.Models
         public string Annotation { get; set; }
 
         public string Genre { get; set; }
-        public string Platform { get; set; }       
+        public Platform Platform { get; set; }       
         public int Downloads { get; set; }
         public double Ratings { get; set; }
 
