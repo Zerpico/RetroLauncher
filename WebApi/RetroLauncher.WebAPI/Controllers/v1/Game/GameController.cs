@@ -60,8 +60,8 @@ namespace RetroLauncher.WebAPI.Controllers.v1
                             }
                       } : null,
 
-                Ratings = g.Ratings != null ? (g.Ratings.Count() == 0 ? 0 : Math.Round(g.Ratings.Average(d => d.RatingValue), 2)) : 0,
-                Downloads = g.Downloads != null ? (g.Downloads.Count() == 0 ? 0 : g.Downloads.Count) : 0
+                Ratings = g.Ratings != null ? (g.Ratings.Count == 0 ? 0 : Math.Round(g.Ratings.Average(d => d.RatingValue), 2)) : 0,
+                Downloads = g.Downloads != null ? (g.Downloads.Count == 0 ? 0 : g.Downloads.Count) : 0
             });
 
             return Ok(new GamesGetResponse() { Items = result, Limit = resultQuery.Limit, Offset = resultQuery.Offset, Total = resultQuery.Total });
@@ -102,8 +102,8 @@ namespace RetroLauncher.WebAPI.Controllers.v1
                     TypeUrl = (Models.TypeUrl)(int)l.TypeUrl,
                     Url = System.IO.Path.Combine(_baseUrl, l.Url.Replace('\\','/'))
                 }),  
-                Ratings = ans.Ratings != null ? (ans.Ratings.Count() == 0 ? 0 : Math.Round(ans.Ratings.Average(d => d.RatingValue), 2)) : 0, 
-                Downloads = ans.Downloads != null ? (ans.Downloads.Count() == 0 ? 0 : ans.Downloads.Count) : 0
+                Ratings = ans.Ratings != null ? (ans.Ratings.Count == 0 ? 0 : Math.Round(ans.Ratings.Average(d => d.RatingValue), 2)) : 0, 
+                Downloads = ans.Downloads != null ? (ans.Downloads.Count == 0 ? 0 : ans.Downloads.Count) : 0
             };
 
             return Ok(result);

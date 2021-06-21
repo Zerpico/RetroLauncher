@@ -25,7 +25,7 @@ namespace Application.Features.Queries
             }
             public async Task<IEnumerable<Genre>> Handle(GetAllGenresQuery query, CancellationToken cancellationToken)
             {
-                return await _context.Genres.ToListAsync();
+                return await _context.Genres.ToListAsync(cancellationToken);
             }
           
         }

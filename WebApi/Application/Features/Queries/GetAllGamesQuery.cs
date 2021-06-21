@@ -43,7 +43,7 @@ namespace Application.Features.Queries
                     .Where(g => query.Genres.Count() == 0 ? true : query.Genres.Contains(g.Genre.Id))
                     .Where(p => query.Platforms.Count() == 0 ? true : query.Platforms.Contains(p.Platform.Id));
 
-                int count = await queryResult.CountAsync();
+                int count = await queryResult.CountAsync(cancellationToken);
                 
                 return
                 new PagingList<Game>()
@@ -51,7 +51,7 @@ namespace Application.Features.Queries
                     Total = count,
                     Offset = query.Offset,
                     Limit = query.Limit,
-                    Items = await queryResult.Skip(query.Offset).Take(query.Limit).ToListAsync()
+                    Items = await queryResult.Skip(query.Offset).Take(query.Limit).ToListAsync(cancellationToken)
                 };
             }
 

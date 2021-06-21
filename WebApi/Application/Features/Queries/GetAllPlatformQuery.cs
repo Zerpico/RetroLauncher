@@ -23,7 +23,7 @@ namespace Application.Features.Queries
             }
             public async Task<IEnumerable<Platform>> Handle(GetAllPlatformQuery query, CancellationToken cancellationToken)
             {
-                return await _context.Platforms.ToListAsync();
+                return await _context.Platforms.ToListAsync(cancellationToken);
             }
 
         }
