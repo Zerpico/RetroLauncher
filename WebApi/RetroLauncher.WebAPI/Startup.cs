@@ -86,8 +86,7 @@ namespace RetroLauncher.WebAPI
             }
 
             //app.UseHttpsRedirection();
-            app.UseRouting();
-            app.UseAuthorization();
+            app.UseHsts();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
@@ -103,12 +102,19 @@ namespace RetroLauncher.WebAPI
             if (!Directory.Exists(Path.Combine(filesDirectory, "files")))
                 Directory.CreateDirectory(Path.Combine(filesDirectory, "files"));
 
-            app.UseDefaultFiles();
             app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(filesDirectory),
-                ContentTypeProvider = provider
+                ContentTypeProvider = provider,
+                FileProvider = new PhysicalFileProvider(filesDirectory)
             });
+
+            app.UseFileServer(new FileServerOptions
+            {
+                FileProvider = new PhysicalFileProvider(filesDirectory)
+            });
+
+            app.UseRouting();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

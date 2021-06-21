@@ -22,7 +22,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1
         public GameController(ILogger<GameController> logger)
         {
             _logger = logger;
-            _baseUrl = Path.Combine(Environment.GetEnvironmentVariable("BASEURL"), "files");
+            _baseUrl =  Path.Combine(Environment.GetEnvironmentVariable("BASEURL"), "files");
             _directoryRoms = Path.Combine(Environment.GetEnvironmentVariable("ROMS_DIRECTORY"), "files");
         }
 
@@ -134,6 +134,8 @@ namespace RetroLauncher.WebAPI.Controllers.v1
             if (ans.GameLinks != null && ans.GameLinks.Count != 0)
             {
                 var romLink = ans.GameLinks.Where(g => g.TypeUrl == Domain.Enums.TypeUrl.Rom).FirstOrDefault();
+                if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+                    romLink.Url = romLink.Url.Replace('\\', '/');
                 return File(System.IO.File.ReadAllBytes(System.IO.Path.Combine(_directoryRoms, romLink.Url)), "application/octet-stream", ans.Id + "_" + ans.Name.Replace(" ", "_") + ".7z");
             }
             else
