@@ -22,7 +22,8 @@ namespace RetroLauncher.WebAPI.Controllers.v1
         public GameController(ILogger<GameController> logger)
         {
             _logger = logger;
-            _baseUrl =  Path.Combine(Environment.GetEnvironmentVariable("BASEURL"), "files");
+            var url = Environment.GetEnvironmentVariable("BASEURL");
+            _baseUrl = url.EndsWith('/') ? url + "files/" : url + "/files/";
             _directoryRoms = Path.Combine(Environment.GetEnvironmentVariable("ROMS_DIRECTORY"), "files");
         }
 
@@ -30,7 +31,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1
         /// Gets all games.
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [Route("getList")]
         [ProducesResponseType(typeof(GamesGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorGetResponse),StatusCodes.Status400BadRequest)]
@@ -56,7 +57,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1
                 GameLinks = (g.GameLinks != null && g.GameLinks.Count != 0 )? new List<Models.GameLink>()
                       { new Models.GameLink()
                             {
-                                Url = System.IO.Path.Combine(_baseUrl,g.GameLinks?.Where(d => d.TypeUrl == Domain.Enums.TypeUrl.Cover).FirstOrDefault().Url.Replace('\\','/')),
+                                Url = _baseUrl + g.GameLinks?.Where(d => d.TypeUrl == Domain.Enums.TypeUrl.Cover).FirstOrDefault().Url.Replace('\\','/'),
                                 TypeUrl = Models.TypeUrl.Cover
                             }
                       } : null,
@@ -73,7 +74,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet]
+        [HttpPost]
         [Route("getbyid")]
         [ProducesResponseType(typeof(GameGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorGetResponse), StatusCodes.Status400BadRequest)]
@@ -101,7 +102,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1
                 GameLinks = ans.GameLinks.Select(l => new Models.GameLink()
                 {
                     TypeUrl = (Models.TypeUrl)(int)l.TypeUrl,
-                    Url = System.IO.Path.Combine(_baseUrl, l.Url.Replace('\\','/'))
+                    Url = _baseUrl + l.Url.Replace('\\','/')
                 }),  
                 Ratings = ans.Ratings != null ? (ans.Ratings.Count == 0 ? 0 : Math.Round(ans.Ratings.Average(d => d.RatingValue), 2)) : 0, 
                 Downloads = ans.Downloads != null ? (ans.Downloads.Count == 0 ? 0 : ans.Downloads.Count) : 0
