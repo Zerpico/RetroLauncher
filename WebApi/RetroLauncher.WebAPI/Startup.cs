@@ -56,19 +56,6 @@ namespace RetroLauncher.WebAPI
             });
             #endregion
             
-            #region Api Versioning
-            // Add API Versioning to the Project
-            services.AddApiVersioning(config =>
-            {
-                // Specify the default API Version as 1.0
-                config.DefaultApiVersion = new ApiVersion(1, 0);
-                // If the client hasn't specified the API version in the request, use the default API version number 
-                config.AssumeDefaultVersionWhenUnspecified = true;
-                // Advertise the API versions supported for the particular endpoint
-                //config.ReportApiVersions = true;
-            });
-            #endregion
-            
 
             services.AddApplication();
             services.AddPersistence(Configuration);            
@@ -90,7 +77,7 @@ namespace RetroLauncher.WebAPI
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "RetroLauncher Api");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api RetroLauncher");
             });
 
             // Set up custom content types - associating file extension to MIME type
@@ -99,19 +86,22 @@ namespace RetroLauncher.WebAPI
             provider.Mappings[".7z"] = "application/x-7z-compressed";
 
             string filesDirectory = Environment.GetEnvironmentVariable("ROMS_DIRECTORY");
-            if (!Directory.Exists(Path.Combine(filesDirectory, "files")))
-                Directory.CreateDirectory(Path.Combine(filesDirectory, "files"));
+            // if (!Directory.Exists(Path.Combine(filesDirectory, "files")))
+            //     Directory.CreateDirectory(Path.Combine(filesDirectory, "files"));
 
-            app.UseStaticFiles(new StaticFileOptions
+            if (!env.IsDevelopment())
             {
-                ContentTypeProvider = provider,
-                FileProvider = new PhysicalFileProvider(filesDirectory)
-            });
+                app.UseStaticFiles(new StaticFileOptions
+                {
+                    ContentTypeProvider = provider,
+                    FileProvider = new PhysicalFileProvider(filesDirectory)
+                });
 
-            app.UseFileServer(new FileServerOptions
-            {
-                FileProvider = new PhysicalFileProvider(filesDirectory)
-            });
+                app.UseFileServer(new FileServerOptions
+                {
+                    FileProvider = new PhysicalFileProvider(filesDirectory)
+                });
+            }
 
             app.UseRouting();
             app.UseAuthorization();

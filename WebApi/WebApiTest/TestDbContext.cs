@@ -27,15 +27,15 @@ namespace WebApiTest
 
             //genres
             context.Genres.AddRange(
-                new Genre() { Id = 1, GenreName = "Платформер" },
-                new Genre() { Id = 2, GenreName = "Аркада" },
-                new Genre() { Id = 3, GenreName = "Гонки" });
+                new Genre() { Id = 1, Name = "Платформер" },
+                new Genre() { Id = 2, Name = "Аркада" },
+                new Genre() { Id = 3, Name = "Гонки" });
 
             //Platformers
             context.Platforms.AddRange(
-                new Platform() { Id = 1, PlatformName = "NES", Alias = "nes" },
-                new Platform() { Id = 2, PlatformName = "SMS", Alias = "sms" },
-                new Platform() { Id = 3, PlatformName = "SMG", Alias = "smg" });
+                new Platform() { Id = 1, Name = "NES", SmallName = "nes" },
+                new Platform() { Id = 2, Name = "SMS", SmallName = "sms" },
+                new Platform() { Id = 3, Name = "SMG", SmallName = "smg" });
             context.SaveChanges();
 
             //Games
@@ -43,15 +43,16 @@ namespace WebApiTest
             {
                 Id = 1,
                 Name = "Sonic The Hedgehog",
-                NameSecond = "ソニック・ザ・ヘッジホッグ",
-                Genre = context.Genres.Where(g => g.Id == 1).FirstOrDefault(),
+                Alternative = "ソニック・ザ・ヘッジホッグ",
+                Genres = new List<GenreLink>(),
                 Platform = context.Platforms.Where(g => g.Id == 3).FirstOrDefault(),
                 Annotation = "sample text",
-                Year = 1991
+                Year = "1991"
             };
-            var gamelink1 = new GameLink() { Id = 1, TypeUrl = Domain.Enums.TypeUrl.Cover, Url = "someUrl", Game = game1 };
-            var gamelink2 = new GameLink() { Id = 2, TypeUrl = Domain.Enums.TypeUrl.Rom, Url = "someUrl", Game = game1 };
-            var gamelink3 = new GameLink() { Id = 3, TypeUrl = Domain.Enums.TypeUrl.Screen, Url = "someUrl", Game = game1 };
+/*
+            var gamelink1 = new GameLink() { Id = 1, Type = Domain.Enums.TypeUrl.Cover, Url = "someUrl", Game = game1 };
+            var gamelink2 = new GameLink() { Id = 2, Type = Domain.Enums.TypeUrl.Rom, Url = "someUrl", Game = game1 };
+            var gamelink3 = new GameLink() { Id = 3, Type = Domain.Enums.TypeUrl.Screen, Url = "someUrl", Game = game1 };
             game1.GameLinks = new List<GameLink>() { gamelink1, gamelink2, gamelink3 };
 
             var game2 = new Game()
@@ -63,9 +64,9 @@ namespace WebApiTest
                 Annotation = "sample text",
                 Year = 1992
             };
-            var gamelink4 = new GameLink() { Id = 4, TypeUrl = Domain.Enums.TypeUrl.Cover, Url = "someUrl", Game = game2 };
-            var gamelink5 = new GameLink() { Id = 5, TypeUrl = Domain.Enums.TypeUrl.Rom, Url = "someUrl", Game = game2 };
-            var gamelink6 = new GameLink() { Id = 6, TypeUrl = Domain.Enums.TypeUrl.Screen, Url = "someUrl", Game = game2 };
+            var gamelink4 = new GameLink() { Id = 4, Type = Domain.Enums.TypeUrl.Cover, Url = "someUrl", Game = game2 };
+            var gamelink5 = new GameLink() { Id = 5, Type = Domain.Enums.TypeUrl.Rom, Url = "someUrl", Game = game2 };
+            var gamelink6 = new GameLink() { Id = 6, Type = Domain.Enums.TypeUrl.Screen, Url = "someUrl", Game = game2 };
             game2.GameLinks = new List<GameLink>() { gamelink4, gamelink5, gamelink6 };
 
             var game3 = new Game()
@@ -77,12 +78,12 @@ namespace WebApiTest
                 Annotation = "sample text",
                 Year = 1993
             };
-            var gamelink7 = new GameLink() { Id = 7, TypeUrl = Domain.Enums.TypeUrl.Cover, Url = "someUrl", Game = game3 };
-            var gamelink8 = new GameLink() { Id = 8, TypeUrl = Domain.Enums.TypeUrl.Rom, Url = "someUrl", Game = game3 };
-            var gamelink9 = new GameLink() { Id = 9, TypeUrl = Domain.Enums.TypeUrl.Screen, Url = "someUrl", Game = game3 };
+            var gamelink7 = new GameLink() { Id = 7, Type = Domain.Enums.TypeUrl.Cover, Url = "someUrl", Game = game3 };
+            var gamelink8 = new GameLink() { Id = 8, Type = Domain.Enums.TypeUrl.Rom, Url = "someUrl", Game = game3 };
+            var gamelink9 = new GameLink() { Id = 9, Type = Domain.Enums.TypeUrl.Screen, Url = "someUrl", Game = game3 };
             game3.GameLinks = new List<GameLink>() { gamelink4, gamelink5, gamelink6 };
             context.Games.AddRange(game1, game2, game3);
-
+*/
             //save
             context.SaveChanges();
             return context;

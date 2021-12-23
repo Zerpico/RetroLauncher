@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RetroLauncher.WebAPI.Controllers.v1.Game
+namespace RetroLauncher.WebAPI.Controllers.Game
 {
     public class GamesGetRequest
     {
@@ -12,7 +12,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1.Game
         public int[] Genres { get; set; } = null;
         public int[] Platforms { get; set; } = null;
 
-        [Range(1,100)]
+        [Range(1,100)]        
         public int Limit { get; set; } = 50;
         public int Offset { get; set; } = 0;
     }

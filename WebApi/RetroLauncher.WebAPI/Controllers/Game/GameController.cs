@@ -4,15 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Features.Queries;
+using Application.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using RetroLauncher.WebAPI.Controllers.v1.Game;
-using RetroLauncher.WebAPI.Controllers.v1.Game.Get;
+using RetroLauncher.WebAPI.Controllers.Game;
+using RetroLauncher.WebAPI.Controllers.Game.Get;
 
-namespace RetroLauncher.WebAPI.Controllers.v1
-{
-    [ApiVersion("1")]
+namespace RetroLauncher.WebAPI.Controllers
+{   
     public class GameController : BaseApiController
     {
         private readonly ILogger<GameController> _logger;
@@ -23,8 +23,8 @@ namespace RetroLauncher.WebAPI.Controllers.v1
         {
             _logger = logger;
             var url = Environment.GetEnvironmentVariable("BASEURL");
-            _baseUrl = url.EndsWith('/') ? url + "files/" : url + "/files/";
-            _directoryRoms = Path.Combine(Environment.GetEnvironmentVariable("ROMS_DIRECTORY"), "files");
+           // _baseUrl = url.EndsWith('/') ? url + "files/" : url + "/files/";
+           // _directoryRoms = Path.Combine(Environment.GetEnvironmentVariable("ROMS_DIRECTORY"), "files");
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1
         [HttpPost]
         [Route("getList")]
         [ProducesResponseType(typeof(GamesGetResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(ErrorGetResponse),StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ErrorGetResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetList([FromForm] GamesGetRequest request)
         {
             var resultQuery = await Mediator.Send(new GetAllGamesQuery { Name = request.Name, Genres = request.Genres, Platforms = request.Platforms, Limit = request.Limit > 100 ? 100 : request.Limit, Offset = request.Offset } );
@@ -45,6 +45,18 @@ namespace RetroLauncher.WebAPI.Controllers.v1
             }
 
             var result = resultQuery.Items.Select(g => new Models.Game()
+            {
+                Id = g.Id,
+                Name = g.Name,
+                Alternative = g.Alternative,
+                Year = g.Year,
+                Publisher = g.Publisher,
+                Genre = string.Join(", ", g.GenreLinks?.Select(x => x.Genre.Name)),
+                Platform = new Models.Platform() { Name = g.Platform.Name, Alias = g.Platform.SmallName, Id = g.Platform.Id },
+                Ratings = g.Rate
+            });
+
+            /*var result = resultQuery.Items.Select(g => new Models.Game()
             {
                 Id = g.Id,
                 Name = g.Name,
@@ -64,7 +76,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1
 
                 Ratings = g.Ratings != null ? (g.Ratings.Count == 0 ? 0 : Math.Round(g.Ratings.Average(d => d.RatingValue), 2)) : 0,
                 Downloads = g.Downloads != null ? (g.Downloads.Count == 0 ? 0 : g.Downloads.Count) : 0
-            });
+            });*/
 
             return Ok(new GamesGetResponse() { Items = result, Limit = resultQuery.Limit, Offset = resultQuery.Offset, Total = resultQuery.Total });
         }
@@ -91,6 +103,10 @@ namespace RetroLauncher.WebAPI.Controllers.v1
             var result = new Models.Game()
             {
                 Id = ans.Id,
+            };
+            /*var result = new Models.Game()
+            {
+                Id = ans.Id,
                 Name = ans.Name,
                 NameSecond = ans.NameSecond,
                 NameOther = ans.NameOther,
@@ -106,7 +122,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1
                 }),  
                 Ratings = ans.Ratings != null ? (ans.Ratings.Count == 0 ? 0 : Math.Round(ans.Ratings.Average(d => d.RatingValue), 2)) : 0, 
                 Downloads = ans.Downloads != null ? (ans.Downloads.Count == 0 ? 0 : ans.Downloads.Count) : 0
-            };
+            };*/
 
             return Ok(result);
         }
@@ -117,7 +133,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet]
+/*        [HttpGet]
         [Route("getrom")]
         public async Task<IActionResult> GetRom(int id)
         {
@@ -145,6 +161,7 @@ namespace RetroLauncher.WebAPI.Controllers.v1
                 return BadRequest(new ErrorGetResponse() { ErrorMessage = $"Not found item by id {id}" });
             }
         }
+*/
 
     }
 }

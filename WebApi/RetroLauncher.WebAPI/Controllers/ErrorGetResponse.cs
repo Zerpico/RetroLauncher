@@ -1,4 +1,4 @@
-﻿namespace RetroLauncher.WebAPI.Controllers.v1
+﻿namespace RetroLauncher.WebAPI.Controllers
 {
     internal class ErrorGetResponse
     {

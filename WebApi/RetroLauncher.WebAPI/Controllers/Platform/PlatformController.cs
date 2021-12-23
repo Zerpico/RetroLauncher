@@ -2,20 +2,18 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using RetroLauncher.WebAPI.Controllers.v1.Genre.Get;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RetroLauncher.WebAPI.Controllers.v1.Genre
+namespace RetroLauncher.WebAPI.Controllers.Platform
 {
-    [ApiVersion("1")]
-    public class GenreController : BaseApiController
+    public class PlatformController : BaseApiController
     {
-        private readonly ILogger<GenreController> _logger;
+        private readonly ILogger<PlatformController> _logger;
 
-        public GenreController(ILogger<GenreController> logger)
+        public PlatformController(ILogger<PlatformController> logger)
         {
             _logger = logger;
         }
@@ -26,25 +24,25 @@ namespace RetroLauncher.WebAPI.Controllers.v1.Genre
         /// <returns></returns>
         [HttpGet]
         [Route("getList")]
-        [ProducesResponseType(typeof(GengresGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PlatformsGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorGetResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get()
         {
-            var resultQuery = await Mediator.Send(new GetAllGenresQuery());
+            var resultQuery = await Mediator.Send(new GetAllPlatformQuery());
             if (resultQuery == null)
             {
                 _logger.LogError("Not found items");
                 return BadRequest(new ErrorGetResponse() { ErrorMessage = "Not found items" });
             }
 
-            var result = resultQuery.Select(g => new Models.Genre()
+            var result = resultQuery.Select(g => new Models.Platform()
             {
                 Id = g.Id,
-                GenreName = g.GenreName
+                Name = g.Name,
+                Alias = g.SmallName
             });
 
-            return Ok(new GengresGetResponse() { Items = result });
+            return Ok(new PlatformsGetResponse() { Items = result });
         }
     }
 }
-

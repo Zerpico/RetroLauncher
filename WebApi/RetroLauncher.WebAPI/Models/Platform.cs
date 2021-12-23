@@ -8,9 +8,9 @@ namespace RetroLauncher.WebAPI.Models
     public class Platform
     {
         public int Id { get; set; }
-        public string PlatformName { get; set; }
+        public string Name { get; set; }
         public string Alias { get; set; }
-        public string UrlPic { get; set; }
+        //public string UrlPic { get; set; }
 
     }
 }

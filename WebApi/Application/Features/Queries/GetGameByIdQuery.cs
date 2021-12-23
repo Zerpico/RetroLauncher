@@ -24,11 +24,11 @@ namespace Application.Features.Queries
             public async Task<Game> Handle(GetGameByIdQuery query, CancellationToken cancellationToken)
             {                
                 var result = await _context.Games
-                    .Include(x => x.Genre)
+                   /* .Include(x => x.Genre)
                     .Include(x => x.Platform)
                     .Include(x => x.GameLinks)
                     .Include(x => x.Ratings)
-                    .Include(x => x.Downloads)
+                    .Include(x => x.Downloads)*/
                     .Where(i => i.Id == query.Id).FirstOrDefaultAsync();
 
                 if (result == null)                

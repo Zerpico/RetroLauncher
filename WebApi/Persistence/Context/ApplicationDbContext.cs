@@ -14,6 +14,7 @@ namespace Persistence.Context
         public DbSet<Game> Games { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Platform> Platforms { get; set; }
+        
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -22,87 +23,97 @@ namespace Persistence.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {            
-            modelBuilder.HasDefaultSchema("retro");
+            //modelBuilder.HasDefaultSchema("retro");
 
             // Games Table
             modelBuilder.Entity<Game>(entity =>
             {                
-                entity.ToTable("gb_games");
-                entity.HasKey(e => e.Id).HasName("gb_games_pkey");               
-                entity.Property(e => e.Id).HasColumnName("game_id");
+                entity.ToTable("games");
+                entity.HasKey(e => e.Id);
+                // entity.Property(e => e.Id).HasColumnName("game_id");
 
-                entity.Property(e => e.Annotation)
-                    .HasColumnName("annotation")
-                    .HasMaxLength(2000);
+                /*  entity.Property(e => e.Annotation)
+                      .HasColumnName("annotation")
+                      .HasMaxLength(2000);
+                */
+                /* entity.Property(e => e.Developer)
+                     .HasColumnName("developer")
+                     .HasMaxLength(100);
 
-                entity.Property(e => e.Developer)
-                    .HasColumnName("developer")
-                    .HasMaxLength(100);
+                 entity.Property(e => e.Name)
+                     .IsRequired()
+                     .HasColumnName("game_name")
+                     .HasMaxLength(100);
 
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasColumnName("game_name")
-                    .HasMaxLength(100);
+                 entity.Property(e => e.Year).HasColumnName("year");
 
-                entity.Property(e => e.Year).HasColumnName("year");
+                 entity.Property(e => e.NameOther)
+                     .HasColumnName("name_other")
+                     .HasMaxLength(100);
 
-                entity.Property(e => e.NameOther)
-                    .HasColumnName("name_other")
-                    .HasMaxLength(100);
+                 entity.Property(e => e.NameSecond)
+                     .HasColumnName("name_second")
+                     .HasMaxLength(100);
+                 */
+                entity.HasMany(e => e.GenreLinks)
+                    .WithOne(p => p.Game);
+                    
+                    
+                //   .HasConstraintName("FK_gb_games_gb_genres")
+                //   .HasForeignKey("genre_id");
 
-                entity.Property(e => e.NameSecond)
-                    .HasColumnName("name_second")
-                    .HasMaxLength(100);
-             
-                entity.HasOne(e => e.Genre)
-                    .WithMany(p => p.Games)                    
-                    .HasConstraintName("FK_gb_games_gb_genres")
-                    .HasForeignKey("genre_id");
-              
                 entity.HasOne(d => d.Platform)
                     .WithMany(p => p.Games)
-                    .HasForeignKey("platform_id")                    
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .HasForeignKey("platform");
+                
+                  //  .HasForeignKey("platform_id")                    
+                  //  .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
+            // GenreLink Table
+            modelBuilder.Entity<GenreLink>(entity =>
+            {
+                entity.ToTable("genrelinks");
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(d => d.Genre)
+                    .WithMany(p => p.GenreLinks);
+            });
+        
             // Genre Table
             modelBuilder.Entity<Genre>(entity =>
             {
-                entity.ToTable("gb_genres");
-                entity.HasKey(e => e.Id).HasName("gb_genres_pkey");
-                entity.Property(e => e.Id).HasColumnName("genre_id");
-
-                entity.Property(e => e.GenreName)
-                    .IsRequired()
-                    .HasColumnName("genre_name")
-                    .HasMaxLength(50);
+                entity.ToTable("genres");
+                entity.HasKey(e => e.Id);                
             });
 
             // Platform Table
             modelBuilder.Entity<Platform>(entity =>
             {
-                entity.ToTable("gb_platforms");
-                entity.HasKey(e => e.Id).HasName("gb_platforms_pkey");             
-                entity.Property(e => e.Id).HasColumnName("platform_id");
+                entity.ToTable("platforms");
+                entity.HasKey(e => e.Id).HasName("id");
 
-                entity.Property(e => e.Alias)
-                    .IsRequired()
-                    .HasColumnName("alias")
-                    .HasMaxLength(10);
+                entity.HasMany(d => d.Games)
+                    .WithOne(p => p.Platform);
 
-                entity.Property(e => e.PlatformName)
+              /*  entity.Property(e => e.Name)
                     .IsRequired()
-                    .HasColumnName("platform_name")
-                    .HasMaxLength(50);
+                    .HasColumnName("name")
+                    .HasMaxLength(255);
+
+                entity.Property(e => e.SmallName)
+                    .IsRequired()
+                    .HasColumnName("smallname")
+                    .HasMaxLength(20);*/
             });
 
             // GameLink Table
-            modelBuilder.Entity<GameLink>(entity =>
+        /*   modelBuilder.Entity<GameLink>(entity =>
             {
                 entity.ToTable("gb_links");
                 entity.HasKey(e => e.Id);    
                 entity.Property(e => e.Id).HasColumnName("link_id");
-                entity.Property(e => e.TypeUrl).HasColumnName("type_url");
+                entity.Property(e => e.Type).HasColumnName("type_url");
 
                 entity.HasOne(e => e.Game)
                     .WithMany(p => p.GameLinks)
@@ -114,10 +125,10 @@ namespace Persistence.Context
                     .HasColumnName("url")
                     .HasMaxLength(1000);
             });
-
+        */
 
             // Downloads table
-            modelBuilder.Entity<Download>(entity =>
+        /*    modelBuilder.Entity<Download>(entity =>
             {
                 entity.ToTable("lg_downloads");
                 entity.HasKey(e => e.Id);
@@ -137,9 +148,9 @@ namespace Persistence.Context
                     .HasConstraintName("FK_lg_downloads_rg_users")
                     .HasForeignKey("user_id");
             });
-
+        */
             // Rating
-            modelBuilder.Entity<Rating>(entity =>
+        /*    modelBuilder.Entity<Rating>(entity =>
             {
                 entity.ToTable("lg_ratings");
                 entity.HasKey(e => e.Id);
@@ -161,7 +172,7 @@ namespace Persistence.Context
                     .HasConstraintName("FK_lg_ratings_rg_users")
                     .HasForeignKey("user_id");
             });
-
+        */
             base.OnModelCreating(modelBuilder);
         }
        

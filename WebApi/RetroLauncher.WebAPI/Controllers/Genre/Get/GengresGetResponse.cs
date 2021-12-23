@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RetroLauncher.WebAPI.Controllers.v1.Genre.Get
+namespace RetroLauncher.WebAPI.Controllers.Genre.Get
 {
     public class GengresGetResponse
     {

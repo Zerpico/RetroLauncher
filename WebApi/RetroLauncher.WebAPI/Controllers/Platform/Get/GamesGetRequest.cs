@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RetroLauncher.WebAPI.Controllers.v1.Platform
+namespace RetroLauncher.WebAPI.Controllers.Platform
 {
     public class PlatformsGetResponse
     {

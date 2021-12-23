@@ -2,19 +2,19 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RetroLauncher.WebAPI.Controllers.Genre.Get;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RetroLauncher.WebAPI.Controllers.v1.Platform
-{
-    [ApiVersion("1")]
-    public class PlatformController : BaseApiController
+namespace RetroLauncher.WebAPI.Controllers.Genre
+{   
+    public class GenreController : BaseApiController
     {
-        private readonly ILogger<PlatformController> _logger;
+        private readonly ILogger<GenreController> _logger;
 
-        public PlatformController(ILogger<PlatformController> logger)
+        public GenreController(ILogger<GenreController> logger)
         {
             _logger = logger;
         }
@@ -25,25 +25,25 @@ namespace RetroLauncher.WebAPI.Controllers.v1.Platform
         /// <returns></returns>
         [HttpGet]
         [Route("getList")]
-        [ProducesResponseType(typeof(PlatformsGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GengresGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorGetResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get()
-        {
-            var resultQuery = await Mediator.Send(new GetAllPlatformQuery());
+        {         
+            var resultQuery = await Mediator.Send(new GetAllGenresQuery());
             if (resultQuery == null)
             {
                 _logger.LogError("Not found items");
                 return BadRequest(new ErrorGetResponse() { ErrorMessage = "Not found items" });
             }
 
-            var result = resultQuery.Select(g => new Models.Platform()
+            var result = resultQuery.Select(g => new Models.Genre()
             {
                 Id = g.Id,
-                PlatformName = g.PlatformName,
-                Alias = g.Alias
+                Name = g.Name
             });
 
-            return Ok(new PlatformsGetResponse() { Items = result });
+            return Ok(new GengresGetResponse() { Items = result });
         }
     }
 }
+

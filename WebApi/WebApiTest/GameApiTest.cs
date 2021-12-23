@@ -71,9 +71,9 @@ namespace WebApiTest
 
             //Asert    
             Assert.NotNull(oneGame.Platform);
-            Assert.NotNull(oneGame.Genre);
-            Assert.NotNull(oneGame.GameLinks);
-            Assert.True(oneGame.GameLinks.Count > 0);
+            Assert.NotNull(oneGame.GenreLinks);
+            //Assert.NotNull(oneGame.GameLinks);
+            //Assert.True(oneGame.GameLinks.Count > 0);
         }
 
         [Fact]

@@ -7,8 +7,9 @@ namespace RetroLauncher.WebAPI.Models
 {
     public class GameLink
     {
-        public string Url { get; set; }
-        public TypeUrl TypeUrl { get; set; }
+        public string GameId { get; set; }
+        public TypeUrl Type { get; set; }
+        public string Url { get; set; }        
     }
 
     public enum TypeUrl : int

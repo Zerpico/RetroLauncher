@@ -9,7 +9,7 @@ namespace Domain.Enums
     public enum TypeUrl
     {
         Rom = 1,
-        Cover = 2,
-        Screen = 3
+        Screen = 2,
+        Cover = 3        
     }
 }

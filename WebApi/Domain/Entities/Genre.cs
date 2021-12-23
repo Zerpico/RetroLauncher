@@ -7,8 +7,8 @@ namespace Domain.Entities
 {
     public partial class Genre : BaseEntity
     {
-        public string GenreName { get; set; }
+        public string Name { get; set; }
 
-        public virtual ICollection<Game> Games { get; set; }
+        public virtual ICollection<GenreLink> GenreLinks { get; set; }
     }
 }

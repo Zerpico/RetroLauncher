@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RetroLauncher.WebAPI.Controllers.v1.Game.Get
+namespace RetroLauncher.WebAPI.Controllers.Game.Get
 {
     public class GamesGetResponse
     {
