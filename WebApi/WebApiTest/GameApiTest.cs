@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Persistence.Context;
-using RetroLauncher.WebAPI;
 using System;
 using System.Linq;
 using System.Linq;

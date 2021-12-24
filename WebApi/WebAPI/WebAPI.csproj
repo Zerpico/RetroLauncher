@@ -5,6 +5,8 @@
     <UserSecretsId>3fb176c0-7b8a-4d15-ae43-dbcdcf3ae24a</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
+    <AssemblyName>RetroLauncher.WebAPI</AssemblyName>
+    <RootNamespace>RetroLauncher.WebAPI</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

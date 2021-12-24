@@ -44,7 +44,7 @@ namespace WebApiTest
                 Id = 1,
                 Name = "Sonic The Hedgehog",
                 Alternative = "ソニック・ザ・ヘッジホッグ",
-                Genres = new List<GenreLink>(),
+                GenreLinks = new List<GenreLink>(),
                 Platform = context.Platforms.Where(g => g.Id == 3).FirstOrDefault(),
                 Annotation = "sample text",
                 Year = "1991"

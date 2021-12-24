@@ -3,6 +3,8 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net5.0-windows</TargetFramework>
+    <AssemblyName>RetroLauncher.Desktop</AssemblyName>
+    <RootNamespace>RetroLauncher.Desktop</RootNamespace>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
