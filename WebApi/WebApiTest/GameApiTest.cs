@@ -17,7 +17,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using static Application.Features.Queries.GetAllGamesQuery;
+using static Application.Features.Queries.GetGamesByNameQuery;
 using Application.Shared;
 
 namespace WebApiTest
@@ -39,7 +39,7 @@ namespace WebApiTest
             //Arange
             var mediator = new Mock<IMediator>();
 
-            GetAllGamesQuery command = new GetAllGamesQuery() { Limit = 100, Offset = 0 };
+            GetGamesByNameQuery command = new GetGamesByNameQuery() { Limit = 100, Offset = 0 };
             GetAllGamesQueryHandler handler = new GetAllGamesQueryHandler(_context) ;
 
             //Act
@@ -60,7 +60,7 @@ namespace WebApiTest
             //Arange
             var mediator = new Mock<IMediator>();
 
-            GetAllGamesQuery command = new GetAllGamesQuery() { Limit = 100, Offset = 0 };
+            GetGamesByNameQuery command = new GetGamesByNameQuery() { Limit = 100, Offset = 0 };
             GetAllGamesQueryHandler handler = new GetAllGamesQueryHandler(_context);
 
             //Act
@@ -81,7 +81,7 @@ namespace WebApiTest
             //Arange
             var mediator = new Mock<IMediator>();
 
-            GetAllGamesQuery command = new GetAllGamesQuery() { Limit = 100, Offset = 0, Name = "sonic" };
+            GetGamesByNameQuery command = new GetGamesByNameQuery() { Limit = 100, Offset = 0, Name = "sonic" };
             GetAllGamesQueryHandler handler = new GetAllGamesQueryHandler(_context);
 
             //Act

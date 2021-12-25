@@ -1,11 +1,21 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RetroLauncher.WebAPI.Controllers.Game
+namespace RetroLauncher.WebAPI.Controllers.Games.Get
 {
+    public class GamesGetRequest
+    {
+        /// <summary> Number of page </summary>
+        [JsonProperty("Page", NullValueHandling = NullValueHandling.Include)]
+        [Range(1, int.MaxValue)]        
+        public int Page { get; set; } = 1;
+    }
+/*    
     public class GamesGetRequest
     {
         public string Name { get; set; } = string.Empty;
@@ -21,4 +31,5 @@ namespace RetroLauncher.WebAPI.Controllers.Game
     {
         public int Id { get; set; }
     }
+*/
 }

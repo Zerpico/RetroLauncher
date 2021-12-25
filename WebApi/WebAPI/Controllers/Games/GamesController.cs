@@ -8,18 +8,18 @@ using Application.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using RetroLauncher.WebAPI.Controllers.Game;
-using RetroLauncher.WebAPI.Controllers.Game.Get;
+using RetroLauncher.WebAPI.Controllers.Games.Dto;
+using RetroLauncher.WebAPI.Controllers.Games.Get;
 
 namespace RetroLauncher.WebAPI.Controllers
 {   
-    public class GameController : BaseApiController
+    public class GamesController : BaseApiController
     {
-        private readonly ILogger<GameController> _logger;
+        private readonly ILogger<GamesController> _logger;
         private readonly string _baseUrl;
         private readonly string _directoryRoms;
 
-        public GameController(ILogger<GameController> logger)
+        public GamesController(ILogger<GamesController> logger)
         {
             _logger = logger;
             var url = Environment.GetEnvironmentVariable("BASEURL");
@@ -27,6 +27,45 @@ namespace RetroLauncher.WebAPI.Controllers
            // _directoryRoms = Path.Combine(Environment.GetEnvironmentVariable("ROMS_DIRECTORY"), "files");
         }
 
+
+        /// <summary> Fetch games list </summary>
+        /// <param name="request">request for fetch</param>
+        [HttpGet]
+        [Route("getList")]
+        [ProducesResponseType(typeof(GamesGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorGetResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> Get([FromQuery] GamesGetRequest request)
+        {
+            var resultQuery = await Mediator.Send(new GetAllGamesQuery() { PageIndex = request.Page-1 });
+            if (resultQuery == null)
+            {
+                _logger.LogError("Not found items");
+                return BadRequest(new ErrorGetResponse() { Code = 400, Status = "Not found items" });
+            }
+
+            var result = resultQuery.Items
+                .Select(g => new Game()
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    Alternative = g.Alternative,
+                    Annotation = g.Annotation,
+                    //Platform = g.Platform.Id,
+                    Publisher = g.Publisher,
+                    Year = g.Year,
+                    Ratings = g.Rate,
+                    Genres = g.GenreLinks?.Select(s=>s.GenreId).ToList()
+                });
+
+            int maxPage = (resultQuery.Total / 30) + ((resultQuery.Total % 30) > 0 ? 1 : 0);
+
+            return Ok(new GamesGetResponse()
+            {
+                Pages = new Pages() { Current = request.Page, Max = maxPage },
+                Data = new GameData() { Games = result.ToList(), Count = result.Count() }
+            });
+        }
+/*
         /// <summary>
         /// Gets all games.
         /// </summary>
@@ -56,27 +95,7 @@ namespace RetroLauncher.WebAPI.Controllers
                 Ratings = g.Rate
             });
 
-            /*var result = resultQuery.Items.Select(g => new Models.Game()
-            {
-                Id = g.Id,
-                Name = g.Name,
-                NameSecond = g.NameSecond,
-                NameOther = g.NameOther,
-                Year = g.Year,
-                Developer = g.Developer,
-                Genre = g.Genre?.GenreName,
-                Platform = new Models.Platform() { Id = g.Platform.Id,  PlatformName = g.Platform.PlatformName, Alias = g.Platform.Alias },
-                GameLinks = (g.GameLinks != null && g.GameLinks.Count != 0 )? new List<Models.GameLink>()
-                      { new Models.GameLink()
-                            {
-                                Url = _baseUrl + g.GameLinks?.Where(d => d.TypeUrl == Domain.Enums.TypeUrl.Cover).FirstOrDefault().Url.Replace('\\','/'),
-                                TypeUrl = Models.TypeUrl.Cover
-                            }
-                      } : null,
-
-                Ratings = g.Ratings != null ? (g.Ratings.Count == 0 ? 0 : Math.Round(g.Ratings.Average(d => d.RatingValue), 2)) : 0,
-                Downloads = g.Downloads != null ? (g.Downloads.Count == 0 ? 0 : g.Downloads.Count) : 0
-            });*/
+           
 
             return Ok(new GamesGetResponse() { Items = result, Limit = resultQuery.Limit, Offset = resultQuery.Offset, Total = resultQuery.Total });
         }
@@ -104,29 +123,11 @@ namespace RetroLauncher.WebAPI.Controllers
             {
                 Id = ans.Id,
             };
-            /*var result = new Models.Game()
-            {
-                Id = ans.Id,
-                Name = ans.Name,
-                NameSecond = ans.NameSecond,
-                NameOther = ans.NameOther,
-                Year = ans.Year,
-                Developer = ans.Developer,
-                Genre = ans.Genre?.GenreName,
-                Platform = new Models.Platform() { Id = ans.Platform.Id, PlatformName = ans.Platform.PlatformName, Alias = ans.Platform.Alias },
-                Annotation = ans.Annotation,
-                GameLinks = ans.GameLinks.Select(l => new Models.GameLink()
-                {
-                    TypeUrl = (Models.TypeUrl)(int)l.TypeUrl,
-                    Url = _baseUrl + l.Url.Replace('\\','/')
-                }),  
-                Ratings = ans.Ratings != null ? (ans.Ratings.Count == 0 ? 0 : Math.Round(ans.Ratings.Average(d => d.RatingValue), 2)) : 0, 
-                Downloads = ans.Downloads != null ? (ans.Downloads.Count == 0 ? 0 : ans.Downloads.Count) : 0
-            };*/
+           
 
             return Ok(result);
         }
-
+*/
 
         /// <summary>
         /// Gets Game by Id.

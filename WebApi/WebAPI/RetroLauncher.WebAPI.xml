@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RetroLauncher.WebAPI</name>
+    </assembly>
+    <members>
+        <member name="P:RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetRequest.Page">
+            <summary> Number of page </summary>
+        </member>
+        <member name="M:RetroLauncher.WebAPI.Controllers.GamesController.Get(RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetRequest)">
+            <summary> Fetch games list </summary>
+            <param name="request">request for fetch</param>
+        </member>
+        <member name="M:RetroLauncher.WebAPI.Controllers.GenreController.Get">
+            <summary> Fetch genres list </summary>
+        </member>
+        <member name="M:RetroLauncher.WebAPI.Controllers.PlatformController.Get">
+            <summary> Fetch platforms list </summary>
+        </member>
+    </members>
+</doc>

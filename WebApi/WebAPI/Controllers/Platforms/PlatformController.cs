@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using RetroLauncher.WebAPI.Controllers.Platforms;
+using RetroLauncher.WebAPI.Controllers.Platforms.Dto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RetroLauncher.WebAPI.Controllers.Platform
+namespace RetroLauncher.WebAPI.Controllers
 {
     public class PlatformController : BaseApiController
     {
@@ -18,10 +20,7 @@ namespace RetroLauncher.WebAPI.Controllers.Platform
             _logger = logger;
         }
 
-        /// <summary>
-        /// Gets all games.
-        /// </summary>
-        /// <returns></returns>
+        /// <summary> Fetch platforms list </summary>
         [HttpGet]
         [Route("getList")]
         [ProducesResponseType(typeof(PlatformsGetResponse), StatusCodes.Status200OK)]
@@ -32,17 +31,19 @@ namespace RetroLauncher.WebAPI.Controllers.Platform
             if (resultQuery == null)
             {
                 _logger.LogError("Not found items");
-                return BadRequest(new ErrorGetResponse() { ErrorMessage = "Not found items" });
+                return BadRequest(new ErrorGetResponse() { Code = 200, Status = "Not found items" });
             }
 
-            var result = resultQuery.Select(g => new Models.Platform()
-            {
-                Id = g.Id,
-                Name = g.Name,
-                Alias = g.SmallName
-            });
+            var result = resultQuery
+                .Select(g => new Platform()
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    Alias = g.SmallName
+                })
+                .ToDictionary(k => k.Id.ToString(), t => new Platform() { Id = t.Id, Name = t.Name, Alias = t.Alias });
 
-            return Ok(new PlatformsGetResponse() { Items = result });
+            return Ok(new PlatformsGetResponse() { Data = new PlatformData() { Count = result.Count, Platforms = result } });
         }
     }
 }

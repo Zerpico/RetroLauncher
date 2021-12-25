@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using RetroLauncher.WebAPI.Controllers.Genre.Get;
+using RetroLauncher.WebAPI.Controllers.Genres.Dto;
+using RetroLauncher.WebAPI.Controllers.Genres.Get;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RetroLauncher.WebAPI.Controllers.Genre
+namespace RetroLauncher.WebAPI.Controllers
 {   
     public class GenreController : BaseApiController
     {
@@ -19,10 +20,7 @@ namespace RetroLauncher.WebAPI.Controllers.Genre
             _logger = logger;
         }
 
-        /// <summary>
-        /// Gets all games.
-        /// </summary>
-        /// <returns></returns>
+        /// <summary> Fetch genres list </summary>
         [HttpGet]
         [Route("getList")]
         [ProducesResponseType(typeof(GengresGetResponse), StatusCodes.Status200OK)]
@@ -33,16 +31,18 @@ namespace RetroLauncher.WebAPI.Controllers.Genre
             if (resultQuery == null)
             {
                 _logger.LogError("Not found items");
-                return BadRequest(new ErrorGetResponse() { ErrorMessage = "Not found items" });
+                return BadRequest(new ErrorGetResponse() { Code = 400, Status = "Not found items" });
             }
 
-            var result = resultQuery.Select(g => new Models.Genre()
-            {
-                Id = g.Id,
-                Name = g.Name
-            });
+            var result = resultQuery
+                .Select(g => new Genre()
+                {
+                    Id = g.Id,
+                    Name = g.Name
+                })
+                .ToDictionary(d=>d.Id.ToString(), t=>new Genre() { Id = t.Id, Name = t.Name });
 
-            return Ok(new GengresGetResponse() { Items = result });
+            return Ok(new GengresGetResponse() { Data = new GenreData() { Genres = result, Count=result.Count } });
         }
     }
 }

@@ -111,6 +111,13 @@ export default {
       var findgamediv = document.getElementById("gamediv");
       findgamediv.appendChild(newgamediv);
 
+      var clickplay = setInterval(() => {
+        if (typeof document.getElementsByClassName('ejs--73f9b4e94a7a1fe74e11107d5ab2ef')[0] !== 'undefined') {
+          clearInterval(clickplay);
+          document.getElementsByClassName('ejs--73f9b4e94a7a1fe74e11107d5ab2ef')[0].click();
+        }
+      }, 100);	  
+
     }
   }
 }

@@ -17,6 +17,8 @@ using RetroLauncher.WebAPI.Filters;
 using Microsoft.AspNetCore.StaticFiles;
 using System.IO;
 using Microsoft.Extensions.FileProviders;
+using System.ComponentModel;
+using System.Reflection;
 
 namespace RetroLauncher.WebAPI
 {
@@ -42,17 +44,18 @@ namespace RetroLauncher.WebAPI
                 {
                     Version = "v1",
                     Title = "RetroLauncher Api",
+                    Contact = new OpenApiContact()
+                    {
+                        Email = "zerpico@yandex.ru",
+                        Url = new Uri("mailto:zerpico@yandex.ru")
+                    }
                 });
 
-                c.CustomSchemaIds(x => x.FullName);
+                c.CustomSchemaIds(x => x.Name);
 
-                // This call remove version from parameter, without it we will have version as parameter 
-                // for all endpoints in swagger UI
-                //c.OperationFilter<RemoveVersionFromParameter>();
-
-                // This make replacement of v{version:apiVersion} to real version of corresponding swagger doc.
-                //c.DocumentFilter<ReplaceVersionWithExactValueInPath>();
-
+                var fileName = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var filePath = Path.Combine(AppContext.BaseDirectory, fileName);
+                c.IncludeXmlComments(filePath);   
             });
             #endregion
             
@@ -77,7 +80,8 @@ namespace RetroLauncher.WebAPI
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api RetroLauncher");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api RetroLauncher");                
+                //c.CustomSchemaIds(x => x.GetCustomAttributes<DisplayNameAttribute>().SingleOrDefault().DisplayName);
             });
 
             // Set up custom content types - associating file extension to MIME type
