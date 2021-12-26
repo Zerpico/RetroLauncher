@@ -24,19 +24,25 @@ namespace Application.Features.Queries
             }
             public async Task<PagingList<Game>> Handle(GetAllGamesQuery query, CancellationToken cancellationToken)
             {
-                var queryResult = _context.Games;
+                var queryResult = _context.Games
+                    .Include(x => x.Platform)
+                    .Include(x => x.GenreLinks)
+                        .ThenInclude(x => x.Genre);
+
                 var count = await queryResult.CountAsync();
                 var result = await queryResult
-                    .Skip(query.PageIndex * 30)
+                    .Skip((query.PageIndex-1) * 30)
                     .Take(30)
                     .ToListAsync(cancellationToken);
+
+                int maxPage = (count / 30) + ((count % 30) > 0 ? 1 : 0);
 
                 return new PagingList<Game>()
                 {
                     Items = result,
                     Total = count,
-                    Limit = 1,
-                    Offset = 30
+                    Current = query.PageIndex,
+                    Max = maxPage
                 };
             }
         }

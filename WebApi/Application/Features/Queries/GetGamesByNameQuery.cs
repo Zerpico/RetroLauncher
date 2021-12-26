@@ -12,56 +12,48 @@ using System.Threading.Tasks;
 
 namespace Application.Features.Queries
 {
+
     public class GetGamesByNameQuery : IRequest<PagingList<Game>>
     {
+        public int PageIndex { get; set; }
         public string Name { get; set; }
-        public int[] Genres { get; set; }
         public int[] Platforms { get; set; }
-        public int Limit { get; set; }
-        public int Offset { get; set; }
+        public int[] Genres { get; set; }
 
-        public class GetAllGamesQueryHandler : IRequestHandler<GetGamesByNameQuery, PagingList<Game>>
+        public class GetGamesByNameQueryHandler : IRequestHandler<GetGamesByNameQuery, PagingList<Game>>
         {
-
             private readonly IApplicationDbContext _context;
-            public GetAllGamesQueryHandler(IApplicationDbContext context)
+            public GetGamesByNameQueryHandler(IApplicationDbContext context)
             {
                 _context = context;
             }
             public async Task<PagingList<Game>> Handle(GetGamesByNameQuery query, CancellationToken cancellationToken)
             {
-                query.Genres = query.Genres ?? (new int[0]);
-                query.Platforms = query.Platforms ?? (new int[0]);
-
                 var queryResult = _context.Games
                     .Include(x => x.Platform)
                     .Include(x => x.GenreLinks)
                         .ThenInclude(x => x.Genre)
                     .Where(n => string.IsNullOrEmpty(query.Name) ? true : n.Name.Contains(query.Name) || n.Alternative.Contains(query.Name))
-                    .Where(p => query.Platforms.Count() == 0 ? true : query.Platforms.Contains(p.Platform.Id));
+                    .Where(p => query.Platforms.Count() == 0 ? true : query.Platforms.Contains(p.Platform.Id))
+                    .Where(p => query.Genres.Count() == 0 ? true : p.GenreLinks.Any(g => query.Genres.Contains(g.GenreId)));
 
-                /*    .Include(x => x.Genre)
-                    .Include(x => x.Platform)
-                    .Include(x => x.GameLinks)
-                    .Include(x => x.Ratings)
-                    .Include(x => x.Downloads)*/
-                /*    .Where(n => string.IsNullOrEmpty(query.Name) ? true : n.Name.Contains(query.Name) || n.Alternative.Contains(query.Name))// || n.NameOther.Contains(query.Name))
-                    .Where(g => query.Genres.Count() == 0 ? true : g.Genres.All(t => query.Genres.Contains(t.GenreId)))
-                    .Where(p => query.Platforms.Count() == 0 ? true : query.Platforms.Contains(p.Platform.Id));
-*/
-                int count = await queryResult.CountAsync(cancellationToken);
-                
-                return
-                new PagingList<Game>()
+                var count = await queryResult.CountAsync();
+                var result = await queryResult
+                    .Skip((query.PageIndex-1) * 30)
+                    .Take(30)
+                    .ToListAsync(cancellationToken);
+
+                int maxPage = (count / 30) + ((count % 30) > 0 ? 1 : 0);
+
+                return new PagingList<Game>()
                 {
+                    Items = result,
                     Total = count,
-                    Offset = query.Offset,
-                    Limit = query.Limit,
-                    Items = queryResult.Skip(query.Offset).Take(query.Limit)//.ToListAsync(cancellationToken)
+                    Current = query.PageIndex,
+                    Max = maxPage
                 };
             }
-
-           
         }
     }
 }
+

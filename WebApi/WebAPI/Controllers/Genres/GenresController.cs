@@ -11,18 +11,18 @@ using System.Threading.Tasks;
 
 namespace RetroLauncher.WebAPI.Controllers
 {   
-    public class GenreController : BaseApiController
+    public class GenresController : BaseApiController
     {
-        private readonly ILogger<GenreController> _logger;
+        private readonly ILogger<GenresController> _logger;
 
-        public GenreController(ILogger<GenreController> logger)
+        public GenresController(ILogger<GenresController> logger)
         {
             _logger = logger;
         }
 
         /// <summary> Fetch genres list </summary>
         [HttpGet]
-        [Route("getList")]
+        [Route("GetList")]
         [ProducesResponseType(typeof(GengresGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorGetResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get()

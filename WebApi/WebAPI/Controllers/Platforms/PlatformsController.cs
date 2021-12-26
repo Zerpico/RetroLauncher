@@ -11,18 +11,18 @@ using System.Threading.Tasks;
 
 namespace RetroLauncher.WebAPI.Controllers
 {
-    public class PlatformController : BaseApiController
+    public class PlatformsController : BaseApiController
     {
-        private readonly ILogger<PlatformController> _logger;
+        private readonly ILogger<PlatformsController> _logger;
 
-        public PlatformController(ILogger<PlatformController> logger)
+        public PlatformsController(ILogger<PlatformsController> logger)
         {
             _logger = logger;
         }
 
         /// <summary> Fetch platforms list </summary>
         [HttpGet]
-        [Route("getList")]
+        [Route("GetList")]
         [ProducesResponseType(typeof(PlatformsGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorGetResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Get()

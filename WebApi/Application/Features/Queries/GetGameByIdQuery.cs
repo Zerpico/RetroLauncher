@@ -13,7 +13,8 @@ namespace Application.Features.Queries
 {
     public class GetGameByIdQuery : IRequest<Game>
     {
-        public int Id { get; set; }
+        public int Id { get; set; }        
+
         public class GetGameByIdQueryHandler : IRequestHandler<GetGameByIdQuery, Game>
         {
             private readonly IApplicationDbContext _context;
@@ -22,20 +23,15 @@ namespace Application.Features.Queries
                 _context = context;
             }
             public async Task<Game> Handle(GetGameByIdQuery query, CancellationToken cancellationToken)
-            {                
-                var result = await _context.Games
-                   /* .Include(x => x.Genre)
+            {
+                var queryResult = await _context.Games
                     .Include(x => x.Platform)
-                    .Include(x => x.GameLinks)
-                    .Include(x => x.Ratings)
-                    .Include(x => x.Downloads)*/
-                    .Where(i => i.Id == query.Id).FirstOrDefaultAsync();
+                    .Include(x => x.GenreLinks)
+                        .ThenInclude(x => x.Genre)
+                    .Where(n => n.Id == query.Id)
+                    .FirstOrDefaultAsync();
 
-                if (result == null)                
-                    return null;
-                
-                return result;
-
+                return queryResult;
             }
         }
     }
