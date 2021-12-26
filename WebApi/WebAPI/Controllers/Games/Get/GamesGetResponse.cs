@@ -9,20 +9,7 @@ using RetroLauncher.WebAPI.Controllers.Games.Dto;
 
 namespace RetroLauncher.WebAPI.Controllers.Games.Get
 {
-/*    public class GamesGetResponse
-    {
-        public int Total { get; set; }
-        public int Offset { get; set; }
-        public int Limit { get; set; }
-        public IEnumerable<Game> Items { get; set; }
-    }
-
-    public class GameGetResponse
-    {
-        public Game Game { get; set; }
-    }
-*/
-
+    /// <summary> Reponse with infromation about Genre games </summary>
     public class GamesGetResponse : PaginatedApiResponse
     {
         [JsonProperty("data", Required = Required.Always, Order = 4)]
@@ -47,33 +34,4 @@ namespace RetroLauncher.WebAPI.Controllers.Games.Get
         public ICollection<Game> Games { get; set; } = new Collection<Game>();
 
     }
-
-    /*
-    public class GamesByGameID : PaginatedApiResponse
-    {
-        [JsonProperty("data", Required = Required.Always)]
-        [Required]
-        public Data Data { get; set; } = new Data();
-
-
-        [JsonProperty("include", NullValueHandling = NullValueHandling.Include)]
-        [Required]
-        public Include Include { get; set; } = new Include();
-      
-    }
-*/
-
-
-    /*
-        public partial class Include
-        {
-            [Newtonsoft.Json.JsonProperty("platform", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required]
-            public Platform Platform { get; set; } = new Platform();
-
-            [Newtonsoft.Json.JsonProperty("platform", Required = Newtonsoft.Json.Required.Always)]
-            [System.ComponentModel.DataAnnotations.Required]
-            public ICollection<Genre> Genres { get; set; } = new Collection<Genre>();
-        }
-    */
 }

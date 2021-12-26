@@ -6,7 +6,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Runtime.Serialization;
 
 namespace RetroLauncher.WebAPI.Controllers.Platforms
-{   
+{
+    /// <summary> Reponse with infromation about Platform data </summary>
     public class PlatformsGetResponse : BaseApiResponse
     {
         [JsonProperty("data", Required = Required.Always, Order = 4)]

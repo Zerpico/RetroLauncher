@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace RetroLauncher.WebAPI.Controllers
 {
+    /// <summary> Basic abstract response with Code and Status</summary>
     public abstract class BaseApiResponse
     {
         [JsonProperty("code", Required = Required.Always, Order = 1)]
@@ -17,8 +18,8 @@ namespace RetroLauncher.WebAPI.Controllers
         [Required(AllowEmptyStrings = true)]
         public string Status { get; set; } = default!;
     }
-
-   
+    
+    /// <summary> Response with information about Pages </summary>
     public partial class PaginatedApiResponse : BaseApiResponse
     {
         [JsonProperty("pages", Required = Required.Always, Order = 3)]
@@ -26,6 +27,7 @@ namespace RetroLauncher.WebAPI.Controllers
         public Pages Pages { get; set; } = new Pages();
     }
 
+    /// <summary> Content response with information about Pages </summary>
     public partial class Pages
     {       
 
@@ -40,6 +42,7 @@ namespace RetroLauncher.WebAPI.Controllers
         public int Max { get; set; } = 1;
     }
 
+    /// <summary> Basic error reposnse </summary>
     public partial class ErrorGetResponse: BaseApiResponse
     {
         

@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace RetroLauncher.WebAPI.Controllers.Genres.Get
-{   
+{
+    /// <summary> Reponse with infromation about Genre data </summary>
     public partial class GengresGetResponse : BaseApiResponse
     {
         [JsonProperty("data", Required = Required.Always, Order = 4)]

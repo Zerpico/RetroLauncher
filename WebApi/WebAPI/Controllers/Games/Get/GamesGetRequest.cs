@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace RetroLauncher.WebAPI.Controllers.Games.Get
 {
+    /// <summary> Request to game by id </summary>
     public class GameGetByIdRequest
     {
         /// <summary> id of list </summary>
@@ -15,6 +16,8 @@ namespace RetroLauncher.WebAPI.Controllers.Games.Get
         [Range(1, int.MaxValue)]
         public int Id { get; set; } = 1;
     }
+
+    /// <summary> Request to all games with pages </summary>
     public class GamesGetRequest
     {
         /// <summary> Number of page </summary>
@@ -27,6 +30,7 @@ namespace RetroLauncher.WebAPI.Controllers.Games.Get
         public string Fields { get; set; } = string.Empty;
     }
 
+    /// <summary> Request to games search by name with pages </summary>
     public class GamesGetByNameRequest : GamesGetRequest
     {
         /// <summary> Search term </summary>
@@ -41,21 +45,4 @@ namespace RetroLauncher.WebAPI.Controllers.Games.Get
         [JsonProperty("platforms", NullValueHandling = NullValueHandling.Include)]
         public int[] Platforms { get; set; } = null;
     }
-/*    
-    public class GamesGetRequest
-    {
-        public string Name { get; set; } = string.Empty;
-        public int[] Genres { get; set; } = null;
-        public int[] Platforms { get; set; } = null;
-
-        [Range(1,100)]        
-        public int Limit { get; set; } = 50;
-        public int Offset { get; set; } = 0;
-    }
-
-    public class GameGetRequest
-    {
-        public int Id { get; set; }
-    }
-*/
 }

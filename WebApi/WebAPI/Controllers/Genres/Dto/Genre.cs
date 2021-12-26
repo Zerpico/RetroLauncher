@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RetroLauncher.WebAPI.Controllers.Genres.Dto
 {
+    /// <summary> Genre model </summary>
     public class Genre
     {
         [JsonProperty("id", Required = Required.Always)]

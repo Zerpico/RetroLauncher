@@ -1,0 +1,9 @@
+version: '3.4'
+
+services:
+  retro_launcher:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ConnectionStrings__DbConnection
+      - FilesPath
+      - BaseUrl
