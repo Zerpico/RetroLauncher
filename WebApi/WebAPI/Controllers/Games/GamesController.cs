@@ -7,6 +7,7 @@ using Application.Features.Queries;
 using Application.Shared;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RetroLauncher.WebAPI.Controllers.Games.Dto;
@@ -20,12 +21,10 @@ namespace RetroLauncher.WebAPI.Controllers
         private readonly string _baseUrl;
         private readonly string _directoryRoms;
 
-        public GamesController(ILogger<GamesController> logger)
+        public GamesController(ILogger<GamesController> logger, IConfiguration configuration)
         {
             _logger = logger;
-            var url = Environment.GetEnvironmentVariable("BASEURL");
-           // _baseUrl = url.EndsWith('/') ? url + "files/" : url + "/files/";
-           // _directoryRoms = Path.Combine(Environment.GetEnvironmentVariable("ROMS_DIRECTORY"), "files");
+            _baseUrl = configuration["BaseUrl"];
         }
 
 
@@ -58,10 +57,10 @@ namespace RetroLauncher.WebAPI.Controllers
                     Year = g.Year,
                     Ratings = g.Rate.HasValue ? Math.Round(g.Rate.Value, 2) : g.Rate,
                     Genres = g.GenreLinks?.Select(s=>s.GenreId).ToList(),
-                    Links = GetLinksWithCover(g.GameLinks)
+                    Links = GetLinksWithCover(g)
                 });
 
-            
+            _logger.LogInformation("Games GetList", request.Page, request.Fields);
 
             return Ok(new GamesGetResponse()
             {
@@ -100,10 +99,11 @@ namespace RetroLauncher.WebAPI.Controllers
                     Year = g.Year,
                     Ratings = g.Rate.HasValue ? Math.Round(g.Rate.Value, 2) : g.Rate,
                     Genres = g.GenreLinks?.Select(s => s.GenreId).ToList(),
-                    Links = GetLinksWithCover(g.GameLinks)
+                    Links = GetLinksWithCover(g)
                 });
 
-           
+            _logger.LogInformation("Games GetByName", request.Page, request.Fields, request.Name, request.Genres, request.Platforms);
+
             return Ok(new GamesGetResponse()
             {
                 Pages = new Pages() { Current = resultQuery.Current, Max = resultQuery.Max },
@@ -140,10 +140,11 @@ namespace RetroLauncher.WebAPI.Controllers
                     Year = resultQuery.Year,
                     Ratings = resultQuery.Rate.HasValue ? Math.Round(resultQuery.Rate.Value, 2) : resultQuery.Rate,
                     Genres = resultQuery.GenreLinks?.Select(s => s.GenreId).ToList(),
-                    Links = GetLinks(resultQuery.GameLinks.ToList())
+                    Links = GetLinks(resultQuery)
                 }
             };
 
+            _logger.LogInformation("Games GetById", request.Id);
 
             return Ok(new GamesGetResponse()
             {
@@ -151,23 +152,28 @@ namespace RetroLauncher.WebAPI.Controllers
                 Data = new GameData() { Games = result, Count = 1 }
             });
         }
+        
 
-
-        private ICollection<GameLink> GetLinksWithCover(ICollection<Domain.Entities.GameLink> gameLinks)
+        private ICollection<GameLink> GetLinksWithCover(Domain.Entities.Game game)
         {
-            var fgame = gameLinks.FirstOrDefault();
+            var nameDir = game.Name.Trim().Replace("'", "").Replace(':', ' ').Replace('\\', '_').Replace('/', '_').Replace('?', ' ').Replace('<', '_').Replace('>', '_').Replace(' ','_');
+           
+            var flink = game.GameLinks.FirstOrDefault();
             return new List<GameLink>() { new GameLink()
                 {
                     Type = "cover",
-                    Url = fgame.Url
+                    Url = new Uri(new Uri(_baseUrl), $"IMAGES/{game.Platform.SmallName}/{nameDir}/{flink.Url}").ToString(),
                 }
             };
         }
 
-        private ICollection<GameLink> GetLinks(List<Domain.Entities.GameLink> gameLinks)
+        private ICollection<GameLink> GetLinks(Domain.Entities.Game game)
         {
+            var gameLinks = game.GameLinks.ToList();
             gameLinks[0].Type = Domain.Enums.TypeUrl.Cover;
-
+            
+            var nameDir = game.Name.Replace("'", "").Replace(':', ' ').Replace('\\', '_').Replace('/', '_').Replace('?', ' ').Replace('<', '_').Replace('>', '_').Replace(' ', '_');
+           
             return gameLinks?.Select(s => new GameLink()
             {
                 Type = s.Type switch
@@ -177,7 +183,11 @@ namespace RetroLauncher.WebAPI.Controllers
                     Domain.Enums.TypeUrl.Cover => "cover",
                     Domain.Enums.TypeUrl.CoverBack => "cover",
                 },
-                Url = s.Url
+                Url = s.Type switch
+                {
+                    Domain.Enums.TypeUrl.Rom => new Uri(new Uri(_baseUrl), $"ROMS/{game.Platform.SmallName}/{s.Url}").ToString(),
+                    _ => new Uri(new Uri(_baseUrl), $"IMAGES/{game.Platform.SmallName}/{nameDir}/{s.Url}").ToString(),
+                }
             }).ToList();
         }
 

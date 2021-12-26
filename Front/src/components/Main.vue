@@ -34,7 +34,7 @@
 
 
   <p>
-    <sui-button color="green" @click="say('tiny.nes')">Запустить</sui-button>
+    <sui-button color="green" @click="say('tiny.nes')" style="visibility: hidden" >Запустить</sui-button>
   </p>
 
   <div id="gamediv" style="margin-top:0.5rem">
@@ -56,9 +56,9 @@ export default {
   data() {
     return {
       posts: [
-        { id: 1, title: 'My journey with Vue', genre: 'action' },
-        { id: 2, title: 'Blogging with Vue', genre: 'action' },
-        { id: 3, title: 'Why Vue is so fun', genre: 'action' }
+        { id: 1, title: 'Some Game 1', genre: 'action' },
+        { id: 2, title: 'Some Game 2', genre: 'action' },
+        { id: 3, title: 'Some Game 3', genre: 'action' }
       ],
       current: 'angular',
       skills: [
@@ -68,22 +68,7 @@ export default {
         { key: 'SMD', text: 'Sega MegaDrive', value: 'SMD' },
         { key: 'GB', text: 'GameBoy', value: 'GB' },
         { key: 'GBA', text: 'GameBoy Advance', value: 'GBA' },
-        { key: 'TBG', text: 'TurboGraphics-16', value: 'TBG' },
-        { key: 'ember', text: 'Ember', value: 'ember' },
-        { key: 'html', text: 'HTML', value: 'html' },
-        { key: 'ia', text: 'Information Architecture', value: 'ia' },
-        { key: 'javascript', text: 'Javascript', value: 'javascript' },
-        { key: 'mech', text: 'Mechanical Engineering', value: 'mech' },
-        { key: 'meteor', text: 'Meteor', value: 'meteor' },
-        { key: 'node', text: 'NodeJS', value: 'node' },
-        { key: 'plumbing', text: 'Plumbing', value: 'plumbing' },
-        { key: 'python', text: 'Python', value: 'python' },
-        { key: 'rails', text: 'Rails', value: 'rails' },
-        { key: 'react', text: 'React', value: 'react' },
-        { key: 'repair', text: 'Kitchen Repair', value: 'repair' },
-        { key: 'ruby', text: 'Ruby', value: 'ruby' },
-        { key: 'ui', text: 'UI Design', value: 'ui' },
-        { key: 'ux', text: 'User Experience', value: 'ux' },
+        { key: 'TBG', text: 'TurboGraphics-16', value: 'TBG' },       
       ]
     }
   },

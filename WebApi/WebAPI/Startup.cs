@@ -34,7 +34,8 @@ namespace RetroLauncher.WebAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers();
+            services.AddControllersWithViews();
+            services.AddSpaStaticFiles(configuration: options => { options.RootPath = "wwwroot"; });
 
             #region Swagger
             services.AddSwaggerGen(c =>
@@ -59,7 +60,6 @@ namespace RetroLauncher.WebAPI
             });
             #endregion
             
-
             services.AddApplication();
             services.AddPersistence(Configuration);            
             services.AddControllersWithViews()
@@ -75,44 +75,38 @@ namespace RetroLauncher.WebAPI
                 app.UseDeveloperExceptionPage();
             }
 
-            //app.UseHttpsRedirection();
             app.UseHsts();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api RetroLauncher");                
-                //c.CustomSchemaIds(x => x.GetCustomAttributes<DisplayNameAttribute>().SingleOrDefault().DisplayName);
             });
 
             // Set up custom content types - associating file extension to MIME type
             var provider = new FileExtensionContentTypeProvider();
-            // Add new mappings
             provider.Mappings[".7z"] = "application/x-7z-compressed";
-
-            string filesDirectory = Environment.GetEnvironmentVariable("ROMS_DIRECTORY");
-            // if (!Directory.Exists(Path.Combine(filesDirectory, "files")))
-            //     Directory.CreateDirectory(Path.Combine(filesDirectory, "files"));
-
-            if (!env.IsDevelopment())
+            // Init FileServerOptions
+            var FilesPath = Configuration["FilesPath"];
+            var fileServerOptions = new FileServerOptions
             {
-                app.UseStaticFiles(new StaticFileOptions
-                {
-                    ContentTypeProvider = provider,
-                    FileProvider = new PhysicalFileProvider(filesDirectory)
-                });
+                FileProvider = new PhysicalFileProvider(FilesPath)
+            };
+            fileServerOptions.StaticFileOptions.ContentTypeProvider = provider;
 
-                app.UseFileServer(new FileServerOptions
-                {
-                    FileProvider = new PhysicalFileProvider(filesDirectory)
-                });
-            }
-
+            //Enable CORS
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseStaticFiles(new StaticFileOptions
+            {
+                ContentTypeProvider = provider
+            });
+            app.UseFileServer(fileServerOptions);
             app.UseRouting();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapFallbackToController("Index", "Home");
             });
         }
     }
