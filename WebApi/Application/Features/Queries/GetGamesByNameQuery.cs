@@ -33,9 +33,10 @@ namespace Application.Features.Queries
                     .Include(x => x.Platform)
                     .Include(x => x.GenreLinks)
                         .ThenInclude(x => x.Genre)
-                    .Where(n => string.IsNullOrEmpty(query.Name) ? true : n.Name.Contains(query.Name) || n.Alternative.Contains(query.Name))
-                    .Where(p => query.Platforms.Count() == 0 ? true : query.Platforms.Contains(p.Platform.Id))
-                    .Where(p => query.Genres.Count() == 0 ? true : p.GenreLinks.Any(g => query.Genres.Contains(g.GenreId)));
+                    .Include(x => x.GameLinks.OrderByDescending(l => l.Type))
+                    .Where(n => string.IsNullOrEmpty(query.Name) ? true : n.Name.ToLower().Contains(query.Name.ToLower()) || n.Alternative.ToLower().Contains(query.Name.ToLower()))
+                    .Where(p => (query.Platforms == null || query.Platforms.Count() == 0) ? true : query.Platforms.Contains(p.Platform.Id))
+                    .Where(p => (query.Genres == null || query.Genres.Count() == 0) ? true : p.GenreLinks.Any(g => query.Genres.Contains(g.GenreId)));
 
                 var count = await queryResult.CountAsync();
                 var result = await queryResult

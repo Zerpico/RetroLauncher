@@ -14,7 +14,8 @@ namespace Persistence.Context
         public DbSet<Game> Games { get; set; }
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Platform> Platforms { get; set; }
-        
+        public DbSet<GameLink> Links { get; set; }
+
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -30,44 +31,13 @@ namespace Persistence.Context
             {                
                 entity.ToTable("games");
                 entity.HasKey(e => e.Id);
-                // entity.Property(e => e.Id).HasColumnName("game_id");
-
-                /*  entity.Property(e => e.Annotation)
-                      .HasColumnName("annotation")
-                      .HasMaxLength(2000);
-                */
-                /* entity.Property(e => e.Developer)
-                     .HasColumnName("developer")
-                     .HasMaxLength(100);
-
-                 entity.Property(e => e.Name)
-                     .IsRequired()
-                     .HasColumnName("game_name")
-                     .HasMaxLength(100);
-
-                 entity.Property(e => e.Year).HasColumnName("year");
-
-                 entity.Property(e => e.NameOther)
-                     .HasColumnName("name_other")
-                     .HasMaxLength(100);
-
-                 entity.Property(e => e.NameSecond)
-                     .HasColumnName("name_second")
-                     .HasMaxLength(100);
-                 */
+                
                 entity.HasMany(e => e.GenreLinks)
                     .WithOne(p => p.Game);
-                    
-                    
-                //   .HasConstraintName("FK_gb_games_gb_genres")
-                //   .HasForeignKey("genre_id");
-
+               
                 entity.HasOne(d => d.Platform)
                     .WithMany(p => p.Games)
-                    .HasForeignKey("platform");
-                
-                  //  .HasForeignKey("platform_id")                    
-                  //  .OnDelete(DeleteBehavior.ClientSetNull);
+                    .HasForeignKey("platform");                
             });
 
             // GenreLink Table
@@ -95,37 +65,19 @@ namespace Persistence.Context
 
                 entity.HasMany(d => d.Games)
                     .WithOne(p => p.Platform);
-
-              /*  entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasColumnName("name")
-                    .HasMaxLength(255);
-
-                entity.Property(e => e.SmallName)
-                    .IsRequired()
-                    .HasColumnName("smallname")
-                    .HasMaxLength(20);*/
+             
             });
 
             // GameLink Table
-        /*   modelBuilder.Entity<GameLink>(entity =>
+           modelBuilder.Entity<GameLink>(entity =>
             {
-                entity.ToTable("gb_links");
-                entity.HasKey(e => e.Id);    
-                entity.Property(e => e.Id).HasColumnName("link_id");
-                entity.Property(e => e.Type).HasColumnName("type_url");
+                entity.ToTable("links");
+                entity.HasKey(e => e.Id);
 
                 entity.HasOne(e => e.Game)
-                    .WithMany(p => p.GameLinks)
-                    .HasConstraintName("FK_gb_links_gb_games")
-                    .HasForeignKey("game_id");
-
-                entity.Property(e => e.Url)
-                    .IsRequired()
-                    .HasColumnName("url")
-                    .HasMaxLength(1000);
+                    .WithMany(p => p.GameLinks);
             });
-        */
+        
 
             // Downloads table
         /*    modelBuilder.Entity<Download>(entity =>

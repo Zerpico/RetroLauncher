@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Enums
 {
-    public enum TypeUrl
+    public enum TypeUrl : int
     {
         Rom = 1,
         Screen = 2,
-        Cover = 3        
+        CoverBack = 3,
+        Cover = 4
     }
 }

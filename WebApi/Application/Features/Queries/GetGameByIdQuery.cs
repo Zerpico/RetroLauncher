@@ -28,6 +28,7 @@ namespace Application.Features.Queries
                     .Include(x => x.Platform)
                     .Include(x => x.GenreLinks)
                         .ThenInclude(x => x.Genre)
+                    .Include(x => x.GameLinks.OrderByDescending(l => l.Type))
                     .Where(n => n.Id == query.Id)
                     .FirstOrDefaultAsync();
 

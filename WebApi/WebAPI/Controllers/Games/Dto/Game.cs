@@ -45,5 +45,9 @@ namespace RetroLauncher.WebAPI.Controllers.Games.Dto
         [Range(0, 5)]        
         public double? Ratings { get; set; }
 
+        [JsonProperty("links")]
+        [Required(AllowEmptyStrings = true)]
+        public ICollection<GameLink> Links { get; set; }
+
     }
 }

@@ -27,7 +27,8 @@ namespace Application.Features.Queries
                 var queryResult = _context.Games
                     .Include(x => x.Platform)
                     .Include(x => x.GenreLinks)
-                        .ThenInclude(x => x.Genre);
+                        .ThenInclude(x => x.Genre)
+                    .Include(x => x.GameLinks.OrderByDescending(l => l.Type));
 
                 var count = await queryResult.CountAsync();
                 var result = await queryResult

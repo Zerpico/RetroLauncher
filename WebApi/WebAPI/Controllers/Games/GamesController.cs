@@ -57,7 +57,8 @@ namespace RetroLauncher.WebAPI.Controllers
                     Publisher = fields.Any(s=> s == nameof(g.Publisher).ToLower()) ? g.Publisher : string.Empty,
                     Year = g.Year,
                     Ratings = g.Rate.HasValue ? Math.Round(g.Rate.Value, 2) : g.Rate,
-                    Genres = g.GenreLinks?.Select(s=>s.GenreId).ToList()
+                    Genres = g.GenreLinks?.Select(s=>s.GenreId).ToList(),
+                    Links = GetLinksWithCover(g.GameLinks)
                 });
 
             
@@ -69,16 +70,16 @@ namespace RetroLauncher.WebAPI.Controllers
             });            
         }
 
-
+       
         /// <summary> Fetch games list </summary>
         /// <param name="request">request for fetch</param>
         [HttpGet]
         [Route("GetByName")]
         [ProducesResponseType(typeof(GamesGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorGetResponse), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetByName([FromQuery] GamesGetRequest request)
+        public async Task<IActionResult> GetByName([FromQuery] GamesGetByNameRequest request)
         {
-            var resultQuery = await Mediator.Send(new GetGamesByNameQuery() { PageIndex = request.Page});
+            var resultQuery = await Mediator.Send(new GetGamesByNameQuery() { PageIndex = request.Page, Name = request.Name, Genres = request.Genres, Platforms = request.Platforms});
             if (resultQuery == null)
             {
                 _logger.LogError("Not found items");
@@ -98,7 +99,8 @@ namespace RetroLauncher.WebAPI.Controllers
                     Publisher = fields.Any(s => s == nameof(g.Publisher).ToLower()) ? g.Publisher : string.Empty,
                     Year = g.Year,
                     Ratings = g.Rate.HasValue ? Math.Round(g.Rate.Value, 2) : g.Rate,
-                    Genres = g.GenreLinks?.Select(s => s.GenreId).ToList()
+                    Genres = g.GenreLinks?.Select(s => s.GenreId).ToList(),
+                    Links = GetLinksWithCover(g.GameLinks)
                 });
 
            
@@ -137,7 +139,8 @@ namespace RetroLauncher.WebAPI.Controllers
                     Publisher = resultQuery.Publisher,
                     Year = resultQuery.Year,
                     Ratings = resultQuery.Rate.HasValue ? Math.Round(resultQuery.Rate.Value, 2) : resultQuery.Rate,
-                    Genres = resultQuery.GenreLinks?.Select(s => s.GenreId).ToList()
+                    Genres = resultQuery.GenreLinks?.Select(s => s.GenreId).ToList(),
+                    Links = GetLinks(resultQuery.GameLinks.ToList())
                 }
             };
 
@@ -148,41 +151,35 @@ namespace RetroLauncher.WebAPI.Controllers
                 Data = new GameData() { Games = result, Count = 1 }
             });
         }
-      
-        /// <summary>
-        /// Gets Game by Id.
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        /*        [HttpGet]
-                [Route("getrom")]
-                public async Task<IActionResult> GetRom(int id)
+
+
+        private ICollection<GameLink> GetLinksWithCover(ICollection<Domain.Entities.GameLink> gameLinks)
+        {
+            var fgame = gameLinks.FirstOrDefault();
+            return new List<GameLink>() { new GameLink()
                 {
-                    if (id <= 0)
-                        return BadRequest(new ErrorGetResponse() { ErrorMessage = $"For getRom request param 'id' must be gret than zero" });
-
-                    var ans = await Mediator.Send(new GetGameByIdQuery { Id = id });
-
-                    if (ans == null)
-                    {
-                        _logger.LogError($"Not found item by id {id}");
-                        return BadRequest(new ErrorGetResponse() { ErrorMessage = $"Not found item by id {id}" });
-                    }
-
-                    if (ans.GameLinks != null && ans.GameLinks.Count != 0)
-                    {
-                        var romLink = ans.GameLinks.Where(g => g.TypeUrl == Domain.Enums.TypeUrl.Rom).FirstOrDefault();
-                        if (Environment.OSVersion.Platform != PlatformID.Win32NT)
-                            romLink.Url = romLink.Url.Replace('\\', '/');
-                        return File(System.IO.File.ReadAllBytes(System.IO.Path.Combine(_directoryRoms, romLink.Url)), "application/octet-stream", ans.Id + "_" + ans.Name.Replace(" ", "_") + ".7z");
-                    }
-                    else
-                    {
-                        _logger.LogError($"Not found item by id {id}");
-                        return BadRequest(new ErrorGetResponse() { ErrorMessage = $"Not found item by id {id}" });
-                    }
+                    Type = "cover",
+                    Url = fgame.Url
                 }
-        */
+            };
+        }
+
+        private ICollection<GameLink> GetLinks(List<Domain.Entities.GameLink> gameLinks)
+        {
+            gameLinks[0].Type = Domain.Enums.TypeUrl.Cover;
+
+            return gameLinks?.Select(s => new GameLink()
+            {
+                Type = s.Type switch
+                {
+                    Domain.Enums.TypeUrl.Rom => "rom" ,
+                    Domain.Enums.TypeUrl.Screen => "screen",
+                    Domain.Enums.TypeUrl.Cover => "cover",
+                    Domain.Enums.TypeUrl.CoverBack => "cover",
+                },
+                Url = s.Url
+            }).ToList();
+        }
 
     }
 }

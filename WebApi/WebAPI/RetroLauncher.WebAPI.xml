@@ -26,7 +26,7 @@
             <summary> Fetch games list </summary>
             <param name="request">request for fetch</param>
         </member>
-        <member name="M:RetroLauncher.WebAPI.Controllers.GamesController.GetByName(RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetRequest)">
+        <member name="M:RetroLauncher.WebAPI.Controllers.GamesController.GetByName(RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetByNameRequest)">
             <summary> Fetch games list </summary>
             <param name="request">request for fetch</param>
         </member>
