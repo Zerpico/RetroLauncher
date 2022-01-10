@@ -18,7 +18,12 @@ namespace RetroLauncher.WebAPI.Controllers
         [Required(AllowEmptyStrings = true)]
         public string Status { get; set; } = default!;
     }
-    
+
+    /// <summary> Common response with information about Pages </summary>
+    public partial class ApiResponse : BaseApiResponse
+    {
+    }
+
     /// <summary> Response with information about Pages </summary>
     public partial class PaginatedApiResponse : BaseApiResponse
     {

@@ -23,6 +23,19 @@ namespace RetroLauncher.WebAPI.Controllers.Games.Get
         }
     }
 
+    public class GameGetResponse : ApiResponse
+    {
+        [JsonProperty("data", Required = Required.Always, Order = 4)]
+        [Required]
+        public GameData Data { get; set; } = new GameData();
+
+        public GameGetResponse()
+        {
+            Code = 200;
+            Status = "OK";
+        }
+    }
+
     public class GameData
     {
         [JsonProperty("count", Required = Required.Always)]

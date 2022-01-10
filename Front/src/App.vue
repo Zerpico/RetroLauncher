@@ -1,34 +1,47 @@
-<template>  
+<template>
   <div id="app">
     <div class="flex-container">
       <header>
         <Header />
       </header>
 
-      <section class="content">        
-          <Main msg="Welcome to Your Vue.js App"/>
+      <section class="content">
+        <div class="ui container">
+          <router-view />
+        </div>
       </section>
 
       <footer>
-         <Footer />
+        <Footer />
       </footer>
-    </div>        
+    </div>
   </div>
 </template>
 
 <script>
-import Main from './components/Main.vue'
-import Header from './components/Header.vue'
-import Footer from './components/Footer.vue'
-
+import Header from "./components/static/Header.vue";
+import Footer from "./components/static/Footer.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    Main,
     Header,
-    Footer
-  }
-}
+    Footer,
+  },
+};
 </script>
 
+<style>
+#nav {
+  padding: 30px;
+}
+
+#nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+#nav a.router-link-exact-active {
+  color: #42b983;
+}
+</style>

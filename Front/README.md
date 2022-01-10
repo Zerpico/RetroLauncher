@@ -1,4 +1,4 @@
-# retro-launcher-front
+# retrolauncher-front
 
 ## Project setup
 ```

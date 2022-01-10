@@ -49,8 +49,8 @@ namespace RetroLauncher.WebAPI.Controllers
                 .Select(g => new Game()
                 {
                     Id = g.Id,
-                    Name = g.Name,
-                    Alternative = g.Alternative,
+                    Name = g.Name.Trim(),
+                    Alternative = g.Alternative.Trim(),
                     Annotation = fields.Any(s => s == nameof(g.Annotation).ToLower()) ? g.Annotation : string.Empty,
                     Platform = g.Platform.Id,
                     Publisher = fields.Any(s=> s == nameof(g.Publisher).ToLower()) ? g.Publisher : string.Empty,
@@ -91,8 +91,8 @@ namespace RetroLauncher.WebAPI.Controllers
                 .Select(g => new Game()
                 {
                     Id = g.Id,
-                    Name = g.Name,
-                    Alternative = g.Alternative,
+                    Name = g.Name.Trim(),
+                    Alternative = g.Alternative.Trim(),
                     Annotation = fields.Any(s => s == nameof(g.Annotation).ToLower()) ? g.Annotation : string.Empty,
                     Platform = g.Platform.Id,
                     Publisher = fields.Any(s => s == nameof(g.Publisher).ToLower()) ? g.Publisher : string.Empty,
@@ -117,7 +117,7 @@ namespace RetroLauncher.WebAPI.Controllers
         /// <param name="request">request for fetch</param>
         [HttpGet]
         [Route("GetById")]
-        [ProducesResponseType(typeof(GamesGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GameGetResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ErrorGetResponse), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetById([FromQuery] GameGetByIdRequest request)
         {
@@ -146,9 +146,8 @@ namespace RetroLauncher.WebAPI.Controllers
 
             _logger.LogInformation("Games GetById", request.Id);
 
-            return Ok(new GamesGetResponse()
+            return Ok(new GameGetResponse()
             {
-                Pages = new Pages() { Current = 1, Max = 1 },
                 Data = new GameData() { Games = result, Count = 1 }
             });
         }
@@ -172,7 +171,7 @@ namespace RetroLauncher.WebAPI.Controllers
             var gameLinks = game.GameLinks.ToList();
             gameLinks[0].Type = Domain.Enums.TypeUrl.Cover;
             
-            var nameDir = game.Name.Replace("'", "").Replace(':', ' ').Replace('\\', '_').Replace('/', '_').Replace('?', ' ').Replace('<', '_').Replace('>', '_').Replace(' ', '_');
+            var nameDir = game.Name.Trim().Replace("'", "").Replace(':', ' ').Replace('\\', '_').Replace('/', '_').Replace('?', ' ').Replace('<', '_').Replace('>', '_').Replace(' ', '_');
            
             return gameLinks?.Select(s => new GameLink()
             {
