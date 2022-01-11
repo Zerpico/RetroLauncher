@@ -49,8 +49,8 @@ namespace RetroLauncher.WebAPI.Controllers
                 .Select(g => new Game()
                 {
                     Id = g.Id,
-                    Name = g.Name.Trim(),
-                    Alternative = g.Alternative.Trim(),
+                    Name = string.IsNullOrEmpty(g.Name) ? string.Empty : g.Name.Trim(),
+                    Alternative = string.IsNullOrEmpty(g.Alternative) ? string.Empty : g.Alternative.Trim(),
                     Annotation = fields.Any(s => s == nameof(g.Annotation).ToLower()) ? g.Annotation : string.Empty,
                     Platform = g.Platform.Id,
                     Publisher = fields.Any(s=> s == nameof(g.Publisher).ToLower()) ? g.Publisher : string.Empty,
@@ -91,8 +91,8 @@ namespace RetroLauncher.WebAPI.Controllers
                 .Select(g => new Game()
                 {
                     Id = g.Id,
-                    Name = g.Name.Trim(),
-                    Alternative = g.Alternative.Trim(),
+                    Name = string.IsNullOrEmpty(g.Name) ? string.Empty : g.Name.Trim(),
+                    Alternative = string.IsNullOrEmpty(g.Alternative) ? string.Empty : g.Alternative.Trim(),
                     Annotation = fields.Any(s => s == nameof(g.Annotation).ToLower()) ? g.Annotation : string.Empty,
                     Platform = g.Platform.Id,
                     Publisher = fields.Any(s => s == nameof(g.Publisher).ToLower()) ? g.Publisher : string.Empty,
@@ -132,8 +132,8 @@ namespace RetroLauncher.WebAPI.Controllers
             { new Game()
                 {
                     Id = resultQuery.Id,
-                    Name = resultQuery.Name,
-                    Alternative = resultQuery.Alternative,
+                    Name = string.IsNullOrEmpty(resultQuery.Name) ? string.Empty : resultQuery.Name.Trim(),
+                    Alternative = string.IsNullOrEmpty(resultQuery.Alternative) ? string.Empty : resultQuery.Alternative.Trim(),
                     Annotation = resultQuery.Annotation,
                     Platform = resultQuery.Platform.Id,
                     Publisher = resultQuery.Publisher,
