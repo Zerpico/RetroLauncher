@@ -23,6 +23,7 @@
       <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
 	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
+	  <PackageReference Include="VueCliMiddleware" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,5 +31,37 @@
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
 
+  <ItemGroup>   
+      <Content Include="..\..\Front\*.*;">
+        <Link>wwwroot/%(RecursiveDir)%(Filename)%(Extension)</Link>
+        <CopyToOutputDirectory >PreserveNewest</CopyToOutputDirectory>
+      </Content>
 
+    <Content Include="..\..\Front\src\**\*.*;">
+      <Link>wwwroot/src/%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory >PreserveNewest</CopyToOutputDirectory>
+    </Content>
+
+    <Content Include="..\..\Front\public\**\*.*;">
+      <Link>wwwroot/public/%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory >PreserveNewest</CopyToOutputDirectory>
+    </Content>
+
+    <Content Include="..\..\Front\dist\**\*.*;">
+      <Link>wwwroot/dist/%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory >PreserveNewest</CopyToOutputDirectory>
+    </Content>
+
+    <Content Include="..\..\Front\node_modules\**\*.*;">
+      <Link>wwwroot/node_modules/%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory >PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+  
 </Project>
+
+

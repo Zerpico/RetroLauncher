@@ -19,6 +19,7 @@ using System.IO;
 using Microsoft.Extensions.FileProviders;
 using System.ComponentModel;
 using System.Reflection;
+using VueCliMiddleware;
 
 namespace RetroLauncher.WebAPI
 {
@@ -74,6 +75,10 @@ namespace RetroLauncher.WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Error");
+            }
 
             app.UseHsts();
             app.UseSwagger();
@@ -82,6 +87,7 @@ namespace RetroLauncher.WebAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Api RetroLauncher");                
             });
 
+            #region Static File Options
             // Set up custom content types - associating file extension to MIME type
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".7z"] = "application/x-7z-compressed";
@@ -92,6 +98,7 @@ namespace RetroLauncher.WebAPI
                 FileProvider = new PhysicalFileProvider(FilesPath)
             };
             fileServerOptions.StaticFileOptions.ContentTypeProvider = provider;
+            #endregion
 
             //Enable CORS
             app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
@@ -100,13 +107,45 @@ namespace RetroLauncher.WebAPI
                 ContentTypeProvider = provider
             });
             app.UseFileServer(fileServerOptions);
+            app.UseSpaStaticFiles();
             app.UseRouting();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapFallbackToController("Index", "Home");
+                //endpoints.MapFallbackToController("Index", "Home");
+            });
+
+            app.UseSpa(spa =>
+            {
+                if (env.IsDevelopment())
+                    spa.Options.SourcePath = "wwwroot/";
+                else
+                    spa.Options.SourcePath = "dist";
+
+                if (env.IsDevelopment())
+                {
+                    spa.UseVueCli();
+                }
+
+                /*if (env.IsDevelopment())
+                {
+
+                    // run npm process with client app
+                    if (mode == "start")
+                    {
+                        spa.UseVueCli(npmScript: "serve", port: port, forceKill: true, https: https);
+                    }
+
+                    // if you just prefer to proxy requests from client app, use proxy to SPA dev server instead,
+                    // app should be already running before starting a .NET client:
+                    // run npm process with client app
+                    if (mode == "attach")
+                    {
+                        spa.UseProxyToSpaDevelopmentServer($"{(https ? "https" : "http")}://localhost:{port}"); // your Vue app port
+                    }
+                }*/
             });
         }
     }
