@@ -1,34 +1,25 @@
 ﻿using Application.Features.Queries;
 using Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Persistence.Context;
-using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net;
-using System.Net.Http;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using static Application.Features.Queries.GetAllGenresQuery;
 
 namespace WebApiTest
 {
-    public class GenreApiTest
+    [Collection("Database collection")]
+    public class GenreApiTest 
     {        
         
         private readonly ApplicationDbContext _context;
-
      
-        public GenreApiTest()
+        public GenreApiTest(DatabaseFixture fixture)
         {
-            _context = TestDbContext.InitDbContext("testGenres");
+            _context = fixture.DbContext;
         }
 
         [Fact]

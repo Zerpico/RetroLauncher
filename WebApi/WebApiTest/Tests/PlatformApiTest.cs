@@ -11,15 +11,15 @@ using static Application.Features.Queries.GetAllPlatformQuery;
 
 namespace WebApiTest
 {
-    public class PlatformApiTest
+    [Collection("Database collection")]
+    public class PlatformApiTest 
     {        
         
         private readonly ApplicationDbContext _context;
-
      
-        public PlatformApiTest()
+        public PlatformApiTest(DatabaseFixture fixture)
         {
-            _context = TestDbContext.InitDbContext("testPlatform");
+            _context = fixture.DbContext;
         }
 
         [Fact]
