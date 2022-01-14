@@ -114,39 +114,21 @@ namespace RetroLauncher.WebAPI
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                //endpoints.MapFallbackToController("Index", "Home");
             });
+
 
             app.UseSpa(spa =>
             {
+#if DEBUG
+                spa.Options.SourcePath = "../../Front/";
                 if (env.IsDevelopment())
-                    spa.Options.SourcePath = "wwwroot/";
-                else
-                    spa.Options.SourcePath = "dist";
+                    spa.UseVueCli(npmScript: "serve");
+#else   
+                spa.Options.SourcePath = "wwwroot";
+#endif
 
-                if (env.IsDevelopment())
-                {
-                    spa.UseVueCli();
-                }
-
-                /*if (env.IsDevelopment())
-                {
-
-                    // run npm process with client app
-                    if (mode == "start")
-                    {
-                        spa.UseVueCli(npmScript: "serve", port: port, forceKill: true, https: https);
-                    }
-
-                    // if you just prefer to proxy requests from client app, use proxy to SPA dev server instead,
-                    // app should be already running before starting a .NET client:
-                    // run npm process with client app
-                    if (mode == "attach")
-                    {
-                        spa.UseProxyToSpaDevelopmentServer($"{(https ? "https" : "http")}://localhost:{port}"); // your Vue app port
-                    }
-                }*/
             });
+          
         }
     }
 }
