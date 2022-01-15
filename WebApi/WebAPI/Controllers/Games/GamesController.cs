@@ -14,13 +14,12 @@ using RetroLauncher.WebAPI.Controllers.Games.Dto;
 using RetroLauncher.WebAPI.Controllers.Games.Get;
 
 namespace RetroLauncher.WebAPI.Controllers
-{   
+{       
     public class GamesController : BaseApiController
     {
         private readonly ILogger<GamesController> _logger;
         private readonly string _baseUrl;
-        private readonly string _directoryRoms;
-
+        
         public GamesController(ILogger<GamesController> logger, IConfiguration configuration)
         {
             _logger = logger;
@@ -177,10 +176,11 @@ namespace RetroLauncher.WebAPI.Controllers
             {
                 Type = s.Type switch
                 {
-                    Domain.Enums.TypeUrl.Rom => "rom" ,
+                    Domain.Enums.TypeUrl.Rom => "rom",
                     Domain.Enums.TypeUrl.Screen => "screen",
                     Domain.Enums.TypeUrl.Cover => "cover",
                     Domain.Enums.TypeUrl.CoverBack => "cover",
+                    _ => throw new NotImplementedException(),
                 },
                 Url = s.Type switch
                 {

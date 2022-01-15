@@ -52,6 +52,12 @@
         <member name="T:RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetResponse">
             <summary> Reponse with infromation about Genre games </summary>
         </member>
+        <member name="T:RetroLauncher.WebAPI.Controllers.GamesController">
+            <summary> Controller for game's request </summary>
+        </member>
+        <member name="M:RetroLauncher.WebAPI.Controllers.GamesController.#ctor(Microsoft.Extensions.Logging.ILogger{RetroLauncher.WebAPI.Controllers.GamesController},Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary> Constructor </summary>
+        </member>
         <member name="M:RetroLauncher.WebAPI.Controllers.GamesController.Get(RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetRequest)">
             <summary> Fetch games list </summary>
             <param name="request">request for fetch</param>

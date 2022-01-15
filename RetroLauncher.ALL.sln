@@ -19,6 +19,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebAPI", "WebApi\WebAPI\Web
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RetroLauncher.Desktop", "Desktop\RetroLauncher.Desktop\RetroLauncher.Desktop.csproj", "{77A0B543-1844-4091-9BFB-ACCA1DB1B840}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{14714BA7-7B1F-4EA7-82AD-82DAB316AD14}"
+	ProjectSection(SolutionItems) = preProject
+		.env = .env
+		docker-compose.override.yml = docker-compose.override.yml
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
