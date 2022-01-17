@@ -1,10 +1,13 @@
-
 <template>
   <div id="app">
     <div class="flex-container">
       <header>
-          <Header />
+        <Header />
       </header>
+
+      <ul v-for="genre in genrelist" :key="genre.id">
+          <li>{{ li.name }}</li>
+      </ul>
 
       <section class="content">
         <div class="ui container">
@@ -19,14 +22,32 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from "vue";
 import Header from "./components/static/Header.vue";
 import Footer from "./components/static/Footer.vue";
-export default {
-  name: "App",
+import { Action } from "vuex-class";
+import Component from "vue-class-component";
+
+@Component({
   components: {
     Header,
     Footer,
-  },
+  }
+}) 
+export default class App extends Vue {   
+
+  @Action("fetchGenres")
+  private fetchGenres: any;
+  
+  @Action("fetchPlatforms")
+  private fetchPlatforms: any;
+
+  created () {
+    this.fetchGenres();
+    this.fetchPlatforms();
+    // получение данных после создания компонента
+   
+  }
 };
 </script>
