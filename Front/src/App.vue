@@ -5,10 +5,6 @@
         <Header />
       </header>
 
-      <ul v-for="genre in genrelist" :key="genre.id">
-          <li>{{ li.name }}</li>
-      </ul>
-
       <section class="content">
         <div class="ui container">
           <router-view />

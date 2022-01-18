@@ -6,7 +6,7 @@ import { RootState } from "../types";
 export const actions: ActionTree<GameState, RootState> = {
   async fetchGames({ commit }): Promise<any> {
     await axios({
-      url: "https://retro.khudaev.ru/api/Games/GetList",
+      url: "https://retro.khudaev.ru/api/Games/GetList?fields=publisher",
     }).then(
       (response) => {
         console.log("Get fetch games");
@@ -25,7 +25,7 @@ export const actions: ActionTree<GameState, RootState> = {
   },
   async fetchGamesByName({ commit }, request: GameRequest): Promise<any> {
     await axios({
-      url: "https://retro.khudaev.ru/api/Games/GetByName?Name="+request.name,
+      url: "https://retro.khudaev.ru/api/Games/GetByName?"+(request.name ? "Name="+request.name : "") + (request.page ? "&Page="+request.page : "")+"&fields=publisher",      
     }).then(
       (response) => {
         console.log("Get fetch games");

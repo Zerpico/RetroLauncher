@@ -19,7 +19,8 @@ export interface GameState {
 }
 
 export interface GameRequest {
-  name: string;
+  name: string | undefined | null;
+  page: string | undefined | null;
   genre: number | undefined | null;
   platform: number | undefined | null;
 }

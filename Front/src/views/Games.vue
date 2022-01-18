@@ -9,7 +9,12 @@
         Error while fetch games list
       </sui-message>
 
-      <h4><sui-button>p</sui-button> {{ profile.currentPage }} of {{ profile.maxPage }} <sui-button>n</sui-button> </h4>
+      <h4>
+        <sui-button compact content="Prev" style="margin-right:1rem" @click.prevent="prevpage" :class="profile.currentPage === 1 ? 'disabled' : ''" /> 
+        {{ profile.currentPage }} 
+        <b style="margin:0 1rem">of</b> {{ profile.maxPage }} 
+        <sui-button compact content="Next" style="margin-left:1rem" @click.prevent="nextpage" :class="profile.currentPage === profile.maxPage ? 'disabled' : ''"/> 
+      </h4>
 	  	 
       <sui-loader v-if="data.loading" active />
 
@@ -61,29 +66,34 @@
 <script lang="ts">
 // an example of a Vue Typescript component using Vue.extend
 import Vue from "vue";
+import VueRouter from 'vue-router';
 import { State, Action, Getter } from "vuex-class";
 import Component from "vue-class-component";
 import { GameState, Game, GameRequest } from "../store/game/types";
-import { Prop } from "vue-property-decorator";
+import { Prop, Watch } from "vue-property-decorator";
 const namespace = "game";
 
 interface Data{
         loading: boolean ;
-        gameid: string | (string | null)[]
-        search: string
+        page: string | (string | null)[];
+        search: string | undefined | null;
+        startsearch: boolean
     }
 
 @Component
 export default class GameList extends Vue {
   private data: Data = {
           loading: true,
-          gameid: "",
-          search: ""
+          page: "",
+          search: "",
+          startsearch: false
       }; 
+  
 
   private request: GameRequest = 
   {
-    name: "",
+    name: null,
+    page: null,
     genre: null,
     platform: null
   }
@@ -105,20 +115,51 @@ export default class GameList extends Vue {
   
   async mounted() {
     // получение данных после монтирования компонента
-    this.data.gameid = this.$route.query.id;
-    await this.fetchGames();
+    this.fetchData();
+  }
+
+  @Watch('data.startsearch')
+    onPropertyChanged(value: boolean, oldValue: boolean) {
+      if (value)
+        this.fetchData()   
+  }
+
+ 
+  private async fetchData()
+  {
+    this.data.loading = true;
+    if (this.$route.query.name){
+      this.data.search = String(this.$route.query.name);
+    }
+    else this.data.search = null;
+
+    const page = this.$route.query.page;
+    if (this.data.search || page) {
+      this.request.name = this.data.search;
+      this.request.page = page ? String(page) : null;
+      await this.fetchGamesByName(this.request);
+    }
+    else await this.fetchGames();
     this.data.loading = false;
+    this.data.startsearch = false;
   }
 
   private search()
   {
-    this.request.name = this.data.search;
-    this.data.loading = true;
-    this.fetchGamesByName(this.request)
-    this.data.loading = false;
+    this.$router.push({ name: "games", query : { name: this.data.search} });
+    this.data.startsearch=true;
   }
 
-  // вычисляемое свойство email пользователя
+  private nextpage() {
+    this.$router.push({ name: "games", query : { name: this.data.search , page: String(this.profile.currentPage+1)} });
+    this.data.startsearch=true;
+  }
+
+  private prevpage() {
+    this.$router.push({ name: "games", query : { name: this.data.search, page: String(this.profile.currentPage-1)} });
+    this.data.startsearch=true;
+  }
+
 }
 </script>
 
