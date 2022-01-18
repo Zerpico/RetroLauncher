@@ -8,6 +8,8 @@ import { RootState } from "../types";
 
 export const state: GameState = {
   games: undefined,
+  currentPage: 0,
+  maxPage: 0,
   error: false,
 };
 

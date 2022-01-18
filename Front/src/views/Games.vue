@@ -2,11 +2,16 @@
   <div class="about">
     <div>
 
+      <sui-input placeholder="Search..." icon="search" v-model="data.search"  />
+      <sui-button primary @click.prevent="search">Поиск</sui-button>
+
       <sui-message v-if="profile.error" info>
-        {{ profile.errorMessage }}
+        Error while fetch games list
       </sui-message>
 
-      <sui-loader v-if="loading" active />
+      <h4><sui-button>p</sui-button> {{ profile.currentPage }} of {{ profile.maxPage }} <sui-button>n</sui-button> </h4>
+	  	 
+      <sui-loader v-if="data.loading" active />
 
       <div v-if="profile.games">
       <sui-list divided relaxed>
@@ -31,6 +36,10 @@
                          </div>
                        
                       </sui-list-item>
+					  
+					  <sui-list-item style="color: rgb(41 174 74);">
+						{{ platformlist[game.platform].name }}
+					  </sui-list-item>
 
                       <sui-list-item style="color: rgb(156 147 114)">{{ game.year }}</sui-list-item>
                       <sui-list-item style="color: #3f3f3f">{{ game.publisher }}</sui-list-item>
@@ -54,24 +63,38 @@
 import Vue from "vue";
 import { State, Action, Getter } from "vuex-class";
 import Component from "vue-class-component";
-import { GameState, Game } from "../store/game/types";
+import { GameState, Game, GameRequest } from "../store/game/types";
 import { Prop } from "vue-property-decorator";
 const namespace = "game";
 
 interface Data{
         loading: boolean ;
+        gameid: string | (string | null)[]
+        search: string
     }
 
 @Component
 export default class GameList extends Vue {
   private data: Data = {
           loading: true,
+          gameid: "",
+          search: ""
       }; 
+
+  private request: GameRequest = 
+  {
+    name: "",
+    genre: null,
+    platform: null
+  }
 
   @State("game") 
   profile!: GameState;
   @Action("fetchGames")
-  private fetchData: any;
+  private fetchGames: any;
+  @Action("fetchGamesByName")
+  private fetchGamesByName: any;
+  
   @Getter("gamelist")
   private gameslist!: Game[];
   @Getter("platformlist")
@@ -79,10 +102,19 @@ export default class GameList extends Vue {
   @Getter("genrelist")
   private genrelist!: [];
  
-
-  mounted(): void {
+  
+  async mounted() {
     // получение данных после монтирования компонента
-    this.fetchData();
+    this.data.gameid = this.$route.query.id;
+    await this.fetchGames();
+    this.data.loading = false;
+  }
+
+  private search()
+  {
+    this.request.name = this.data.search;
+    this.data.loading = true;
+    this.fetchGamesByName(this.request)
     this.data.loading = false;
   }
 
