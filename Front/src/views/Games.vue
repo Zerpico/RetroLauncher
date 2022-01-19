@@ -65,12 +65,11 @@
 <script lang="ts">
 // an example of a Vue Typescript component using Vue.extend
 import Vue from "vue";
-import VueRouter from 'vue-router';
 import { State, Action, Getter } from "vuex-class";
 import Component from "vue-class-component";
+import { Route } from 'vue-router'
 import { GameState, Game, GameRequest } from "../store/game/types";
 import { Prop, Watch } from "vue-property-decorator";
-const namespace = "game";
 
 interface Data{
         loading: boolean ;
@@ -110,30 +109,34 @@ export default class GameList extends Vue {
   private genrelist!: [];
  
   
-  async mounted() {
+  async created() {
     // получение данных после монтирования компонента
-    this.fetchData();
+    await this.fetchData();
   }
+  
 
-  @Watch('$route')
-    onPropertyChanged(value: any, oldValue: any) {    
-      if (value !== oldValue) 
-        this.fetchData()   
-  }
+  @Watch("$route.query", { immediate: true })
+   onUrlChange(newVal: Route) {
+    
+      this.fetchData()
+     
+    }
 
  
   private async fetchData()
   {
     this.data.loading = true;
-    if (this.$route.query.name){
-      this.data.search = String(this.$route.query.name);
+    const newName = this.$route.query.name;
+    const newPage = this.$route.query.page;
+
+    if (newName){
+      this.data.search = String(newName);
     }
     else this.data.search = null;
 
-    const page = this.$route.query.page;
-    if (this.data.search || page) {
+    if (newName || newPage) {
       this.request.name = this.data.search;
-      this.request.page = page ? String(page) : null;
+      this.request.page = newPage ? String(newPage) : null;
       await this.fetchGamesByName(this.request);
     }
     else await this.fetchGames();
