@@ -21,7 +21,7 @@
       <sui-list divided relaxed>
         <sui-list-item v-for="game in gameslist" :key="game.id">
           <sui-list-content>
-            <a href="#" is="sui-list-header">
+            <router-link :to="'/game/'+game.id" is="sui-list-header">
               <sui-grid>
                 <sui-grid-row>
                   <sui-grid-column :width="2">
@@ -52,7 +52,7 @@
                   </sui-grid-column>
                 </sui-grid-row>
               </sui-grid>
-            </a>
+            </router-link>
           </sui-list-content>
         </sui-list-item>
       </sui-list>

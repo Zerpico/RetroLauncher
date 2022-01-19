@@ -42,4 +42,19 @@ export const actions: ActionTree<GameState, RootState> = {
       }
     );
   },
+  async fetchGameById({ commit }, id: string): Promise<any> {
+    await axios({
+      url: "https://retro.khudaev.ru/api/Games/GetById?Id="+id,
+    }).then(
+      (response) => {
+        console.log("Get fetch game by "+id);
+        const games: Game[] = response && response.data.data.games;        
+        commit("gameLoaded", games);      
+      },
+      (error) => {
+        console.log(error);
+        commit("gameError");
+      }
+    );
+  },
 };
