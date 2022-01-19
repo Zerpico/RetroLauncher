@@ -37,7 +37,7 @@ namespace Application.Features.Queries
                     .Where(n => string.IsNullOrEmpty(query.Name) ? true : n.Name.ToLower().Contains(query.Name.ToLower()) || n.Alternative.ToLower().Contains(query.Name.ToLower()))
                     .Where(p => (query.Platforms == null || query.Platforms.Count() == 0) ? true : query.Platforms.Contains(p.Platform.Id))
                     .Where(p => (query.Genres == null || query.Genres.Count() == 0) ? true : p.GenreLinks.Any(g => query.Genres.Contains(g.GenreId)))
-                    .OrderBy(o => o.Rate);
+                    .OrderByDescending(o => o.Rate);
 
                 var count = await queryResult.CountAsync();
                 var result = await queryResult

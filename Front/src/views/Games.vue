@@ -2,7 +2,7 @@
   <div class="about">
     <div>
 
-      <sui-input placeholder="Search..." icon="search" v-model="data.search"  />
+      <sui-input placeholder="Search..." icon="search" v-model="data.search" v-on:keyup.enter="search"  />
       <sui-button primary @click.prevent="search">Поиск</sui-button>
 
       <sui-message v-if="profile.error" info>
@@ -17,7 +17,7 @@
       </h4>
 	  	 
       <sui-loader v-if="data.loading" active />
-
+      <div v-else>
       <div v-if="profile.games">
       <sui-list divided relaxed>
         <sui-list-item v-for="game in gameslist" :key="game.id">
@@ -58,6 +58,7 @@
         </sui-list-item>
       </sui-list>
       </div>
+      </div>
 
     </div>
   </div>
@@ -77,7 +78,6 @@ interface Data{
         loading: boolean ;
         page: string | (string | null)[];
         search: string | undefined | null;
-        startsearch: boolean
     }
 
 @Component
@@ -85,8 +85,7 @@ export default class GameList extends Vue {
   private data: Data = {
           loading: true,
           page: "",
-          search: "",
-          startsearch: false
+          search: ""
       }; 
   
 
@@ -118,7 +117,7 @@ export default class GameList extends Vue {
     this.fetchData();
   }
 
-  @Watch('data.startsearch')
+  @Watch('$route')
     onPropertyChanged(value: boolean, oldValue: boolean) {
       if (value)
         this.fetchData()   
@@ -141,23 +140,19 @@ export default class GameList extends Vue {
     }
     else await this.fetchGames();
     this.data.loading = false;
-    this.data.startsearch = false;
   }
 
   private search()
   {
-    this.$router.push({ name: "games", query : { name: this.data.search} });
-    this.data.startsearch=true;
+    this.$router.push({ name: "games", query : { name: this.data.search, page: "1" } });
   }
 
   private nextpage() {
     this.$router.push({ name: "games", query : { name: this.data.search , page: String(this.profile.currentPage+1)} });
-    this.data.startsearch=true;
   }
 
   private prevpage() {
     this.$router.push({ name: "games", query : { name: this.data.search, page: String(this.profile.currentPage-1)} });
-    this.data.startsearch=true;
   }
 
 }
