@@ -16,9 +16,8 @@
         <sui-button compact content="Next" style="margin-left:1rem" @click.prevent="nextpage" :class="profile.currentPage === profile.maxPage ? 'disabled' : ''"/> 
       </h4>
 	  	 
-      <sui-loader v-if="data.loading" active />
-      <div v-else>
-      <div v-if="profile.games">
+      <sui-loader v-if="data.loading" active />      
+      <div v-else-if="profile.games">
       <sui-list divided relaxed>
         <sui-list-item v-for="game in gameslist" :key="game.id">
           <sui-list-content>
@@ -57,7 +56,6 @@
           </sui-list-content>
         </sui-list-item>
       </sui-list>
-      </div>
       </div>
 
     </div>
@@ -118,8 +116,8 @@ export default class GameList extends Vue {
   }
 
   @Watch('$route')
-    onPropertyChanged(value: boolean, oldValue: boolean) {
-      if (value)
+    onPropertyChanged(value: any, oldValue: any) {    
+      if (value !== oldValue) 
         this.fetchData()   
   }
 
