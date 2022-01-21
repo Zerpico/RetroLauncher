@@ -8,7 +8,13 @@ export interface Game {
   genres: [];
   platform: number;
   rating: number;
-  links: [];
+  links: Link[];
+}
+
+export interface Link {
+  id: number;
+  url: string;
+  type: string;
 }
 
 export interface GameState {

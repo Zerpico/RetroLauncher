@@ -68,7 +68,8 @@
 
 import { Component, Vue } from "vue-property-decorator";
 import { State, Action, Getter } from "vuex-class";
-import { GameState, Game, GameRequest } from "../store/game/types";
+import { GameState, Game, Link, GameRequest } from "../store/game/types";
+import { Platform } from "../store/platform/types";
 
 interface Data{
             loading: boolean ;       
@@ -88,7 +89,7 @@ export default class GameView extends Vue {
   @Getter("gamelist")
   private gameslist!: Game[];
   @Getter("platformlist")
-  private platformlist!: [];
+  private platformlist!: Platform[];
   @Getter("genrelist")
   private genrelist!: [];
 
@@ -131,21 +132,21 @@ export default class GameView extends Vue {
     console.log("find "+alias);
       var newgamediv = document.createElement("div"); // Create li element.
       newgamediv.setAttribute("id", "gameloader");
-      newgamediv.style = "width:640px;height:480px;max-width:100%;";     
+      newgamediv.setAttribute("style", "width:640px;height:480px;max-width:100%;");
       var b = document.createElement('div');
       b.id = 'game';
       newgamediv.appendChild(b);
       
       var scriptnes = document.createElement('script');
       scriptnes.innerHTML = "EJS_player = '#game'; EJS_gameName = '" + this.gameslist[0].name + "'; EJS_biosUrl = ''; EJS_gameUrl = '" + url + "'; EJS_core = '"+alias+"'; EJS_pathtodata = '/data/'; ";
-      findgamediv.appendChild(scriptnes);
+      findgamediv?.appendChild(scriptnes);
       
       var scriptnes2 = document.createElement('script');
       scriptnes2.src = '/data/loader.js';
-      findgamediv.appendChild(scriptnes2);
+      findgamediv?.appendChild(scriptnes2);
       
       
-      findgamediv.appendChild(newgamediv);
+      findgamediv?.appendChild(newgamediv);
       
   }
 }
