@@ -43,7 +43,9 @@ export default class App extends Vue {
     this.fetchGenres();
     this.fetchPlatforms();
     // получение данных после создания компонента
-   
+   /* var scriptnes2 = document.createElement('script');
+    scriptnes2.src = '/data/loader.js';
+      document.body.appendChild(scriptnes2);*/
   }
 };
 </script>

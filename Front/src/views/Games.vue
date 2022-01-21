@@ -25,7 +25,7 @@
               <sui-grid>
                 <sui-grid-row>
                   <sui-grid-column :width="2">
-                    <img :src="game.links[0].url" style="width: 8em" />
+                    <img :src="game.links[0].url" style="max-height: 144px" />
                   </sui-grid-column>
                   <sui-grid-column :width="13">
                     <sui-list>

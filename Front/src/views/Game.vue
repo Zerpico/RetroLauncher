@@ -18,7 +18,7 @@
         <div id="menu">
             <ul>
                 <li v-for="link of gameslist[0].links" :key="link.id">
-                    <img v-if="link.type !== 'rom'" :src="link.url" />
+                    <img v-if="link.type !== 'rom'" :src="link.url" style="max-height: 144px" />
                 </li>
             </ul>
         </div>
@@ -59,7 +59,7 @@
             {{ gameslist[0].annotation }}
         </sui-container>
 
-        <div id="game">
+        <div id="gamediv" style="margin-top:0.5rem">
         </div>
     </div>
 </template>
@@ -99,25 +99,54 @@ export default class GameView extends Vue {
   }
 
   rungame() {
-      var gamediv = document.getElementById('game');
-      if (gamediv.childNodes.length <= 0) {
-        
-        const url = this.gameslist[0].links[this.gameslist[0].links.length-1].url;
+
+      var findgameloader = document.getElementById("gameloader");
+      if (findgameloader !== null) { // Prevents empty list item.
+        return;
+      } 
 
 
-        var a = document.createElement('div');
-        a.style = "width:640px;height:480px;max-width:100%;";
-        var b = document.createElement('div');
-		b.id = 'game';
-		a.appendChild(b);
-		document.body.appendChild(a);
-		var script = document.createElement('script');
-		script.innerHTML = "EJS_player = '#game'; EJS_gameName = '" + this.gameslist[0].name + "'; EJS_biosUrl = ''; EJS_gameUrl = '" + url + "'; EJS_core = '" + this.platformlist[this.gameslist[0].platform].alias + "'; EJS_pathtodata = 'data/'; ";
-		document.body.appendChild(script);
-		var script2 = document.createElement('script');
-		script2.src = 'data/loader.js';
-		gamediv.appendChild(script2);
+      var scripts = document.getElementsByTagName('script');
+      for (var i = scripts.length; i--;) {
+          if (scripts[i].src.includes("data/webrtc-adapter.js")) 
+            {
+                scripts[i].remove();
+                break;
+            }
       }
+
+      var findgamediv = document.getElementById("gamediv");
+      var url = this.gameslist[0].links[this.gameslist[0].links.length-1].url;
+      var platform = this.platformlist[this.gameslist[0].platform].alias;
+
+      for (var j = this.platformlist.length; j--;) {
+          if (this.platformlist[j].id == this.gameslist[0].platform) {
+           platform = this.platformlist[j].alias;
+           break;
+          }
+        }
+
+        var alias = String(platform).replace("gbx", "gb").replace("gen", "segaMD").replace("sms","segaMS");
+
+    console.log("find "+alias);
+      var newgamediv = document.createElement("div"); // Create li element.
+      newgamediv.setAttribute("id", "gameloader");
+      newgamediv.style = "width:640px;height:480px;max-width:100%;";     
+      var b = document.createElement('div');
+      b.id = 'game';
+      newgamediv.appendChild(b);
+      
+      var scriptnes = document.createElement('script');
+      scriptnes.innerHTML = "EJS_player = '#game'; EJS_gameName = '" + this.gameslist[0].name + "'; EJS_biosUrl = ''; EJS_gameUrl = '" + url + "'; EJS_core = '"+alias+"'; EJS_pathtodata = '/data/'; ";
+      findgamediv.appendChild(scriptnes);
+      
+      var scriptnes2 = document.createElement('script');
+      scriptnes2.src = '/data/loader.js';
+      findgamediv.appendChild(scriptnes2);
+      
+      
+      findgamediv.appendChild(newgamediv);
+      
   }
 }
 </script>
