@@ -9051,7 +9051,7 @@ var EJS = function(_0x574f5e) {
 }, function(_0x951035, _0xc196fa, _0x29812e) {
     'use strict';
     (function(_0x1583e8) {
-        if (_0x29812e(0xa3), _0x29812e(0x168), _0x29812e(0x169), _0x1583e8._babelPolyfill) throw new Error('only one instance of babel-polyfill is allowed');
+        //if (_0x29812e(0xa3), _0x29812e(0x168), _0x29812e(0x169), _0x1583e8._babelPolyfill) throw new Error('only one instance of babel-polyfill is allowed');
         _0x1583e8._babelPolyfill = true;
         var _0xc196fa = 'defineProperty';
 
