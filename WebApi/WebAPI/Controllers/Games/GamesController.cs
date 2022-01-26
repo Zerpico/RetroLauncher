@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using Application.Features.Queries;
@@ -19,11 +20,13 @@ namespace RetroLauncher.WebAPI.Controllers
     {
         private readonly ILogger<GamesController> _logger;
         private readonly string _baseUrl;
-        
+        private readonly string _filesPath;
+
         public GamesController(ILogger<GamesController> logger, IConfiguration configuration)
         {
             _logger = logger;
             _baseUrl = configuration["BaseUrl"];
+            _filesPath = configuration["FilesPath"];
         }
 
 
@@ -150,12 +153,102 @@ namespace RetroLauncher.WebAPI.Controllers
                 Data = new GameData() { Games = result, Count = 1 }
             });
         }
-        
+
+
+
+        /// <summary> Fetch games by id </summary>
+        /// <param name="request">request for fetch</param>
+        [HttpGet]
+        [Route("GetEmulById")]
+        [ProducesResponseType(typeof(GameGetResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ErrorGetResponse), StatusCodes.Status400BadRequest)]
+        public async Task<IActionResult> GetEmulById([FromQuery] GameGetByIdRequest request)
+        {
+            var resultQuery = await Mediator.Send(new GetGameByIdQuery() { Id = request.Id });
+
+            var name = resultQuery.Name;
+            var platform = resultQuery.Platform.SmallName;
+            var alias = platform.Replace("gbx", "gb").Replace("gen", "segaMD").Replace("sms", "segaMS");
+            var links = resultQuery.GameLinks.Where(x => x.Type == Domain.Enums.TypeUrl.Rom);
+
+            var dirExract = await ExtractRom(resultQuery);
+
+            var r = new System.Text.RegularExpressions.Regex(@"(\([\w\s]*hack[\w\s]*\))",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase |
+                System.Text.RegularExpressions.RegexOptions.Multiline);
+
+            var r2 = new System.Text.RegularExpressions.Regex(@"(\([\w\s]*prototype[\w\s]*\))",
+               System.Text.RegularExpressions.RegexOptions.IgnoreCase |
+               System.Text.RegularExpressions.RegexOptions.Multiline);
+
+            var files = Directory.GetFiles(dirExract).Where(g => !r.IsMatch(g) && !r2.IsMatch(g)).ToArray();
+
+            string mainrom = files.First();
+            var mrom = files.Where(x => x.Contains("[!]") || x.Contains("(!)")).FirstOrDefault();
+            if (!string.IsNullOrEmpty(mrom))
+                mainrom = mrom;
+
+            var rom = new Uri(new Uri(_baseUrl), $"CACHE/{platform}/{GetNameDir(name)}/{Path.GetFileName(mainrom)}").ToString();
+           // var rom = GetLinks(resultQuery).Where(x => x.Type == "rom").FirstOrDefault().Url;
+
+string html = @"
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"">
+    <meta name=""viewport"" content=""width=device-width, initial-scale=1"">
+    <meta name=""robots"" content=""noindex"" />
+    <base href=""/"" />
+    <title>ColdCast Games</title>
+</head>
+<body>
+
+<div style=""width:640px;height:480px;max-width:100%;margin:0 auto;"">
+<div id=""game""></div>
+</div>
+"+Environment.NewLine+
+@$"<script type=""text/javascript"">
+    EJS_player = '#game';
+    EJS_gameName = '{name}';
+    EJS_biosUrl = '';
+    EJS_gameUrl = '{rom}';
+    EJS_core = '{alias}';
+    EJS_pathtodata = '/data/';
+</script>
+
+"+@"<script type=""text/javascript"" src=""data/loader.js""></script>
+<style>
+html,body {margin:0;padding:0;}
+</style>
+</body>
+</html>";            
+
+            return Content(html, "text/html");
+        }
+
+        private async Task<string> ExtractRom(Domain.Entities.Game game)
+        {
+            var nameDir = GetNameDir(game.Name.Trim());
+            var romfile = game.GameLinks.Where(x => x.Type == Domain.Enums.TypeUrl.Rom).FirstOrDefault().Url;
+
+            var zipFile = Path.Combine(_filesPath, "ROMS", game.Platform.SmallName, romfile);
+            var extractDir = Path.Combine(_filesPath, "CACHE", game.Platform.SmallName, nameDir);
+
+            if (Directory.Exists(extractDir))
+                if (Directory.GetFiles(extractDir).Any())
+                    return await Task.FromResult(extractDir);
+
+            return await Task.Run(() =>
+            {
+                Directory.CreateDirectory(extractDir);
+                ZipFile.ExtractToDirectory(zipFile, extractDir);
+                return extractDir;
+            });
+        }
 
         private ICollection<GameLink> GetLinksWithCover(Domain.Entities.Game game)
         {
-            var nameDir = game.Name.Trim().Replace("'", "").Replace(':', ' ').Replace('\\', '_').Replace('/', '_').Replace('?', ' ').Replace('<', '_').Replace('>', '_').Replace(' ','_');
-           
+            var nameDir = GetNameDir(game.Name.Trim());
             var flink = game.GameLinks.FirstOrDefault();
             return new List<GameLink>() { new GameLink()
                 {
@@ -169,8 +262,7 @@ namespace RetroLauncher.WebAPI.Controllers
         {
             var gameLinks = game.GameLinks.ToList();
             gameLinks[0].Type = Domain.Enums.TypeUrl.Cover;
-            
-            var nameDir = game.Name.Trim().Replace("'", "").Replace(':', ' ').Replace('\\', '_').Replace('/', '_').Replace('?', ' ').Replace('<', '_').Replace('>', '_').Replace(' ', '_');
+            var nameDir = GetNameDir(game.Name.Trim());
            
             return gameLinks?.Select(s => new GameLink()
             {
@@ -189,6 +281,9 @@ namespace RetroLauncher.WebAPI.Controllers
                 }
             }).ToList();
         }
+
+        private string GetNameDir(string name) => name.Trim().Replace("'", "").Replace(':', ' ').Replace('\\', '_').Replace('/', '_')
+            .Replace('?', ' ').Replace('<', '_').Replace('>', '_').Replace(' ', '_');
 
     }
 }

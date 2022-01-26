@@ -64,6 +64,10 @@
             <summary> Fetch games by id </summary>
             <param name="request">request for fetch</param>
         </member>
+        <member name="M:RetroLauncher.WebAPI.Controllers.GamesController.GetEmulById(RetroLauncher.WebAPI.Controllers.Games.Get.GameGetByIdRequest)">
+            <summary> Fetch games by id </summary>
+            <param name="request">request for fetch</param>
+        </member>
         <member name="T:RetroLauncher.WebAPI.Controllers.Genres.Dto.Genre">
             <summary> Genre model </summary>
         </member>

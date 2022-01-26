@@ -91,6 +91,18 @@ namespace RetroLauncher.WebAPI
             // Set up custom content types - associating file extension to MIME type
             var provider = new FileExtensionContentTypeProvider();
             provider.Mappings[".7z"] = "application/x-7z-compressed";
+            provider.Mappings[".data"] = "application/octet-stream";
+            provider.Mappings[".gba"] = "application/octet-stream";
+            provider.Mappings[".gb"] = "application/octet-stream";
+            provider.Mappings[".gbc"] = "application/octet-stream";
+            provider.Mappings[".gen"] = "application/octet-stream";
+            provider.Mappings[".nes"] = "application/octet-stream";
+            provider.Mappings[".sg"] = "application/octet-stream";
+            provider.Mappings[".sms"] = "application/octet-stream";
+            provider.Mappings[".smc"] = "application/octet-stream";
+            provider.Mappings[".pce"] = "application/octet-stream";
+
+
             // Init FileServerOptions
             var FilesPath = Configuration["FilesPath"];
             var fileServerOptions = new FileServerOptions
