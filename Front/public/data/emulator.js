@@ -202,7 +202,7 @@ var EJS = function(_0x574f5e) {
         _0x5633cb.StandardMapping = {
             'env': {},
             'buttons': {
-                'byButton': [0x0, 0x1, 0x2, 0x3, 0x4, 0x5, 0x6, 0x7, 0x8, 0x9, 0xa, 0xb, 0xc, 0xd, 0xe, 0xf, 0x10]
+                'byButton': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
             },
             'axes': {
                 'byAxis': [0x0, 0x1, 0x2, 0x3]
@@ -9051,7 +9051,7 @@ var EJS = function(_0x574f5e) {
 }, function(_0x951035, _0xc196fa, _0x29812e) {
     'use strict';
     (function(_0x1583e8) {
-        //if (_0x29812e(0xa3), _0x29812e(0x168), _0x29812e(0x169), _0x1583e8._babelPolyfill) throw new Error('only one instance of babel-polyfill is allowed');
+        if (_0x29812e(0xa3), _0x29812e(0x168), _0x29812e(0x169), _0x1583e8._babelPolyfill) throw new Error('only one instance of babel-polyfill is allowed');
         _0x1583e8._babelPolyfill = true;
         var _0xc196fa = 'defineProperty';
 

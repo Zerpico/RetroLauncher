@@ -23,44 +23,51 @@
             </ul>
         </div>
 
-        <sui-table basic="very" celled collapsing>          
+        
+        <div id="game_info">
+        <div id="info_box">			
+            <div id="annotation_info" style="margin-top: 0.8rem;">               
+                    {{ gameslist[0].annotation }}
+            </div>		
+            <div id="table_info">
+              <sui-table basic="very" celled collapsing>          
             <sui-table-body>
-            <sui-table-row>
-                <sui-table-cell><b>Платформа: </b></sui-table-cell>
-                <sui-table-cell>{{ platformlist[gameslist[0].platform].name }}</sui-table-cell>
-            </sui-table-row>
-            <sui-table-row>
-                <sui-table-cell><b>Жанр: </b></sui-table-cell>
-                <sui-table-cell>
-                    <span v-for="genre of gameslist[0].genres" :key="genre.id">
-                            {{genrelist[genre].name}}
-                          </span>
-                </sui-table-cell>
-            </sui-table-row>
-            <sui-table-row>
-                <sui-table-cell>
-                    <b>Дата выхода: </b>
-                </sui-table-cell>
-                <sui-table-cell>
-                    {{ gameslist[0].year }}
-                </sui-table-cell>
-            </sui-table-row>
-            <sui-table-row>
-                <sui-table-cell>
-                    <b>Разработчик: </b>
-                </sui-table-cell>
-                <sui-table-cell>
-                    {{ gameslist[0].publisher }}
-                </sui-table-cell>
-            </sui-table-row>
-        </sui-table-body>
-        </sui-table>
-        <sui-container text-align="justified">
-            {{ gameslist[0].annotation }}
-        </sui-container>
-
-        <div id="gamediv" style="margin-top:0.5rem">
+                <sui-table-row>
+                    <sui-table-cell><b>Платформа: </b></sui-table-cell>
+                    <sui-table-cell>{{ platformlist[gameslist[0].platform].name }}</sui-table-cell>
+                </sui-table-row>
+                <sui-table-row>
+                    <sui-table-cell><b>Жанр: </b></sui-table-cell>
+                    <sui-table-cell>
+                        <span v-for="genre of gameslist[0].genres" :key="genre.id">
+                                {{genrelist[genre].name}}
+                            </span>
+                    </sui-table-cell>
+                </sui-table-row>
+                <sui-table-row>
+                    <sui-table-cell>
+                        <b>Дата выхода: </b>
+                    </sui-table-cell>
+                    <sui-table-cell>
+                        {{ gameslist[0].year }}
+                    </sui-table-cell>
+                </sui-table-row>
+                <sui-table-row>
+                    <sui-table-cell>
+                        <b>Разработчик: </b>
+                    </sui-table-cell>
+                    <sui-table-cell>
+                        {{ gameslist[0].publisher }}
+                    </sui-table-cell>
+                </sui-table-row>
+            </sui-table-body>
+            </sui-table>
+            </div>		
         </div>
+        </div>
+        
+
+        <div id="gamediv" style="margin-top:1.5rem"></div>
     </div>
 </template>
 
@@ -101,58 +108,34 @@ export default class GameView extends Vue {
 
   rungame() {
 
-      var findgameloader = document.getElementById("gameloader");
-      if (findgameloader !== null) { // Prevents empty list item.
+      const findgameloader = document.querySelector("#gamediv");
+      if (findgameloader?.childNodes.length > 0) { // Prevents empty list item.
+        findgameloader?.scrollIntoView();
         return;
       } 
+  
+      var embed = document.createElement("div");
+      embed.className="embed";
 
+      var iframe = document.createElement("iframe");
+      iframe.setAttribute("src","https://retro.khudaev.ru/api/Games/GetEmulById?Id="+this.gameslist[0].id);
+      iframe.setAttribute("frameborder","0");
+      iframe.setAttribute("width","100%");
+      iframe.setAttribute("height","100%");
+      iframe.setAttribute("scrolling","no");
 
-      var scripts = document.getElementsByTagName('script');
-      for (var i = scripts.length; i--;) {
-          if (scripts[i].src.includes("data/webrtc-adapter.js")) 
-            {
-                scripts[i].remove();
-                break;
-            }
-      }
-
-      var findgamediv = document.getElementById("gamediv");
-      var url = this.gameslist[0].links[this.gameslist[0].links.length-1].url;
-      var platform = this.platformlist[this.gameslist[0].platform].alias;
-
-      for (var j = this.platformlist.length; j--;) {
-          if (this.platformlist[j].id == this.gameslist[0].platform) {
-           platform = this.platformlist[j].alias;
-           break;
-          }
-        }
-
-        var alias = String(platform).replace("gbx", "gb").replace("gen", "segaMD").replace("sms","segaMS");
-
-    console.log("find "+alias);
-      var newgamediv = document.createElement("div"); // Create li element.
-      newgamediv.setAttribute("id", "gameloader");
-      newgamediv.setAttribute("style", "width:640px;height:480px;max-width:100%;");
-      var b = document.createElement('div');
-      b.id = 'game';
-      newgamediv.appendChild(b);
-      
-      var scriptnes = document.createElement('script');
-      scriptnes.innerHTML = "EJS_player = '#game'; EJS_gameName = '" + this.gameslist[0].name + "'; EJS_biosUrl = ''; EJS_gameUrl = '" + url + "'; EJS_core = '"+alias+"'; EJS_pathtodata = '/data/'; ";
-      findgamediv?.appendChild(scriptnes);
-      
-      var scriptnes2 = document.createElement('script');
-      scriptnes2.src = '/data/loader.js';
-      findgamediv?.appendChild(scriptnes2);
-      
-      
-      findgamediv?.appendChild(newgamediv);
+      embed.appendChild(iframe);
+      embed.style.height="480px";
+ 
+      findgameloader?.appendChild(embed);
+      findgameloader?.scrollIntoView();
       
   }
 }
 </script>
 
 <style>
+
 
 .list span:not(:last-child)::after {
   content: ',';
@@ -169,4 +152,32 @@ export default class GameView extends Vue {
 #game{
     margin-top: 3rem;
 }
+
+#game_info{
+    height: 100%;
+    position: relative;
+    display: table;
+    width: 100%;
+}
+
+#info_box {	
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+#annotation_info{
+    display: inline-block;
+    width: 60%;
+    text-align: left;
+    vertical-align: top;
+}
+
+#table_info{
+  display: inline-block;
+  width: 40%;
+  text-align: right;
+  vertical-align: top;
+	
+}
+
 </style>
