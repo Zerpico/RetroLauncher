@@ -11,6 +11,7 @@ namespace RetroLauncher.WebAPI.Controllers
     {
         private IMediator _mediator;
 
+        /// <summary> Mediator </summary>
         protected IMediator Mediator => _mediator ??= HttpContext.RequestServices.GetService<IMediator>();
     }
 }

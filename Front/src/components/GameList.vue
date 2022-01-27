@@ -17,6 +17,7 @@
                        <div class="listgenre">
                         <span v-for="genre of game.genres" :key="genre.id">
                           {{genrelist[genre].name}}
+                          hello
                         </span>
                        </div>                       
                     </sui-list-item>					  

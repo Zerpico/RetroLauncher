@@ -9,6 +9,7 @@
     <RootNamespace>RetroLauncher.WebAPI</RootNamespace>
     <SpaRoot>..\..\Front\</SpaRoot>
     <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
   </PropertyGroup>
 
   <PropertyGroup>
