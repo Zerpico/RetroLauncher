@@ -2,11 +2,11 @@
     <div>
         <sui-grid divided="vertically">
             <sui-grid-row :columns="2">
-            <sui-grid-column>
+            <sui-grid-column :width="9">
                 <h3 style="margin-bottom: 0px;">{{ gameslist[0].name }}</h3>
                 <h4 style="margin-top: 0px;color: #7a7a7a" v-if="gameslist[0].alternative !== gameslist[0].name">{{ gameslist[0].alternative }}</h4> 
             </sui-grid-column>
-            <sui-grid-column>
+            <sui-grid-column :width="7">
                 <sui-button color="green" @click.prevent="rungame">Запустить</sui-button>
             </sui-grid-column>
             </sui-grid-row>
@@ -23,14 +23,13 @@
             </ul>
         </div>
 
-        
-        <div id="game_info">
-        <div id="info_box">			
-            <div id="annotation_info" style="margin-top: 0.8rem;">               
-                    {{ gameslist[0].annotation }}
-            </div>		
-            <div id="table_info">
-              <sui-table basic="very" celled collapsing>          
+        <sui-grid divided="vertically">
+            <sui-grid-row :columns="2">
+            <sui-grid-column :width="9" style="margin-top: 0.8rem">
+                {{ gameslist[0].annotation }}
+            </sui-grid-column>
+            <sui-grid-column :width="7">
+                <sui-table basic="very" celled collapsing>          
             <sui-table-body>
                 <sui-table-row>
                     <sui-table-cell><b>Платформа: </b></sui-table-cell>
@@ -62,10 +61,9 @@
                 </sui-table-row>
             </sui-table-body>
             </sui-table>
-            </div>		
-        </div>
-        </div>
-        
+            </sui-grid-column>
+            </sui-grid-row>
+        </sui-grid>
 
         <div id="gamediv" style="margin-top:1.5rem"></div>
     </div>
@@ -152,32 +150,4 @@ export default class GameView extends Vue {
 #game{
     margin-top: 3rem;
 }
-
-#game_info{
-    height: 100%;
-    position: relative;
-    display: table;
-    width: 100%;
-}
-
-#info_box {	
-    display: table-cell;
-    vertical-align: middle;
-    text-align: center;
-}
-#annotation_info{
-    display: inline-block;
-    width: 60%;
-    text-align: left;
-    vertical-align: top;
-}
-
-#table_info{
-  display: inline-block;
-  width: 40%;
-  text-align: right;
-  vertical-align: top;
-	
-}
-
 </style>

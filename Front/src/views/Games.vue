@@ -2,6 +2,8 @@
   <div class="about">
     <div>
 
+     
+
       <sui-input placeholder="Search..." icon="search" v-model="data.search" v-on:keyup.enter="search"  />
       <sui-button primary @click.prevent="search">Поиск</sui-button>
 
@@ -18,44 +20,9 @@
 	  	 
       <sui-loader v-if="data.loading" active />      
       <div v-else-if="profile.games">
-      <sui-list divided relaxed>
-        <sui-list-item v-for="game in gameslist" :key="game.id">
-          <sui-list-content>
-            <router-link :to="'/game/'+game.id" is="sui-list-header">
-              <sui-grid>
-                <sui-grid-row>
-                  <sui-grid-column :width="2">
-                    <img :src="game.links[0].url" style="max-height: 144px" />
-                  </sui-grid-column>
-                  <sui-grid-column :width="13">
-                    <sui-list>
-                      <sui-list-item style="color: #3f3f3f">{{game.name}}</sui-list-item>
-                      <sui-list-item v-if="game.alternative !== game.name" style="color: #7a7a7a">{{ game.alternative }}</sui-list-item>                      
-                      <sui-list-item style="color: rgb(141 74 74);">
-                       <p>
-                         <div class="listgenre">
-                          <span v-for="genre of game.genres" :key="genre.id">
-                            {{genrelist[genre].name}}
-                          </span>
-                         </div>
-                       
-                      </sui-list-item>
-					  
-					  <sui-list-item style="color: rgb(41 174 74);">
-						{{ platformlist[game.platform].name }}
-					  </sui-list-item>
 
-                      <sui-list-item style="color: rgb(156 147 114)">{{ game.year }}</sui-list-item>
-                      <sui-list-item style="color: #3f3f3f">{{ game.publisher }}</sui-list-item>
-                      <sui-list-item style="color: #3f3f3f"><sui-rating :rating="game.rating" :max-rating="5" /></sui-list-item>
-                    </sui-list>
-                  </sui-grid-column>
-                </sui-grid-row>
-              </sui-grid>
-            </router-link>
-          </sui-list-content>
-        </sui-list-item>
-      </sui-list>
+      <GameListTable :gameslist="profile.games" :platformlist="platformlist" :genrelist="genrelist"/>        
+      
       </div>
 
     </div>
@@ -70,6 +37,7 @@ import Component from "vue-class-component";
 import { Route } from 'vue-router'
 import { GameState, Game, GameRequest } from "../store/game/types";
 import { Prop, Watch } from "vue-property-decorator";
+import GameListTable from "../components/GameList.vue"
 
 interface Data{
         loading: boolean ;
@@ -77,7 +45,11 @@ interface Data{
         search: string | undefined | null;
     }
 
-@Component
+@Component({
+  components: {
+    GameListTable
+  }
+})
 export default class GameList extends Vue {
   private data: Data = {
           loading: true,
@@ -85,7 +57,6 @@ export default class GameList extends Vue {
           search: ""
       }; 
   
-
   private request: GameRequest = 
   {
     name: null,

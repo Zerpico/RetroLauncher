@@ -1,10 +1,9 @@
 <template>
-    <div class="home">
-        <h4>Добро пожаловать!</h4>
-        <p>Это предварительная версия <b>Ретро Лаунчера</b></p>
-        <p>Здесь вы сможете просмотреть информацию по играм на приставки: NES, SNES, Sega MasterSystem, Sega MegaDrive, TurboGrafx-16, GameBoy/Color, GameBoy Advance </p>
-        <p>Воспользуйтесь <router-link to="/games">Каталогом</router-link> для просмотра</p>
-
+    <div class="home">       
+        <h4>Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ!</h4>       
+        <p>Р­С‚Рѕ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅР°СЏ РІРµСЂСЃРёСЏ <b>Р РµС‚СЂРѕ Р›Р°СѓРЅС‡РµСЂР°</b></p>
+        <p>Р—РґРµСЃСЊ РІС‹ СЃРјРѕР¶РµС‚Рµ РїСЂРѕСЃРјРѕС‚СЂРµС‚СЊ РёРЅС„РѕСЂРјР°С†РёСЋ РїРѕ РёРіСЂР°Рј РЅР° РїСЂРёСЃС‚Р°РІРєРё: NES, SNES, Sega MasterSystem, Sega MegaDrive, TurboGrafx-16, GameBoy/Color, GameBoy Advance </p>
+        <p>Р’РѕСЃРїРѕР»СЊР·СѓР№С‚РµСЃСЊ <router-link to="/games">РљР°С‚Р°Р»РѕРіРѕРј</router-link> РґР»СЏ РїСЂРѕСЃРјРѕС‚СЂР°</p>
     </div>
 </template>
 
