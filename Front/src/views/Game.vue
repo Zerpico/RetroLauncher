@@ -107,7 +107,8 @@ export default class GameView extends Vue {
   rungame() {
 
       const findgameloader = document.querySelector("#gamediv");
-      if (findgameloader?.childNodes.length > 0) { // Prevents empty list item.
+      const lenght = findgameloader?.childNodes?.length ? 0 : Number(findgameloader?.childNodes?.length);
+      if (lenght > 0) { // Prevents empty list item.
         findgameloader?.scrollIntoView();
         return;
       } 
