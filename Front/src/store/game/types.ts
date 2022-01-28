@@ -12,7 +12,6 @@ export interface Game {
 }
 
 export interface Link {
-  id: number;
   url: string;
   type: string;
 }

@@ -1,11 +1,9 @@
 <template>
   <div class="about">
     <div>
-
-     
-
       <sui-input placeholder="Search..." icon="search" v-model="data.search" v-on:keyup.enter="search"  />
       <sui-button primary @click.prevent="search">Поиск</sui-button>
+      <sui-divider />
 
       <sui-message v-if="profile.error" info>
         Error while fetch games list

@@ -15,13 +15,27 @@
 
         <sui-rating :rating="gameslist[0].rating" :max-rating="5" />
 
-        <div id="menu">
-            <ul>
-                <li v-for="link of gameslist[0].links" :key="link.id">
-                    <img v-if="link.type !== 'rom'" :src="link.url" style="max-height: 144px" />
-                </li>
-            </ul>
+      
+
+        <div class="img-scroller">
+          <ul>
+            <li v-for="link of filterlinks(gameslist[0].links)" :key="link.id">
+              <a @click.prevent="toggle(link)" href="#">
+                <img class="img-scroller-item" :src="link.url"  style="max-height: 144px; width:auto" />
+              </a>
+            </li>           
+          </ul>
         </div>
+
+        <sui-modal v-model="data.openimg" class="img-modal" @click.prevent="toggle(null)"  >
+          <sui-modal-content image>
+            <sui-image size="huge" :src="data.currentimg.url" style="max-height: 468px; width: auto;" />           
+          </sui-modal-content>       
+          <sui-modal-actions>
+          <sui-button positive @click.prevent="previmg">Пред.</sui-button>
+          <sui-button positive @click.prevent="nextimg">След.</sui-button>
+        </sui-modal-actions>  
+        </sui-modal>
        
 
         <div class="layout-container">
@@ -47,7 +61,10 @@
 	    	<div class="details table table--without-border">
                 <div class="table__row details__rating details__row ">
                     <div class="details__category table__row-label">Платформа:</div>
-	    		    <div class="details__content table__row-content">{{ platformlist[gameslist[0].platform].name }}</div>
+	    		    <div class="details__content table__row-content">
+                {{ platformlist[gameslist[0].platform].name }}
+                <img :src="getPlatformIcon(gameslist[0].platform)" style="width:16px; vertical-align: text-bottom; margin-left:.5rem"/>
+                </div>
 	    		</div>
 	    		<div class="table__row details__row">
 	    			<div class="details__category table__row-label">Жанр:</div>
@@ -81,13 +98,17 @@ import { GameState, Game, Link, GameRequest } from "../store/game/types";
 import { Platform } from "../store/platform/types";
 
 interface Data{
-            loading: boolean ;       
+            loading: boolean;    
+            openimg: boolean;   
+            currentimg: Link;
     }
 
 @Component
 export default class GameView extends Vue {
   private data: Data = {
-            loading: true           
+            loading: true,
+            openimg: false,
+            currentimg: {} as Link
     }; 
 
   @State("game") 
@@ -106,6 +127,52 @@ export default class GameView extends Vue {
   async created() {    
         //await this.fetchData();        
         await this.fetchGameById(this.$route.params.id);
+  }
+
+  filterlinks(links: Link[]){
+    return links.filter((l) => l.type != 'rom');
+  }
+
+  toggle(link: Link | null) {
+    if (link)
+      this.data.currentimg = link;
+      this.data.openimg = !this.data.openimg;
+  }
+ 
+  previmg() {
+    const imgs = this.filterlinks(this.gameslist[0].links);
+    const ind = imgs.findIndex(x => x === this.data.currentimg);
+    if (ind === 0) {
+      this.data.currentimg = imgs[imgs.length-1];
+    }
+    else {
+      this.data.currentimg = imgs[ind-1];
+    }
+  }
+
+  nextimg() {
+    const imgs = this.filterlinks(this.gameslist[0].links);
+    const ind = imgs.findIndex(x => x === this.data.currentimg);
+    if (ind === imgs.length-1) {
+      this.data.currentimg = imgs[0];
+    }
+    else {
+      this.data.currentimg = imgs[ind+1];
+    }
+  }
+
+  getPlatformIcon(platform: number) { 
+    switch (platform)
+    {
+      case 1: return "../icons/nintendo_nes.png"
+      case 2: return "../icons/nintendo_supernes.png"
+      case 4: return "../icons/nintendo_game_boy_advance_sp.png"
+      case 6: return "../icons/sega_genesis.png"
+      case 14: return "../icons/sega_master_system.png"
+      case 15: return "../icons/nec_turbografx_16.png"
+      case 16: return "../icons/nintendo_game_boy_pocket.png"      
+      default: return "../icons/icon.png"
+    }   
   }
 
   rungame() {
@@ -140,135 +207,49 @@ export default class GameView extends Vue {
 <style>
 
 
+
+.img-modal .modal {
+ width: auto;
+}
+
+
 .list span:not(:last-child)::after {
   content: ',';
 }
 
-#menu ul{
+
+.img-scroller {
+  display: flex;
+  justify-content: left; /* horizontal alignment / centering of the ul */  
+  max-width: 100%; /* responsiveness */
+  margin: 0 auto; /* horizontal alignment / centering on the page */
+}
+
+.img-scroller > ul {
   list-style: none;
+  display: flex;
+  overflow: auto; /* better this way */
+  overflow-y: hidden; /* appears just a little, don't know why (yet), needs to be set to hide it and make it look nicer */
+  max-height: 100vh;
 }
-#menu li{
-  display: inline;
-  margin: 0 0.3rem
+
+.img-scroller > ul > li {
+  height: 150px; /* needs to match the height of the "shortest" img or be less than that but not more */
+  flex: 0 0 auto; /* mandatory */
+  max-height: 100vh;
 }
+
+.img-scroller-item { /* responsiveness */
+  display: block; /* to remove the bottom margin */
+  height: 100vh;
+  max-width: 100%;
+  max-height: 100%; /* mandatory */
+  margin: 0 .5rem;
+}
+
 
 #game{
     margin-top: 3rem;
 }
 
-.title-underline-text{
-    justify-content: space-between;
-    font-size: 16px;
-    line-height: 19px;
-    font-weight: 600;
-    border-bottom: 1px solid #bfbfbf;
-    margin-bottom: 20px;
-}
-
-.layout-container {
-  box-sizing: content-box;
-  position: relative;
-  max-width: 1096px;
-  margin: auto;
-  /*! padding: 0 16px; */
-  display: inline-flex;
-}
-
-.layout-side-col {
-  width: 38.68613%;
-}
-.layout-main-col, .layout-side-col {
-  display: inline-block;
-  vertical-align: top;
-}
-.layout-main-col {
-  width: 56.93431%;
-  margin-right: 4.37956%;
-}
-
-
-.details {
-  margin-bottom: 50px;
-  padding-top: 10px;
-}
-.table {
-  width: 100%;
-}
-
-.details .details__row {
-  padding-bottom: 8px;
-}
-.details__row:hover:before {
- content:"";
- position:absolute;
- top:0;
- bottom:0;
- left:-8px;
- right:-8px;
- background:hsla(0,0%,100%,.2);
- border-left:2px solid #78387b
-}
-
-.table--without-border .table__row {
-  border-bottom: none;
-  /*! padding-bottom: 4px; */
-}
-.details__row {
-  position: relative;
-  padding-top: 7px;
-}
-.table__row {
-  display: -ms-flexbox;
-  display: flex;
-  padding: 12px 0;
-    padding-top: 12px;
-    padding-bottom: 12px;
-  line-height: 17px;
-  font-size: 14px;
-  border-bottom: 1px solid #bcbcbc;
-}
-
-.details__category, .details__content {
-  line-height: 17px;
-  z-index: 10;
-}
-.details__category {
-  width: 110px;
-}
-.table-header, .table__row-label {
-  color: rgba(33,33,33,.7);
-}
-.table__row-content, .table__row-label {
-  vertical-align: top;
-}
-
-.title--no-margin {
-  margin-bottom: 0;
-}
-.title {
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  font-size: 16px;
-  line-height: 19px;
-  font-weight: 600;
-  border-bottom: 1px solid #bfbfbf;
-  margin-bottom: 20px;
-}
-.title__underline-text {
-  position: relative;
-  padding: 16px 0;
-  line-height: 12px;
-  border-bottom: 1px solid;
-  margin-bottom: -1px;
-}
-.description {
-    margin-top: 0.5em;
-    margin-bottom: 50px;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 21px;
-	padding: 22px 0 10px;
-}
 </style>
