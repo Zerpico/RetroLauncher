@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using RetroLauncher.Application.Features.Commands;
 using RetroLauncher.WebAPI.Controllers.Games.Dto;
 using RetroLauncher.WebAPI.Controllers.Games.Get;
 
@@ -209,7 +210,7 @@ string html = @"
 "+Environment.NewLine+
 @$"<script type=""text/javascript"">
     EJS_player = '#game';
-    EJS_gameName = '{name}';
+    EJS_gameName = '{name.Replace("'", string.Empty)}';
     EJS_biosUrl = '';
     EJS_gameUrl = '{rom}';
     EJS_core = '{alias}';
@@ -221,7 +222,9 @@ string html = @"
 html,body {margin:0;padding:0;}
 </style>
 </body>
-</html>";            
+</html>";
+
+            var resultCommand = await Mediator.Send(new CreateDownloadCommand() { Game = resultQuery });
 
             return Content(html, "text/html");
         }
@@ -241,7 +244,16 @@ html,body {margin:0;padding:0;}
             return await Task.Run(() =>
             {
                 Directory.CreateDirectory(extractDir);
-                ZipFile.ExtractToDirectory(zipFile, extractDir);
+
+                using (ZipArchive archive = ZipFile.OpenRead(zipFile))
+                {
+                    foreach (ZipArchiveEntry entry in archive.Entries)
+                    {
+                        entry.ExtractToFile(Path.Combine(extractDir, GetValidName(entry.FullName)), true);
+                    }
+                }
+
+             //   ZipFile.ExtractToDirectory(zipFile, extractDir, true);
                 return extractDir;
             });
         }
@@ -284,6 +296,9 @@ html,body {margin:0;padding:0;}
 
         private string GetNameDir(string name) => name.Trim().Replace("'", "").Replace(':', ' ').Replace('\\', '_').Replace('/', '_')
             .Replace('?', ' ').Replace('<', '_').Replace('>', '_').Replace(' ', '_');
+
+        private string GetValidName(string name) => name.Trim().Replace("'", "").Replace(':', '_').Replace('\\', '_').Replace('/', '_')
+            .Replace('?', '_').Replace('<', '_').Replace('>', '_').Replace(' ', '_').Replace('"', '.');
 
     }
 }

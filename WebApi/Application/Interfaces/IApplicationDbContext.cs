@@ -13,6 +13,7 @@ namespace Application.Interfaces
         DbSet<Game> Games { get; set; }
         DbSet<Genre> Genres { get; set; }
         DbSet<Platform> Platforms { get; set; }
+        DbSet<Download> Downloads { get; set; }
         Task<int> SaveChangesAsync();
     }
 }

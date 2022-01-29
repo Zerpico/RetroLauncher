@@ -33,11 +33,13 @@ namespace Application.Features.Queries
                     .Include(x => x.Platform)
                     .Include(x => x.GenreLinks)
                         .ThenInclude(x => x.Genre)
+                    .Include(x => x.Downloads)
                     .Include(x => x.GameLinks.OrderByDescending(l => l.Type))
                     .Where(n => string.IsNullOrEmpty(query.Name) ? true : n.Name.ToLower().Contains(query.Name.ToLower()) || n.Alternative.ToLower().Contains(query.Name.ToLower()))
                     .Where(p => (query.Platforms == null || query.Platforms.Count() == 0) ? true : query.Platforms.Contains(p.Platform.Id))
                     .Where(p => (query.Genres == null || query.Genres.Count() == 0) ? true : p.GenreLinks.Any(g => query.Genres.Contains(g.GenreId)))
-                    .OrderByDescending(o => o.Rate != null).ThenByDescending(o => o.Rate.Value);
+                    .OrderByDescending(o => o.Downloads.Count).ThenByDescending(o => o.Rate.HasValue ? o.Rate : 0);
+
 
                 var count = await queryResult.CountAsync();
                 var result = await queryResult

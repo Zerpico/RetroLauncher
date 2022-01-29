@@ -18,5 +18,6 @@ namespace Domain.Entities
         public virtual ICollection<GenreLink> GenreLinks { get; set; }
         public Platform Platform { get; set; }
         public virtual ICollection<GameLink> GameLinks { get; set; }
+        public virtual ICollection<Download> Downloads { get; set; }
     }
 }

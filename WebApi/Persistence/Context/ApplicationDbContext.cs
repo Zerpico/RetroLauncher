@@ -15,7 +15,7 @@ namespace Persistence.Context
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Platform> Platforms { get; set; }
         public DbSet<GameLink> Links { get; set; }
-
+        public DbSet<Download> Downloads { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -77,7 +77,17 @@ namespace Persistence.Context
                 entity.HasOne(e => e.Game)
                     .WithMany(p => p.GameLinks);
             });
-        
+
+            //Downloads table
+            modelBuilder.Entity<Download>(entity =>
+            {
+                entity.ToTable("downloads");
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.Game)
+                    .WithMany(p => p.Downloads);
+
+            });
 
             // Downloads table
         /*    modelBuilder.Entity<Download>(entity =>
