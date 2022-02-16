@@ -1,0 +1,21 @@
+version: '3.4'
+
+networks:
+  db_network:
+    external:
+      name: db_network
+
+services:
+  retro_launcher:
+    image: retro_launcher:${TAG}
+    container_name: retro_launcher
+    build:
+      context: .
+      dockerfile: WebApi/WebAPI/Dockerfile
+    volumes:
+      - ${DISK_FOLDER}:${FilesPath}
+    networks:
+      - db_network
+    ports:
+      - "6500:80"
+      - "6501:443"

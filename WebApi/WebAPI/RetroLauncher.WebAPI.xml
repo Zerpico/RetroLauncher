@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RetroLauncher.WebAPI</name>
+    </assembly>
+    <members>
+        <member name="T:RetroLauncher.WebAPI.Controllers.BaseApiController">
+            <summary> Basic abstract Controller </summary>
+        </member>
+        <member name="P:RetroLauncher.WebAPI.Controllers.BaseApiController.Mediator">
+            <summary> Mediator </summary>
+        </member>
+        <member name="T:RetroLauncher.WebAPI.Controllers.BaseApiResponse">
+            <summary> Basic abstract response with Code and Status</summary>
+        </member>
+        <member name="T:RetroLauncher.WebAPI.Controllers.ApiResponse">
+            <summary> Common response with information about Pages </summary>
+        </member>
+        <member name="T:RetroLauncher.WebAPI.Controllers.PaginatedApiResponse">
+            <summary> Response with information about Pages </summary>
+        </member>
+        <member name="T:RetroLauncher.WebAPI.Controllers.Pages">
+            <summary> Content response with information about Pages </summary>
+        </member>
+        <member name="T:RetroLauncher.WebAPI.Controllers.ErrorGetResponse">
+            <summary> Basic error reposnse </summary>
+        </member>
+        <member name="T:RetroLauncher.WebAPI.Controllers.Games.Get.GameGetByIdRequest">
+            <summary> Request to game by id </summary>
+        </member>
+        <member name="P:RetroLauncher.WebAPI.Controllers.Games.Get.GameGetByIdRequest.Id">
+            <summary> id of list </summary>
+        </member>
+        <member name="T:RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetRequest">
+            <summary> Request to all games with pages </summary>
+        </member>
+        <member name="P:RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetRequest.Page">
+            <summary> Number of page </summary>
+        </member>
+        <member name="P:RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetRequest.Fields">
+            <summary> delimited fields: annotations, publisher </summary>
+        </member>
+        <member name="T:RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetByNameRequest">
+            <summary> Request to games search by name with pages </summary>
+        </member>
+        <member name="P:RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetByNameRequest.Name">
+            <summary> Search term </summary>
+        </member>
+        <member name="P:RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetByNameRequest.Genres">
+            <summary> Filter genres </summary>
+        </member>
+        <member name="P:RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetByNameRequest.Platforms">
+            <summary> Filter platforms </summary>
+        </member>
+        <member name="T:RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetResponse">
+            <summary> Reponse with infromation about Genre games </summary>
+        </member>
+        <member name="M:RetroLauncher.WebAPI.Controllers.GamesController.Get(RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetRequest)">
+            <summary> Fetch games list </summary>
+            <param name="request">request for fetch</param>
+        </member>
+        <member name="M:RetroLauncher.WebAPI.Controllers.GamesController.GetByName(RetroLauncher.WebAPI.Controllers.Games.Get.GamesGetByNameRequest)">
+            <summary> Fetch games list </summary>
+            <param name="request">request for fetch</param>
+        </member>
+        <member name="M:RetroLauncher.WebAPI.Controllers.GamesController.GetById(RetroLauncher.WebAPI.Controllers.Games.Get.GameGetByIdRequest)">
+            <summary> Fetch games by id </summary>
+            <param name="request">request for fetch</param>
+        </member>
+        <member name="M:RetroLauncher.WebAPI.Controllers.GamesController.GetEmulById(RetroLauncher.WebAPI.Controllers.Games.Get.GameGetByIdRequest)">
+            <summary> Fetch games by id </summary>
+            <param name="request">request for fetch</param>
+        </member>
+        <member name="T:RetroLauncher.WebAPI.Controllers.Genres.Dto.Genre">
+            <summary> Genre model </summary>
+        </member>
+        <member name="T:RetroLauncher.WebAPI.Controllers.Genres.Get.GengresGetResponse">
+            <summary> Reponse with infromation about Genre data </summary>
+        </member>
+        <member name="M:RetroLauncher.WebAPI.Controllers.GenresController.Get">
+            <summary> Fetch genres list </summary>
+        </member>
+        <member name="T:RetroLauncher.WebAPI.Controllers.Platforms.PlatformsGetResponse">
+            <summary> Reponse with infromation about Platform data </summary>
+        </member>
+        <member name="M:RetroLauncher.WebAPI.Controllers.PlatformsController.Get">
+            <summary> Fetch platforms list </summary>
+        </member>
+    </members>
+</doc>
